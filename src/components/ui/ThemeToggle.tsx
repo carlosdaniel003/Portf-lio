@@ -1,6 +1,6 @@
 "use client";
 
-import { MonitorCog, Moon, Sun } from "lucide-react";
+import { Monitor, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type Theme = "dark" | "light";
@@ -32,7 +32,7 @@ export default function ThemeToggle() {
         aria-label="Carregando tema"
         type="button"
       >
-        <MonitorCog size={18} />
+        <Monitor size={18} />
       </button>
     );
   }
