@@ -1,0 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-mach-dark text-mach-text antialiased;
+  }
+}
+
+@layer utilities {
+  .border-glow {
+    box-shadow: 0 0 15px rgba(220, 38, 38, 0.2);
+    border: 1px solid rgba(255, 0, 0, 0.5);
+  }
+}
