@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail } from "lucide-react";
+import { Github, Instagram, Linkedin } from "lucide-react";
 
 export default function Contact() {
   return (
@@ -21,16 +21,7 @@ export default function Contact() {
 
             <div className="grid gap-3">
               <a
-                href="mailto:contato@carlosdaniel.dev"
-                className="group flex items-center justify-between rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:-translate-y-1 hover:border-[color:var(--accent)]"
-              >
-                <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
-                  <Mail size={20} /> E-mail
-                </span>
-                <span className="text-sm text-[color:var(--muted)]">Enviar mensagem</span>
-              </a>
-              <a
-                href="https://www.linkedin.com/in/carlosdaniel-dev"
+                href="https://www.linkedin.com/in/carlosdaniel003"
                 target="_blank"
                 rel="noreferrer"
                 className="group flex items-center justify-between rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:-translate-y-1 hover:border-[color:var(--accent)]"
@@ -38,7 +29,7 @@ export default function Contact() {
                 <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
                   <Linkedin size={20} /> LinkedIn
                 </span>
-                <span className="text-sm text-[color:var(--muted)]">Ver perfil</span>
+                <span className="text-sm text-[color:var(--muted)]">Contato profissional</span>
               </a>
               <a
                 href="https://github.com/carlosdaniel003"
@@ -50,6 +41,17 @@ export default function Contact() {
                   <Github size={20} /> GitHub
                 </span>
                 <span className="text-sm text-[color:var(--muted)]">Ver código</span>
+              </a>
+              <a
+                href="https://www.instagram.com/carlos_daniel.003"
+                target="_blank"
+                rel="noreferrer"
+                className="group flex items-center justify-between rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:-translate-y-1 hover:border-[color:var(--accent)]"
+              >
+                <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
+                  <Instagram size={20} /> Instagram
+                </span>
+                <span className="text-sm text-[color:var(--muted)]">Perfil público</span>
               </a>
             </div>
           </div>
