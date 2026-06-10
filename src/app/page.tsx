@@ -1,17 +1,19 @@
-// C:\Users\u s u á r i o\Documents\Portfólio\src\app\page.tsx
-// O que é: O entrypoint principal da página.
-// O que fiz de novo: Inseri o componente <Loader /> para a introdução fluída.
-
-import Hero from "@/components/sections/Hero";
 import CaseStudies from "@/components/sections/CaseStudies";
+import Contact from "@/components/sections/Contact";
+import Hero from "@/components/sections/Hero";
+import Services from "@/components/sections/Services";
+import Stack from "@/components/sections/Stack";
 import Loader from "@/components/ui/Loader";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col bg-white">
+    <main className="min-h-screen overflow-hidden bg-[color:var(--bg)] text-[color:var(--text)]">
       <Loader />
       <Hero />
+      <Services />
       <CaseStudies />
+      <Stack />
+      <Contact />
     </main>
   );
 }
