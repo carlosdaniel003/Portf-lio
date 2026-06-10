@@ -1,24 +1,34 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Header from "@/components/ui/Header";
 import "./globals.css";
-import Sidebar from "@/components/ui/Sidebar";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "Carlos Daniel | Full Stack Developer",
-  description: "Sistemas Inteligentes e Automação Industrial",
+  description:
+    "Portfólio de Carlos Daniel: sistemas industriais, IA aplicada, visão computacional, automação e desenvolvimento full stack.",
+  keywords: [
+    "Carlos Daniel",
+    "Full Stack Developer",
+    "Portfólio",
+    "IA",
+    "Visão Computacional",
+    "Automação Industrial",
+    "Next.js",
+    "Python",
+  ],
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode; }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className="scroll-smooth">
-      <body className={`${inter.className} flex min-h-screen`}>
-        <Sidebar />
-        {/* Adiciona margem à esquerda para o sidebar em telas grandes */}
-        <div className="flex-1 md:ml-64 relative">
-          {children}
-        </div>
+    <html lang="pt-BR" className="scroll-smooth" suppressHydrationWarning>
+      <body className={inter.className}>
+        <Header />
+        {children}
       </body>
     </html>
   );
