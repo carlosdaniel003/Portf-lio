@@ -10,7 +10,7 @@ export default function AboutMe() {
   return (
     <section id="sobre" className="relative py-24">
       <div className="portfolio-container">
-        <div className="grid gap-8 lg:grid-cols-[3fr_1fr]">
+        <div className="grid gap-8">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -105,12 +105,12 @@ export default function AboutMe() {
               <p className="mb-4 text-xs font-black uppercase tracking-[0.28em] text-[color:var(--accent)]">
                 Base técnica
               </p>
-              <h3 className="text-3xl font-black tracking-[-0.04em] text-[color:var(--text)] lg:text-2xl">
+              <h3 className="max-w-3xl text-3xl font-black tracking-[-0.04em] text-[color:var(--text)] sm:text-4xl">
                 A ponte entre chão de fábrica e software.
               </h3>
             </div>
 
-            <div className="grid gap-4">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               {aboutProfile.technicalBase.map((item, index) => (
                 <article
                   key={item.title}
@@ -119,12 +119,12 @@ export default function AboutMe() {
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
                     Base 0{index + 1}
                   </p>
-                  <h4 className="mt-3 text-lg font-black text-[color:var(--text)] lg:text-base">
-                    {item.title}
-                  </h4>
-                  <p className="mt-3 text-sm leading-7 text-[color:var(--muted)] lg:text-xs lg:leading-6">
-                    {item.description}
-                  </p>
+                  <h4 className="mt-3 text-lg font-black text-[color:var(--text)]">
+  {item.title}
+</h4>
+<p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">
+  {item.description}
+</p>
                 </article>
               ))}
             </div>
@@ -321,7 +321,7 @@ export default function AboutMe() {
     <div className="relative mt-12">
       <div className="absolute left-[21px] top-0 h-full w-px bg-gradient-to-b from-[color:var(--accent)] via-[color:var(--line)] to-transparent lg:left-1/2 lg:-translate-x-1/2" />
 
-      <div className="grid gap-8">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {aboutProfile.experiences.map((experience, index) => (
           <motion.article
             key={`${experience.company}-${experience.period}`}
