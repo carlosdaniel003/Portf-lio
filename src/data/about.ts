@@ -54,7 +54,7 @@ export const aboutProfile: AboutProfile = {
     },
     {
       company: "Tomatec",
-      role: "Técnico de Reparo",
+      role: "Montador",
       period: "03/2024 — 10/2024",
       description:
         "Montagem de produtos eletrônicos, organização de linha, abastecimento operacional e apoio ao fluxo produtivo.",
@@ -68,7 +68,7 @@ export const aboutProfile: AboutProfile = {
     },
     {
       company: "Suzuki Motos do Brasil",
-      role: "Assistente Administrativo",
+      role: "Aprendiz Administrativo",
       period: "10/2021 — 09/2022",
       description:
         "Suporte administrativo para engenharia e importação, controle documental e organização de informações técnicas.",

@@ -15,6 +15,8 @@ export type Project = {
   repoUrl: string;
   demoUrl?: string;
   accent: string;
+  thumbnailUrl?: string;
+  coverUrl?: string;
 };
 
 export type Service = {

@@ -1,10 +1,21 @@
+// src\components\sections\CaseStudies.tsx
 "use client";
 
 import { projectsData } from "@/data/portfolio";
-import { motion } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight, Layers3 } from "lucide-react";
+import { useState } from "react";
 
 export default function CaseStudies() {
+  const [selectedProjectId, setSelectedProjectId] = useState(projectsData[0].id);
+
+  const selectedProject =
+    projectsData.find((project) => project.id === selectedProjectId) ?? projectsData[0];
+
+  const selectedProjectIndex = projectsData.findIndex(
+    (project) => project.id === selectedProject.id
+  );
+
   return (
     <section id="projetos" className="relative py-24">
       <div className="portfolio-container">
@@ -14,67 +25,184 @@ export default function CaseStudies() {
               Projetos reais
             </p>
             <h2 className="text-4xl font-black tracking-[-0.04em] text-[color:var(--text)] sm:text-5xl">
-              Cases que mostram o que eu consigo entregar de ponta a ponta.
+              Selecione um sistema e veja o case completo.
             </h2>
           </div>
+
           <p className="max-w-md text-sm leading-7 text-[color:var(--muted)]">
-            Cada projeto é apresentado como produto: problema, solução, impacto, tecnologias e links para código ou demonstração.
+            Os projetos são apresentados como produtos: problema, solução, impacto,
+            tecnologias, destaques e links para código ou demonstração.
           </p>
         </div>
 
-        <div className="grid gap-6">
-          {projectsData.map((project, index) => (
-            <motion.article
-              key={project.id}
-              initial={{ opacity: 0, y: 26 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-90px" }}
-              transition={{ duration: 0.5, delay: index * 0.04 }}
-              className="glass-card group overflow-hidden rounded-[2rem]"
-            >
-              <div className="grid gap-0 lg:grid-cols-[0.86fr_1.14fr]">
-                <div className="relative min-h-[280px] overflow-hidden border-b border-[color:var(--line)] bg-[color:var(--panel-strong)] p-6 lg:border-b-0 lg:border-r">
-                  <div className={`absolute inset-0 bg-gradient-to-br ${project.accent} opacity-20`} />
-                  <div className="soft-grid absolute inset-0 opacity-40" />
-                  <div className="relative z-10 flex h-full flex-col justify-between">
-                    <div>
-                      <div className="mb-5 inline-flex rounded-full border border-white/15 bg-black/20 px-3 py-1 text-xs font-black uppercase tracking-[0.2em] text-white backdrop-blur-md">
-                        {project.category}
-                      </div>
-                      <h3 className="text-4xl font-black tracking-[-0.05em] text-white sm:text-5xl">
-                        {project.shortTitle}
-                      </h3>
-                    </div>
-
-                    <div className="mt-10 rounded-3xl border border-white/15 bg-black/30 p-5 text-white backdrop-blur-xl">
-                      <p className="text-xs font-black uppercase tracking-[0.22em] text-white/60">Status</p>
-                      <p className="mt-2 text-lg font-black">{project.status}</p>
-                    </div>
-                  </div>
+        <div className="glass-card overflow-hidden rounded-[2.5rem]">
+          <div className="grid gap-0 lg:grid-cols-[0.82fr_1.18fr]">
+            <aside className="border-b border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 sm:p-6 lg:border-b-0 lg:border-r">
+              <div className="mb-6 flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.22em] text-[color:var(--accent)]">
+                    Project Deck
+                  </p>
+                  <h3 className="mt-2 text-2xl font-black tracking-[-0.04em] text-[color:var(--text)]">
+                    Escolha um projeto
+                  </h3>
                 </div>
 
-                <div className="p-6 sm:p-8 lg:p-10">
-                  <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
+                <div className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel)] text-[color:var(--accent)]">
+                  <Layers3 size={22} />
+                </div>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2 lg:max-h-[780px] lg:grid-cols-1 lg:overflow-y-auto lg:pr-2">
+                {projectsData.map((project, index) => {
+                  const isSelected = project.id === selectedProject.id;
+
+                  return (
+                    <button
+                      key={project.id}
+                      type="button"
+                      onClick={() => setSelectedProjectId(project.id)}
+                      className={
+                        isSelected
+                          ? "group relative overflow-hidden rounded-[1.6rem] border border-[color:var(--accent)] bg-[color:var(--bg)] p-4 text-left shadow-[0_0_42px_color-mix(in_srgb,var(--accent)_14%,transparent)] transition"
+                          : "group relative overflow-hidden rounded-[1.6rem] border border-[color:var(--line)] bg-[color:var(--panel)] p-4 text-left transition hover:-translate-y-1 hover:border-[color:var(--accent)] hover:bg-[color:var(--bg)]"
+                      }
+                    >
+                      <div className={`absolute inset-0 bg-gradient-to-br ${project.accent} opacity-0 transition group-hover:opacity-10 ${isSelected ? "opacity-10" : ""}`} />
+
+                      <div className="relative z-10 flex gap-4">
+                        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)]">
+                          {project.thumbnailUrl ? (
+                            <img
+                              src={project.thumbnailUrl}
+                              alt={project.shortTitle}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <div className="relative grid h-full w-full place-items-center">
+                              <div className={`absolute inset-0 bg-gradient-to-br ${project.accent} opacity-25`} />
+                              <div className="soft-grid absolute inset-0 opacity-30" />
+                              <span className="relative z-10 text-lg font-black text-[color:var(--text)]">
+                                {project.shortTitle.slice(0, 2).toUpperCase()}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-start justify-between gap-3">
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
+                              Case {String(index + 1).padStart(2, "0")}
+                            </p>
+
+                            <span className="rounded-full border border-[color:var(--line)] px-2 py-1 text-[9px] font-black uppercase tracking-[0.14em] text-[color:var(--muted)]">
+                              {project.status}
+                            </span>
+                          </div>
+
+                          <h4 className="mt-3 truncate text-lg font-black text-[color:var(--text)]">
+                            {project.shortTitle}
+                          </h4>
+
+                          <p className="mt-1 text-xs font-bold uppercase tracking-[0.14em] text-[color:var(--muted)]">
+                            {project.category}
+                          </p>
+
+                          <div className="mt-3 flex flex-wrap gap-1.5">
+                            {project.technologies.slice(0, 3).map((tech) => (
+                              <span
+                                key={tech}
+                                className="rounded-full bg-[color:var(--accent)]/10 px-2 py-1 text-[9px] font-black uppercase tracking-[0.12em] text-[color:var(--accent)]"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </aside>
+
+            <div className="p-5 sm:p-6 lg:p-8">
+              <AnimatePresence mode="wait">
+                <motion.article
+                  key={selectedProject.id}
+                  initial={{ opacity: 0, y: 18 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -18 }}
+                  transition={{ duration: 0.28 }}
+                  className="grid gap-6"
+                >
+                  <div className="relative min-h-[320px] overflow-hidden rounded-[2rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)]">
+                    {selectedProject.coverUrl ? (
+                      <img
+                        src={selectedProject.coverUrl}
+                        alt={selectedProject.title}
+                        className="absolute inset-0 h-full w-full object-cover"
+                      />
+                    ) : (
+                      <>
+                        <div className={`absolute inset-0 bg-gradient-to-br ${selectedProject.accent} opacity-25`} />
+                        <div className="soft-grid absolute inset-0 opacity-40" />
+                      </>
+                    )}
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--bg)] via-[color:var(--bg)]/35 to-transparent" />
+
+                    <div className="relative z-10 flex min-h-[320px] flex-col justify-between p-6 sm:p-8">
+                      <div className="flex flex-wrap items-center justify-between gap-4">
+                        <span className="rounded-full border border-white/15 bg-black/25 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white backdrop-blur-xl">
+                          {selectedProject.category}
+                        </span>
+
+                        <span className="rounded-full border border-white/15 bg-black/25 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/75 backdrop-blur-xl">
+                          Case {String(selectedProjectIndex + 1).padStart(2, "0")}
+                        </span>
+                      </div>
+
+                      <div>
+                        <p className="mb-3 text-xs font-black uppercase tracking-[0.22em] text-white/65">
+                          Projeto selecionado
+                        </p>
+
+                        <h3 className="max-w-3xl text-5xl font-black tracking-[-0.06em] text-white sm:text-6xl">
+                          {selectedProject.shortTitle}
+                        </h3>
+
+                        <p className="mt-4 max-w-2xl text-sm font-bold uppercase tracking-[0.18em] text-white/70">
+                          {selectedProject.status}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col justify-between gap-5 rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 sm:flex-row sm:items-start">
                     <div>
-                      <p className="text-xs font-black uppercase tracking-[0.24em] text-[color:var(--accent)]">
-                        Case 0{index + 1}
+                      <p className="text-xs font-black uppercase tracking-[0.22em] text-[color:var(--accent)]">
+                        Case completo
                       </p>
-                      <h3 className="mt-3 text-2xl font-black text-[color:var(--text)] sm:text-3xl">
-                        {project.title}
+
+                      <h3 className="mt-3 text-3xl font-black tracking-[-0.04em] text-[color:var(--text)]">
+                        {selectedProject.title}
                       </h3>
                     </div>
-                    <div className="flex gap-2">
+
+                    <div className="flex flex-wrap gap-2">
                       <a
-                        href={project.repoUrl}
+                        href={selectedProject.repoUrl}
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex items-center gap-2 rounded-full border border-[color:var(--line)] px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-[color:var(--text)] transition hover:border-[color:var(--accent)]"
                       >
                         Código <ArrowUpRight size={14} />
                       </a>
-                      {project.demoUrl && (
+
+                      {selectedProject.demoUrl && (
                         <a
-                          href={project.demoUrl}
+                          href={selectedProject.demoUrl}
                           target="_blank"
                           rel="noreferrer"
                           className="inline-flex items-center gap-2 rounded-full bg-[color:var(--accent)] px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-[#04110d] transition hover:-translate-y-0.5"
@@ -85,27 +213,47 @@ export default function CaseStudies() {
                     </div>
                   </div>
 
-                  <div className="grid gap-5 md:grid-cols-3">
-                    <div>
-                      <p className="mb-2 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--muted)]">Problema</p>
-                      <p className="text-sm leading-7 text-[color:var(--muted)]">{project.problem}</p>
+                  <div className="grid gap-4 md:grid-cols-3">
+                    <div className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
+                      <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
+                        Problema
+                      </p>
+                      <p className="text-sm leading-7 text-[color:var(--muted)]">
+                        {selectedProject.problem}
+                      </p>
                     </div>
-                    <div>
-                      <p className="mb-2 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--muted)]">Solução</p>
-                      <p className="text-sm leading-7 text-[color:var(--muted)]">{project.solution}</p>
+
+                    <div className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
+                      <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
+                        Solução
+                      </p>
+                      <p className="text-sm leading-7 text-[color:var(--muted)]">
+                        {selectedProject.solution}
+                      </p>
                     </div>
-                    <div>
-                      <p className="mb-2 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--muted)]">Impacto</p>
-                      <p className="text-sm leading-7 text-[color:var(--muted)]">{project.impact}</p>
+
+                    <div className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
+                      <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
+                        Impacto
+                      </p>
+                      <p className="text-sm leading-7 text-[color:var(--muted)]">
+                        {selectedProject.impact}
+                      </p>
                     </div>
                   </div>
 
-                  <div className="mt-8 grid gap-5 md:grid-cols-[1fr_0.9fr]">
-                    <div className="rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
-                      <p className="mb-4 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">Destaques</p>
+                  <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+                    <div className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
+                      <p className="mb-4 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
+                        Destaques
+                      </p>
+
                       <ul className="grid gap-3 sm:grid-cols-2">
-                        {project.highlights.map((item) => (
-                          <li key={item} className="flex gap-3 text-sm font-semibold text-[color:var(--text)]">
+                        {selectedProject.highlights.map((item) => (
+                          <li
+                            key={item}
+                            className="flex gap-3 text-sm font-semibold leading-6 text-[color:var(--text)]"
+                          >
                             <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--accent)]" />
                             {item}
                           </li>
@@ -113,10 +261,13 @@ export default function CaseStudies() {
                       </ul>
                     </div>
 
-                    <div className="rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
-                      <p className="mb-4 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">Stack</p>
+                    <div className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
+                      <p className="mb-4 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
+                        Stack
+                      </p>
+
                       <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech) => (
+                        {selectedProject.technologies.map((tech) => (
                           <span
                             key={tech}
                             className="rounded-full border border-[color:var(--line)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[color:var(--muted)]"
@@ -127,10 +278,10 @@ export default function CaseStudies() {
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            </motion.article>
-          ))}
+                </motion.article>
+              </AnimatePresence>
+            </div>
+          </div>
         </div>
       </div>
     </section>
