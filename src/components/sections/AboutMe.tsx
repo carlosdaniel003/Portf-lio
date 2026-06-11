@@ -319,10 +319,10 @@ export default function AboutMe() {
     </div>
 
     <div className="relative mt-12">
-      <div className="absolute left-[21px] top-0 h-full w-px bg-gradient-to-b from-[color:var(--accent)] via-[color:var(--line)] to-transparent lg:left-1/2 lg:-translate-x-1/2" />
+  <div className="absolute left-[21px] top-0 h-full w-px bg-gradient-to-b from-[color:var(--accent)] via-[color:var(--line)] to-transparent lg:left-1/2 lg:-translate-x-1/2" />
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {aboutProfile.experiences.map((experience, index) => (
+  <div className="grid gap-8">
+    {aboutProfile.experiences.map((experience, index) => (
           <motion.article
             key={`${experience.company}-${experience.period}`}
             initial={{ opacity: 0, y: 22 }}
