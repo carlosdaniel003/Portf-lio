@@ -1,3 +1,4 @@
+// src\components\sections\Hero.tsx
 "use client";
 
 import InteractiveBackground from "@/components/ui/InteractiveBackground";
@@ -13,7 +14,7 @@ const pillars = [
 
 export default function Hero() {
   return (
-    <section id="inicio" className="relative flex min-h-screen items-center overflow-hidden pt-24">
+    <section id="inicio" className="relative flex min-h-[760px] items-start overflow-hidden pt-12 sm:pt-16 lg:pt-20">
       <InteractiveBackground />
 
       <div className="portfolio-container relative z-10 grid items-center gap-12 py-20 lg:grid-cols-[1.05fr_0.95fr]">
@@ -26,7 +27,7 @@ export default function Hero() {
             <span className="h-2 w-2 rounded-full bg-[color:var(--accent)] shadow-[0_0_18px_var(--accent)]" />
             Software para operação real
           </div>
-
+<div className="portfolio-container relative z-10 grid items-center gap-12 py-12 lg:grid-cols-[1.05fr_0.95fr]"></div>
           <h1 className="max-w-5xl text-5xl font-black tracking-[-0.06em] text-[color:var(--text)] sm:text-6xl lg:text-7xl">
             Transformo problemas de fábrica em
             <span className="text-gradient"> sistemas inteligentes.</span>
