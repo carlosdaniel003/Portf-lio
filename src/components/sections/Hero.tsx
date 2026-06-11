@@ -14,10 +14,10 @@ const pillars = [
 
 export default function Hero() {
   return (
-    <section id="inicio" className="relative flex min-h-[760px] items-start overflow-hidden pt-12 sm:pt-16 lg:pt-20">
+    <section id="inicio" className="relative flex min-h-[680px] items-start overflow-hidden pt-0">
       <InteractiveBackground />
 
-      <div className="portfolio-container relative z-10 grid items-center gap-12 py-20 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="portfolio-container relative z-10 grid items-center gap-12 pt-8 pb-16 lg:grid-cols-[1.05fr_0.95fr]">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
@@ -25,9 +25,8 @@ export default function Hero() {
         >
           <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-[color:var(--muted)] backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-[color:var(--accent)] shadow-[0_0_18px_var(--accent)]" />
-            Software para operação real
+            Software para problemas reais
           </div>
-<div className="portfolio-container relative z-10 grid items-center gap-12 py-12 lg:grid-cols-[1.05fr_0.95fr]"></div>
           <h1 className="max-w-5xl text-5xl font-black tracking-[-0.06em] text-[color:var(--text)] sm:text-6xl lg:text-7xl">
             Transformo problemas de fábrica em
             <span className="text-gradient"> sistemas inteligentes.</span>

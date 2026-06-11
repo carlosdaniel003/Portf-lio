@@ -29,10 +29,7 @@ export default function CaseStudies() {
             </h2>
           </div>
 
-          <p className="max-w-md text-sm leading-7 text-[color:var(--muted)]">
-            Os projetos são apresentados como produtos: problema, solução, impacto,
-            tecnologias, destaques e links para código ou demonstração.
-          </p>
+          
         </div>
 
         <div className="glass-card overflow-hidden rounded-[2.5rem]">
