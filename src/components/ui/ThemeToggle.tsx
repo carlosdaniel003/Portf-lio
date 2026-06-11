@@ -1,3 +1,4 @@
+// src\components\ui\ThemeToggle.tsx
 "use client";
 
 import { Monitor, Moon, Sun } from "lucide-react";
@@ -28,7 +29,7 @@ export default function ThemeToggle() {
   if (!ready) {
     return (
       <button
-        className="grid h-10 w-10 place-items-center rounded-full border border-white/10 bg-white/5 text-[color:var(--muted)]"
+        className="grid h-11 w-11 place-items-center rounded-full text-[color:var(--muted)] transition hover:-translate-y-0.5 hover:bg-[color:var(--panel-strong)] hover:text-[color:var(--accent)]"
         aria-label="Carregando tema"
         type="button"
       >
@@ -40,7 +41,7 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="group grid h-10 w-10 place-items-center rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] text-[color:var(--text)] transition hover:-translate-y-0.5 hover:border-[color:var(--accent)]"
+      className="group grid h-11 w-11 place-items-center rounded-full text-[color:var(--muted)] transition hover:-translate-y-0.5 hover:bg-[color:var(--panel-strong)] hover:text-[color:var(--accent)]"
       aria-label={theme === "dark" ? "Ativar tema claro" : "Ativar tema escuro"}
       type="button"
     >

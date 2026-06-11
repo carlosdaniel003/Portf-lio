@@ -1,3 +1,4 @@
+// src\core\types.ts
 export type ProjectStatus = "Em produção" | "Protótipo aprovado" | "Em evolução";
 
 export type Project = {
@@ -20,4 +21,47 @@ export type Service = {
   title: string;
   description: string;
   tags: string[];
+};
+
+export type AboutEducation = {
+  title: string;
+  institution: string;
+  period: string;
+  description: string;
+};
+
+export type AboutExperience = {
+  company: string;
+  role: string;
+  period: string;
+  description: string;
+};
+
+export type AboutTechnicalBase = {
+  title: string;
+  description: string;
+};
+
+export type AboutProfile = {
+  name: string;
+  role: string;
+  location: string;
+  image: string;
+  summary: string;
+  education: AboutEducation[];
+  deliveries: string[];
+  experiences: AboutExperience[];
+  technicalBase: AboutTechnicalBase[];
+};
+
+export type StackTechnology = {
+  name: string;
+  badge: string;
+  usage: string;
+};
+
+export type StackGroup = {
+  title: string;
+  description: string;
+  technologies: StackTechnology[];
 };

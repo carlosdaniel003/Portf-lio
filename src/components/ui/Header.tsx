@@ -1,55 +1,87 @@
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import { Folder, Github, Home, Mail, User } from "lucide-react";
 
 const links = [
-  { label: "Início", href: "#inicio" },
-  { label: "Soluções", href: "#solucoes" },
-  { label: "Projetos", href: "#projetos" },
-  { label: "Stack", href: "#stack" },
-  { label: "Contato", href: "#contato" },
+  {
+    label: "Início",
+    href: "#inicio",
+    icon: Home,
+  },
+  {
+    label: "Sobre",
+    href: "#sobre",
+    icon: User,
+  },
+  {
+    label: "Projetos",
+    href: "#projetos",
+    icon: Folder,
+  },
+  {
+    label: "Contato",
+    href: "#contato",
+    icon: Mail,
+  },
 ];
 
 export default function Header() {
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-[color:var(--line)] bg-[color:var(--bg)]/75 backdrop-blur-2xl">
-      <div className="portfolio-container flex h-16 items-center justify-between gap-5">
-        <a href="#inicio" className="flex items-center gap-3" aria-label="Ir para o início">
-          <span className="grid h-10 w-10 place-items-center rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel)] font-black text-[color:var(--accent)]">
-            CD
-          </span>
-          <span className="hidden leading-tight sm:block">
-            <strong className="block text-sm font-black tracking-tight text-[color:var(--text)]">
-              Carlos Daniel
-            </strong>
-            <span className="block text-xs text-[color:var(--muted)]">
-              Full Stack & Industrial Systems
-            </span>
+    <header className="fixed left-4 top-1/2 z-50 -translate-y-1/2">
+      <nav
+        aria-label="Menu principal"
+        className="flex flex-col items-center gap-3 rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] p-2 shadow-2xl backdrop-blur-2xl"
+      >
+        <a
+          href="#inicio"
+          aria-label="Carlos Daniel - início"
+          className="group relative grid h-11 w-11 place-items-center rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] font-black text-[color:var(--accent)] transition hover:-translate-y-0.5 hover:border-[color:var(--accent)]"
+        >
+          CD
+
+          <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-[color:var(--text)] opacity-0 shadow-xl backdrop-blur-xl transition group-hover:opacity-100 lg:block">
+            Carlos Daniel
           </span>
         </a>
 
-        <nav className="hidden items-center gap-1 rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] p-1 md:flex">
-          {links.map((link) => (
+        <div className="h-px w-7 bg-[color:var(--line)]" />
+
+        {links.map((link) => {
+          const Icon = link.icon;
+
+          return (
             <a
               key={link.href}
               href={link.href}
-              className="rounded-full px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--muted)] transition hover:bg-[color:var(--panel-strong)] hover:text-[color:var(--text)]"
+              aria-label={link.label}
+              className="group relative grid h-11 w-11 place-items-center rounded-full text-[color:var(--muted)] transition hover:-translate-y-0.5 hover:bg-[color:var(--panel-strong)] hover:text-[color:var(--accent)]"
             >
-              {link.label}
-            </a>
-          ))}
-        </nav>
+              <Icon size={18} strokeWidth={2.3} />
 
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
-          <a
-            href="https://github.com/carlosdaniel003"
-            target="_blank"
-            rel="noreferrer"
-            className="hidden rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-[color:var(--text)] transition hover:-translate-y-0.5 hover:border-[color:var(--accent)] lg:inline-flex"
-          >
+              <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-[color:var(--text)] opacity-0 shadow-xl backdrop-blur-xl transition group-hover:opacity-100 lg:block">
+                {link.label}
+              </span>
+            </a>
+          );
+        })}
+
+        <div className="h-px w-7 bg-[color:var(--line)]" />
+
+        <ThemeToggle />
+
+        <a
+          href="https://github.com/carlosdaniel003"
+          target="_blank"
+          rel="noreferrer"
+          aria-label="GitHub"
+          className="group relative grid h-11 w-11 place-items-center rounded-full text-[color:var(--muted)] transition hover:-translate-y-0.5 hover:bg-[color:var(--panel-strong)] hover:text-[color:var(--accent)]"
+        >
+          <Github size={18} strokeWidth={2.3} />
+
+          <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-[color:var(--text)] opacity-0 shadow-xl backdrop-blur-xl transition group-hover:opacity-100 lg:block">
             GitHub
-          </a>
-        </div>
-      </div>
+          </span>
+        </a>
+      </nav>
     </header>
   );
 }
