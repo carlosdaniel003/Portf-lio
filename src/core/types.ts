@@ -17,6 +17,7 @@ export type Project = {
   accent: string;
   thumbnailUrl?: string;
   coverUrl?: string;
+  galleryUrls?: string[];
 };
 
 export type Service = {

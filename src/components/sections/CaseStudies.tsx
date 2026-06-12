@@ -3,8 +3,8 @@
 import TiltCard from "@/components/ui/TiltCard";
 import { projectsData } from "@/data/portfolio";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, Layers3 } from "lucide-react";
-import { useState } from "react";
+import { ArrowUpRight, Image as Images, Layers3 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function CaseStudies() {
   const [selectedProjectId, setSelectedProjectId] = useState(projectsData[0].id);
@@ -15,6 +15,14 @@ export default function CaseStudies() {
   const selectedProjectIndex = projectsData.findIndex(
     (project) => project.id === selectedProject.id
   );
+
+  const galleryImages = selectedProject.galleryUrls ?? [];
+  const firstGalleryImage = galleryImages[0] ?? "";
+  const [selectedGalleryImage, setSelectedGalleryImage] = useState(firstGalleryImage);
+
+  useEffect(() => {
+    setSelectedGalleryImage(firstGalleryImage);
+  }, [firstGalleryImage, selectedProject.id]);
 
   return (
     <section id="projetos" className="relative py-24">
@@ -66,7 +74,11 @@ export default function CaseStudies() {
                           : "group rounded-[1.6rem] border border-[color:var(--line)] bg-[color:var(--panel)] p-4 text-left transition hover:border-[color:var(--accent)] hover:bg-[color:var(--bg)]"
                       }
                     >
-                      <div className={`absolute inset-0 bg-gradient-to-br ${project.accent} opacity-0 transition group-hover:opacity-10 ${isSelected ? "opacity-10" : ""}`} />
+                      <div
+                        className={`absolute inset-0 bg-gradient-to-br ${project.accent} opacity-0 transition group-hover:opacity-10 ${
+                          isSelected ? "opacity-10" : ""
+                        }`}
+                      />
 
                       <div className="relative z-10 flex gap-4">
                         <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)]">
@@ -78,7 +90,9 @@ export default function CaseStudies() {
                             />
                           ) : (
                             <div className="relative grid h-full w-full place-items-center">
-                              <div className={`absolute inset-0 bg-gradient-to-br ${project.accent} opacity-25`} />
+                              <div
+                                className={`absolute inset-0 bg-gradient-to-br ${project.accent} opacity-25`}
+                              />
                               <div className="soft-grid absolute inset-0 opacity-30" />
                               <span className="relative z-10 text-lg font-black text-[color:var(--text)]">
                                 {project.shortTitle.slice(0, 2).toUpperCase()}
@@ -147,7 +161,9 @@ export default function CaseStudies() {
                       />
                     ) : (
                       <>
-                        <div className={`absolute inset-0 bg-gradient-to-br ${selectedProject.accent} opacity-25`} />
+                        <div
+                          className={`absolute inset-0 bg-gradient-to-br ${selectedProject.accent} opacity-25`}
+                        />
                         <div className="soft-grid absolute inset-0 opacity-40" />
                       </>
                     )}
@@ -304,6 +320,77 @@ export default function CaseStudies() {
                       </div>
                     </TiltCard>
                   </div>
+
+                  {galleryImages.length > 0 && (
+                    <TiltCard
+                      as="div"
+                      intensity="subtle"
+                      className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5"
+                    >
+                      <div className="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                        <div>
+                          <p className="text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
+                            Screenshots do sistema
+                          </p>
+                          <h4 className="mt-2 text-2xl font-black tracking-[-0.04em] text-[color:var(--text)]">
+                            Interface em uso real
+                          </h4>
+                        </div>
+
+                        <div className="flex items-center gap-2 rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">
+                          <Images size={14} />
+                          {galleryImages.length} imagem
+                          {galleryImages.length > 1 ? "s" : ""}
+                        </div>
+                      </div>
+
+                      <div className="relative overflow-hidden rounded-[1.4rem] border border-[color:var(--line)] bg-[color:var(--bg)]">
+                        <AnimatePresence mode="wait">
+                          <motion.img
+                            key={selectedGalleryImage}
+                            src={selectedGalleryImage}
+                            alt={`${selectedProject.shortTitle} screenshot`}
+                            initial={{ opacity: 0, scale: 1.02 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.98 }}
+                            transition={{ duration: 0.28 }}
+                            className="h-auto max-h-[520px] w-full object-contain"
+                          />
+                        </AnimatePresence>
+                      </div>
+
+                      {galleryImages.length > 1 && (
+                        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
+                          {galleryImages.map((imageUrl, index) => {
+                            const isActive = selectedGalleryImage === imageUrl;
+
+                            return (
+                              <button
+                                key={imageUrl}
+                                type="button"
+                                onClick={() => setSelectedGalleryImage(imageUrl)}
+                                className={
+                                  isActive
+                                    ? "relative overflow-hidden rounded-2xl border border-[color:var(--accent)] bg-[color:var(--bg)] p-1 shadow-[0_0_26px_color-mix(in_srgb,var(--accent)_20%,transparent)]"
+                                    : "relative overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel)] p-1 transition hover:border-[color:var(--accent)]"
+                                }
+                              >
+                                <img
+                                  src={imageUrl}
+                                  alt={`${selectedProject.shortTitle} miniatura ${index + 1}`}
+                                  className="h-20 w-full rounded-xl object-cover"
+                                />
+
+                                <span className="absolute left-2 top-2 rounded-full bg-black/45 px-2 py-1 text-[9px] font-black text-white backdrop-blur-xl">
+                                  {String(index + 1).padStart(2, "0")}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </TiltCard>
+                  )}
                 </motion.article>
               </AnimatePresence>
             </div>

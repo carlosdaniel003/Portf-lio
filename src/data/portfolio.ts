@@ -1,4 +1,3 @@
-// src/data/portfolio.ts
 import { Project, Service } from "@/core/types";
 
 export const servicesData: Service[] = [
@@ -34,7 +33,7 @@ export const projectsData: Project[] = [
     title: "Skill Map",
     shortTitle: "Skill Map",
     category: "Gestão Operacional",
-    status: "Protótipo aprovado",
+    status: "Em produção",
     problem:
       "Lideranças precisam entender habilidades, frequência e disponibilidade de operadores sem depender de planilhas dispersas.",
     solution:
@@ -51,13 +50,27 @@ export const projectsData: Project[] = [
     repoUrl: "https://github.com/carlosdaniel003/Skill-Map",
     demoUrl: "https://skill-map-sage.vercel.app/",
     accent: "from-emerald-400 to-cyan-400",
+    thumbnailUrl: "/images/projects/skill-map/thumb.jpg",
+    coverUrl: "/images/projects/skill-map/cover.jpg",
+    galleryUrls: [
+      "/images/projects/skill-map/01.jpg",
+      "/images/projects/skill-map/02.jpg",
+      "/images/projects/skill-map/03.jpg",
+      "/images/projects/skill-map/04.jpg",
+      "/images/projects/skill-map/05.jpg",
+      "/images/projects/skill-map/06.jpg",
+      "/images/projects/skill-map/07.jpg",
+      "/images/projects/skill-map/08.jpg",
+      "/images/projects/skill-map/09.jpg",
+      "/images/projects/skill-map/10.jpg",
+    ],
   },
   {
     id: "sigma-q",
     title: "SIGMA-Q: Plataforma Inteligente de Qualidade",
     shortTitle: "SIGMA-Q",
     category: "Qualidade & Indicadores",
-    status: "Em evolução",
+    status: "Em produção",
     problem:
       "Análises de qualidade em planilhas consomem tempo, fragmentam informações e dificultam a identificação rápida das causas críticas.",
     solution:
@@ -73,6 +86,9 @@ export const projectsData: Project[] = [
     ],
     repoUrl: "https://github.com/carlosdaniel003/sigma-q-v5",
     accent: "from-lime-300 to-emerald-500",
+    thumbnailUrl: "/images/projects/sigma-q/thumb.jpg",
+    coverUrl: "/images/projects/sigma-q/cover.jpg",
+    galleryUrls: ["/images/projects/sigma-q/01.jpg"],
   },
   {
     id: "visionx-neural",
@@ -95,13 +111,15 @@ export const projectsData: Project[] = [
     ],
     repoUrl: "https://github.com/carlosdaniel003/visionx-neural",
     accent: "from-cyan-300 to-blue-500",
+    thumbnailUrl: "/images/projects/visionx-neural/thumb.jpg",
+    coverUrl: "/images/projects/visionx-neural/cover.jpg",
   },
   {
     id: "lumus-pci",
     title: "LUMUS-PCI",
     shortTitle: "LUMUS",
     category: "Inspeção de LEDs em PCI",
-    status: "Em evolução",
+    status: "Em produção",
     problem:
       "A validação visual de LEDs em placas PCI é repetitiva, cansativa e sujeita a falhas quando feita apenas por inspeção humana.",
     solution:
@@ -117,6 +135,8 @@ export const projectsData: Project[] = [
     ],
     repoUrl: "https://github.com/carlosdaniel003/LUMUS-PCI",
     accent: "from-green-300 to-emerald-500",
+    thumbnailUrl: "/images/projects/lumus-pci/thumb.jpg",
+    coverUrl: "/images/projects/lumus-pci/cover.jpg",
   },
   {
     id: "central-aprovacoes",
@@ -139,6 +159,12 @@ export const projectsData: Project[] = [
     ],
     repoUrl: "https://github.com/carlosdaniel003/Central-de-Aprovacoes-CA",
     accent: "from-teal-300 to-sky-500",
+    thumbnailUrl: "/images/projects/central-aprovacoes/thumb.jpg",
+    coverUrl: "/images/projects/central-aprovacoes/cover.jpg",
+    galleryUrls: [
+      "/images/projects/central-aprovacoes/01.jpg",
+      "/images/projects/central-aprovacoes/02.jpg",
+    ],
   },
 ];
 

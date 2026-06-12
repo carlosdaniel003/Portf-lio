@@ -34,7 +34,7 @@ export default function AboutMe() {
                       <img
                         src={aboutProfile.image}
                         alt={aboutProfile.name}
-                        className="h-full w-full object-cover object-[center_18%]"
+                        className="h-full w-full object-cover object-[center_38%]"
                       />
 
                       <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
