@@ -4,7 +4,6 @@ import Contact from "@/components/sections/Contact";
 import Hero from "@/components/sections/Hero";
 import InteractiveBackground from "@/components/ui/InteractiveBackground";
 import Loader from "@/components/ui/Loader";
-import ScrollReveal from "@/components/ui/ScrollReveal";
 import SectionDivider from "@/components/ui/SectionDivider";
 
 export default function Home() {
@@ -17,22 +16,13 @@ export default function Home() {
         <Hero />
 
         <SectionDivider index="01" title="Identidade técnica" />
-
-        <ScrollReveal variant="up">
-          <AboutMe />
-        </ScrollReveal>
+        <AboutMe />
 
         <SectionDivider index="02" title="Projetos reais" />
-
-        <ScrollReveal variant="scale">
-          <CaseStudies />
-        </ScrollReveal>
+        <CaseStudies />
 
         <SectionDivider index="03" title="Contato direto" />
-
-        <ScrollReveal variant="up">
-          <Contact />
-        </ScrollReveal>
+        <Contact />
       </div>
     </main>
   );

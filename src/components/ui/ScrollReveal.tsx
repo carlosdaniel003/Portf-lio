@@ -1,3 +1,4 @@
+// src\components\ui\ScrollReveal.tsx
 "use client";
 
 import { motion } from "framer-motion";
