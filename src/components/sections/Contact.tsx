@@ -3,10 +3,9 @@ import TiltCard from "@/components/ui/TiltCard";
 import { Github, Instagram, Linkedin, Mail, MessageCircle } from "lucide-react";
 
 const whatsappUrl =
-  "https://wa.me/5592982890208?text=Ol%C3%A1%2C%20Carlos%20Daniel.%20Vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar%20sobre%20uma%20oportunidade%20ou%20projeto.";
-
+  "https://wa.me/5592982890208?text=Ol%C3%A1%2C%20Carlos%20Daniel.%20Vi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar%20sobre%20uma%20solu%C3%A7%C3%A3o%2C%20projeto%20ou%20oportunidade%20t%C3%A9cnica.";
 const emailUrl =
-  "mailto:carlos.daniel.simoes.003@gmail.com?subject=Contato%20pelo%20portf%C3%B3lio&body=Ol%C3%A1%2C%20Carlos%20Daniel.%0A%0AVi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar%20sobre%20uma%20oportunidade%20ou%20projeto.";
+  "mailto:carlos.daniel.simoes.003@gmail.com?subject=Contato%20pelo%20portf%C3%B3lio&body=Ol%C3%A1%2C%20Carlos%20Daniel.%0A%0AVi%20seu%20portf%C3%B3lio%20e%20gostaria%20de%20conversar%20sobre%20uma%20solu%C3%A7%C3%A3o%2C%20projeto%20ou%20oportunidade%20t%C3%A9cnica.";
 
 export default function Contact() {
   return (
@@ -21,12 +20,13 @@ export default function Contact() {
                 </p>
 
                 <h2 className="max-w-3xl text-4xl font-black tracking-[-0.05em] text-[color:var(--text)] sm:text-6xl">
-                  Precisa de alguém que entregue software com visão de problema real?
+                  Tem um problema que precise de solução?
                 </h2>
 
                 <p className="mt-6 max-w-2xl text-sm leading-7 text-[color:var(--muted)]">
-                  Estou aberto a oportunidades como desenvolvedor e também a projetos externos de sistemas web,
-                  dashboards, automação, IA aplicada e visão computacional.
+                  Atuo transformando processos manuais, planilhas, falhas recorrentes e necessidades operacionais
+em sistemas web, dashboards, automações e soluções com IA aplicada. Se você precisa desenvolver
+uma solução, validar uma ideia ou conversar sobre projetos técnicos, envie uma mensagem.
                 </p>
 
                 <div className="mt-8 grid gap-3 sm:grid-cols-[1fr_0.78fr]">
@@ -98,21 +98,21 @@ export default function Contact() {
                 </p>
 
                 <h3 className="mt-3 text-2xl font-black tracking-[-0.04em] text-[color:var(--text)]">
-                  Vamos conversar sobre software, automação ou oportunidade dev.
+                  Vamos solucionar seu problema?
                 </h3>
 
                 <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
                   Use o WhatsApp para contato rápido ou acesse meus perfis para ver projetos,
-                  código, trajetória e presença profissional.
+código, trajetória técnica e soluções desenvolvidas em ambiente industrial.
                 </p>
 
                 <div className="mt-5 grid gap-2 sm:grid-cols-2">
                   <span className="rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] px-4 py-2 text-center text-[11px] font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">
-                    Freelance
+                    Soluções sob medida
                   </span>
 
                   <span className="rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] px-4 py-2 text-center text-[11px] font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">
-                    Vagas Dev
+                    Projetos técnicos e industriais
                   </span>
                 </div>
               </TiltCard>
