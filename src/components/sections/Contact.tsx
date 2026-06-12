@@ -1,4 +1,3 @@
-// src\components\sections\Contact.tsx
 import TiltCard from "@/components/ui/TiltCard";
 import { Github, Instagram, Linkedin, Mail, MessageCircle } from "lucide-react";
 
@@ -13,43 +12,49 @@ export default function Contact() {
     <section id="contato" className="relative py-24">
       <div className="portfolio-container">
         <div className="glass-card overflow-hidden rounded-[2.5rem] p-8 sm:p-12 lg:p-16">
-          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-end">
-            <div>
-              <p className="mb-4 text-xs font-black uppercase tracking-[0.28em] text-[color:var(--accent)]">
-                Próximos passos
-              </p>
+          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch">
+            <div className="flex flex-col justify-between">
+              <div>
+                <p className="mb-4 text-xs font-black uppercase tracking-[0.28em] text-[color:var(--accent)]">
+                  Próximos passos
+                </p>
 
-              <h2 className="max-w-3xl text-4xl font-black tracking-[-0.05em] text-[color:var(--text)] sm:text-6xl">
-                Precisa de alguém que entregue software com visão de problema real?
-              </h2>
+                <h2 className="max-w-3xl text-4xl font-black tracking-[-0.05em] text-[color:var(--text)] sm:text-6xl">
+                  Precisa de alguém que entregue software com visão de problema real?
+                </h2>
 
-              <p className="mt-6 max-w-2xl text-sm leading-7 text-[color:var(--muted)]">
-                Estou aberto a oportunidades como desenvolvedor e também a projetos externos de sistemas web,
-                dashboards, automação, IA aplicada e visão computacional.
-              </p>
+                <p className="mt-6 max-w-2xl text-sm leading-7 text-[color:var(--muted)]">
+                  Estou aberto a oportunidades como desenvolvedor e também a projetos externos de sistemas web,
+                  dashboards, automação, IA aplicada e visão computacional.
+                </p>
 
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <TiltCard
-                  as="a"
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  intensity="subtle"
-                  className="inline-flex items-center justify-center gap-3 rounded-full bg-[color:var(--accent)] px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-[#04110d] transition hover:shadow-[0_18px_50px_color-mix(in_srgb,var(--accent)_28%,transparent)]"
-                >
-                  <MessageCircle size={18} />
-                  Falar no WhatsApp
-                </TiltCard>
+                <div className="mt-8 grid gap-3 sm:grid-cols-[1fr_0.78fr]">
+                  <TiltCard
+                    as="a"
+                    href={whatsappUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    intensity="subtle"
+                    className="rounded-full bg-[color:var(--accent)] px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-[#04110d] transition hover:shadow-[0_18px_50px_color-mix(in_srgb,var(--accent)_28%,transparent)]"
+                  >
+                    <span className="flex items-center justify-center gap-3">
+                      <MessageCircle size={18} />
+                      Falar no WhatsApp
+                    </span>
+                  </TiltCard>
 
-                <TiltCard
-                  as="a"
-                  href={emailUrl}
-                  intensity="subtle"
-                  className="inline-flex items-center justify-center gap-3 rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-[color:var(--text)] transition hover:border-[color:var(--accent)]"
-                >
-                  <Mail size={18} />
-                  Enviar e-mail
-                </TiltCard>
+                  <TiltCard
+                    as="a"
+                    href={emailUrl}
+                    intensity="subtle"
+                    className="rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-[color:var(--text)] transition hover:border-[color:var(--accent)]"
+                  >
+                    <span className="flex items-center justify-center gap-3">
+                      <Mail size={18} />
+                      Enviar e-mail
+                    </span>
+                  </TiltCard>
+                </div>
               </div>
 
               <div className="mt-6 grid gap-3 text-sm text-[color:var(--muted)] sm:grid-cols-2">
@@ -83,17 +88,52 @@ export default function Contact() {
 
             <div className="grid gap-3">
               <TiltCard
+                as="div"
+                intensity="subtle"
+                className="rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-6"
+              >
+                <p className="text-xs font-black uppercase tracking-[0.22em] text-[color:var(--accent)]">
+                  Contato direto
+                </p>
+
+                <h3 className="mt-3 text-2xl font-black tracking-[-0.04em] text-[color:var(--text)]">
+                  Vamos conversar sobre software, automação ou oportunidade dev.
+                </h3>
+
+                <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
+                  Use o WhatsApp para contato rápido ou acesse meus perfis para ver projetos,
+                  código, trajetória e presença profissional.
+                </p>
+
+                <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                  <span className="rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] px-4 py-2 text-center text-[11px] font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">
+                    Freelance
+                  </span>
+
+                  <span className="rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] px-4 py-2 text-center text-[11px] font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">
+                    Vagas Dev
+                  </span>
+                </div>
+              </TiltCard>
+
+              <TiltCard
                 as="a"
                 href="https://www.linkedin.com/in/carlosdaniel003"
                 target="_blank"
                 rel="noreferrer"
                 intensity="subtle"
-                className="group flex items-center justify-between rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
+                className="group rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
               >
-                <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
-                  <Linkedin size={20} /> LinkedIn
+                <span className="flex w-full items-center justify-between gap-4">
+                  <span>
+                    <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
+                      <Linkedin size={20} /> LinkedIn
+                    </span>
+                    <span className="mt-1 block text-sm text-[color:var(--muted)]">
+                      Contato profissional
+                    </span>
+                  </span>
                 </span>
-                <span className="text-sm text-[color:var(--muted)]">Contato profissional</span>
               </TiltCard>
 
               <TiltCard
@@ -102,12 +142,18 @@ export default function Contact() {
                 target="_blank"
                 rel="noreferrer"
                 intensity="subtle"
-                className="group flex items-center justify-between rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
+                className="group rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
               >
-                <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
-                  <Github size={20} /> GitHub
+                <span className="flex w-full items-center justify-between gap-4">
+                  <span>
+                    <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
+                      <Github size={20} /> GitHub
+                    </span>
+                    <span className="mt-1 block text-sm text-[color:var(--muted)]">
+                      Ver código
+                    </span>
+                  </span>
                 </span>
-                <span className="text-sm text-[color:var(--muted)]">Ver código</span>
               </TiltCard>
 
               <TiltCard
@@ -116,12 +162,18 @@ export default function Contact() {
                 target="_blank"
                 rel="noreferrer"
                 intensity="subtle"
-                className="group flex items-center justify-between rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
+                className="group rounded-3xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
               >
-                <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
-                  <Instagram size={20} /> Instagram
+                <span className="flex w-full items-center justify-between gap-4">
+                  <span>
+                    <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
+                      <Instagram size={20} /> Instagram
+                    </span>
+                    <span className="mt-1 block text-sm text-[color:var(--muted)]">
+                      Perfil público
+                    </span>
+                  </span>
                 </span>
-                <span className="text-sm text-[color:var(--muted)]">Perfil público</span>
               </TiltCard>
             </div>
           </div>

@@ -1,3 +1,4 @@
+// src\components\ui\InteractiveBackground.tsx
 "use client";
 
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";

@@ -1,3 +1,4 @@
+// src\app\page.tsx
 import AboutMe from "@/components/sections/AboutMe";
 import CaseStudies from "@/components/sections/CaseStudies";
 import Contact from "@/components/sections/Contact";
