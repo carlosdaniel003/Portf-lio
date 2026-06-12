@@ -174,13 +174,20 @@ export default function NeuralCircuitCore() {
               <stop offset="100%" stopColor="var(--accent-2)" stopOpacity="0.12" />
             </linearGradient>
 
-            <filter id="softGlow">
-              <feGaussianBlur stdDeviation="1.8" result="coloredBlur" />
-              <feMerge>
-                <feMergeNode in="coloredBlur" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
+            <filter
+  id="softGlow"
+  x="-80%"
+  y="-80%"
+  width="260%"
+  height="260%"
+  colorInterpolationFilters="sRGB"
+>
+  <feGaussianBlur stdDeviation="1.8" result="coloredBlur" />
+  <feMerge>
+    <feMergeNode in="coloredBlur" />
+    <feMergeNode in="SourceGraphic" />
+  </feMerge>
+</filter>
           </defs>
 
           <motion.circle

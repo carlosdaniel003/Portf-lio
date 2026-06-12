@@ -1,6 +1,7 @@
 // src\components\sections\CaseStudies.tsx
 "use client";
 
+import TiltCard from "@/components/ui/TiltCard";
 import { projectsData } from "@/data/portfolio";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Layers3 } from "lucide-react";
@@ -28,8 +29,6 @@ export default function CaseStudies() {
               Selecione um sistema e veja o case completo.
             </h2>
           </div>
-
-          
         </div>
 
         <div className="glass-card overflow-hidden rounded-[2.5rem]">
@@ -55,14 +54,16 @@ export default function CaseStudies() {
                   const isSelected = project.id === selectedProject.id;
 
                   return (
-                    <button
+                    <TiltCard
+                      as="button"
                       key={project.id}
                       type="button"
                       onClick={() => setSelectedProjectId(project.id)}
+                      intensity="medium"
                       className={
                         isSelected
-                          ? "group relative overflow-hidden rounded-[1.6rem] border border-[color:var(--accent)] bg-[color:var(--bg)] p-4 text-left shadow-[0_0_42px_color-mix(in_srgb,var(--accent)_14%,transparent)] transition"
-                          : "group relative overflow-hidden rounded-[1.6rem] border border-[color:var(--line)] bg-[color:var(--panel)] p-4 text-left transition hover:-translate-y-1 hover:border-[color:var(--accent)] hover:bg-[color:var(--bg)]"
+                          ? "group rounded-[1.6rem] border border-[color:var(--accent)] bg-[color:var(--bg)] p-4 text-left shadow-[0_0_42px_color-mix(in_srgb,var(--accent)_14%,transparent)] transition"
+                          : "group rounded-[1.6rem] border border-[color:var(--line)] bg-[color:var(--panel)] p-4 text-left transition hover:border-[color:var(--accent)] hover:bg-[color:var(--bg)]"
                       }
                     >
                       <div className={`absolute inset-0 bg-gradient-to-br ${project.accent} opacity-0 transition group-hover:opacity-10 ${isSelected ? "opacity-10" : ""}`} />
@@ -117,7 +118,7 @@ export default function CaseStudies() {
                           </div>
                         </div>
                       </div>
-                    </button>
+                    </TiltCard>
                   );
                 })}
               </div>
@@ -133,7 +134,11 @@ export default function CaseStudies() {
                   transition={{ duration: 0.28 }}
                   className="grid gap-6"
                 >
-                  <div className="relative min-h-[320px] overflow-hidden rounded-[2rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)]">
+                  <TiltCard
+                    as="div"
+                    intensity="subtle"
+                    className="relative min-h-[320px] rounded-[2rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)]"
+                  >
                     {selectedProject.coverUrl ? (
                       <img
                         src={selectedProject.coverUrl}
@@ -174,9 +179,13 @@ export default function CaseStudies() {
                         </p>
                       </div>
                     </div>
-                  </div>
+                  </TiltCard>
 
-                  <div className="flex flex-col justify-between gap-5 rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 sm:flex-row sm:items-start">
+                  <TiltCard
+                    as="div"
+                    intensity="subtle"
+                    className="flex flex-col justify-between gap-5 rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 sm:flex-row sm:items-start"
+                  >
                     <div>
                       <p className="text-xs font-black uppercase tracking-[0.22em] text-[color:var(--accent)]">
                         Case completo
@@ -208,39 +217,55 @@ export default function CaseStudies() {
                         </a>
                       )}
                     </div>
-                  </div>
+                  </TiltCard>
 
                   <div className="grid gap-4 md:grid-cols-3">
-                    <div className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
+                    <TiltCard
+                      as="div"
+                      intensity="medium"
+                      className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5"
+                    >
                       <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
                         Problema
                       </p>
                       <p className="text-sm leading-7 text-[color:var(--muted)]">
                         {selectedProject.problem}
                       </p>
-                    </div>
+                    </TiltCard>
 
-                    <div className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
+                    <TiltCard
+                      as="div"
+                      intensity="medium"
+                      className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5"
+                    >
                       <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
                         Solução
                       </p>
                       <p className="text-sm leading-7 text-[color:var(--muted)]">
                         {selectedProject.solution}
                       </p>
-                    </div>
+                    </TiltCard>
 
-                    <div className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
+                    <TiltCard
+                      as="div"
+                      intensity="medium"
+                      className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5"
+                    >
                       <p className="mb-3 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
                         Impacto
                       </p>
                       <p className="text-sm leading-7 text-[color:var(--muted)]">
                         {selectedProject.impact}
                       </p>
-                    </div>
+                    </TiltCard>
                   </div>
 
                   <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-                    <div className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
+                    <TiltCard
+                      as="div"
+                      intensity="subtle"
+                      className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5"
+                    >
                       <p className="mb-4 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
                         Destaques
                       </p>
@@ -256,9 +281,13 @@ export default function CaseStudies() {
                           </li>
                         ))}
                       </ul>
-                    </div>
+                    </TiltCard>
 
-                    <div className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5">
+                    <TiltCard
+                      as="div"
+                      intensity="subtle"
+                      className="rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5"
+                    >
                       <p className="mb-4 text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
                         Stack
                       </p>
@@ -273,7 +302,7 @@ export default function CaseStudies() {
                           </span>
                         ))}
                       </div>
-                    </div>
+                    </TiltCard>
                   </div>
                 </motion.article>
               </AnimatePresence>
