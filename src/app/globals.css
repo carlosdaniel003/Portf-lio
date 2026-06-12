@@ -278,3 +278,61 @@ a {
     display: none;
   }
 }
+
+@media (pointer: fine) {
+  body {
+    cursor: none;
+  }
+
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  [role="button"] {
+    cursor: none;
+  }
+
+  .custom-cursor-dot,
+  .custom-cursor-ring {
+    pointer-events: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2147483646;
+    border-radius: 999px;
+    transform: translate(-50%, -50%);
+    mix-blend-mode: normal;
+  }
+
+  .custom-cursor-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--accent);
+    box-shadow:
+      0 0 14px var(--accent),
+      0 0 28px color-mix(in srgb, var(--accent) 42%, transparent);
+  }
+
+  .custom-cursor-ring {
+    width: 34px;
+    height: 34px;
+    border: 1px solid color-mix(in srgb, var(--accent) 65%, transparent);
+    background:
+      radial-gradient(
+        circle,
+        color-mix(in srgb, var(--accent) 10%, transparent),
+        transparent 62%
+      );
+    box-shadow:
+      0 0 24px color-mix(in srgb, var(--accent) 24%, transparent),
+      inset 0 0 18px color-mix(in srgb, var(--accent-2) 10%, transparent);
+  }
+}
+
+@media (pointer: coarse) {
+  .custom-cursor-dot,
+  .custom-cursor-ring {
+    display: none;
+  }
+}

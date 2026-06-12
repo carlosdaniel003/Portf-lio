@@ -1,20 +1,24 @@
-// src\components\sections\Hero.tsx
 "use client";
 
+import Logo from "@/components/ui/Logo";
 import NeuralCircuitCore from "@/components/ui/neural/NeuralCircuitCore";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section id="inicio" className="relative flex min-h-[680px] items-start overflow-hidden pt-0">
-
+    <section
+      id="inicio"
+      className="relative flex min-h-[680px] items-start overflow-hidden pt-0"
+    >
       <div className="portfolio-container relative z-10 grid items-center gap-12 pt-8 pb-16 lg:grid-cols-[1.05fr_0.95fr]">
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
         >
+          <Logo variant="full" size="md" className="mb-8" />
+
           <div className="mb-8 inline-flex items-center gap-3 rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-[color:var(--muted)] backdrop-blur-xl">
             <span className="h-2 w-2 rounded-full bg-[color:var(--accent)] shadow-[0_0_18px_var(--accent)]" />
             Software para problemas reais

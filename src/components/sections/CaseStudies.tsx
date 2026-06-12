@@ -1,3 +1,4 @@
+// src\components\sections\CaseStudies.tsx
 "use client";
 
 import TiltCard from "@/components/ui/TiltCard";
@@ -168,17 +169,17 @@ export default function CaseStudies() {
                       </>
                     )}
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--bg)] via-[color:var(--bg)]/35 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/15" />
 
                     <div className="relative z-10 flex min-h-[320px] flex-col justify-between p-6 sm:p-8">
                       <div className="flex flex-wrap items-center justify-between gap-4">
-                        <span className="rounded-full border border-white/15 bg-black/25 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white backdrop-blur-xl">
-                          {selectedProject.category}
-                        </span>
+                        <span className="rounded-full border border-white/20 bg-black/55 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white shadow-[0_8px_28px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+  {selectedProject.category}
+</span>
 
-                        <span className="rounded-full border border-white/15 bg-black/25 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/75 backdrop-blur-xl">
-                          Case {String(selectedProjectIndex + 1).padStart(2, "0")}
-                        </span>
+<span className="rounded-full border border-white/20 bg-black/55 px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-white/85 shadow-[0_8px_28px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+  Case {String(selectedProjectIndex + 1).padStart(2, "0")}
+</span>
                       </div>
 
                       <div>

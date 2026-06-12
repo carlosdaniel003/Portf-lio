@@ -1,8 +1,10 @@
+// src\components\ui\Header.tsx
 "use client";
 
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { Folder, Github, Home, Mail, User } from "lucide-react";
 import { useEffect, useState } from "react";
+import Logo from "@/components/ui/Logo";
 
 const links = [
   {
@@ -70,9 +72,9 @@ export default function Header() {
         <a
           href="#inicio"
           aria-label="Carlos Daniel - início"
-          className="group relative z-10 grid h-11 w-11 place-items-center rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] font-black text-[color:var(--accent)] transition hover:-translate-y-0.5 hover:border-[color:var(--accent)]"
+          className="group relative z-10 transition"
         >
-          CD
+          <Logo variant="mark" size="sm" />
 
           <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-[color:var(--text)] opacity-0 shadow-xl backdrop-blur-xl transition group-hover:opacity-100 lg:block">
             Carlos Daniel

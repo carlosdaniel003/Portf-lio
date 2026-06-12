@@ -1,6 +1,6 @@
-// src\app\layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import CustomCursor from "@/components/ui/CustomCursor";
 import Header from "@/components/ui/Header";
 import "./globals.css";
 
@@ -20,6 +20,10 @@ export const metadata: Metadata = {
     "Next.js",
     "Python",
   ],
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({
@@ -28,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className="scroll-smooth" suppressHydrationWarning>
       <body className={inter.className}>
+        <CustomCursor />
         <Header />
         {children}
       </body>

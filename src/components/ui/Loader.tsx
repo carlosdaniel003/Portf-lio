@@ -1,7 +1,9 @@
+// src\components\ui\Loader.tsx
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Logo from "@/components/ui/Logo";
 
 const bootSteps = [
   "Mapeando operação real",
@@ -123,9 +125,7 @@ export default function Loader() {
                   }}
                   transition={{ duration: 1.35, repeat: Infinity, ease: "easeInOut" }}
                 >
-                  <div className="grid h-14 w-14 place-items-center rounded-full border border-[color:var(--accent)] bg-[color:var(--bg)] text-sm font-black tracking-[0.22em] text-[color:var(--accent)]">
-                    CD
-                  </div>
+                  <Logo variant="mark" size="md" />
                 </motion.div>
 
                 {nodes.map((node) => (
