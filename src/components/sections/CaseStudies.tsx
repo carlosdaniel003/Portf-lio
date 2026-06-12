@@ -1,4 +1,3 @@
-// src\components\sections\CaseStudies.tsx
 "use client";
 
 import TiltCard from "@/components/ui/TiltCard";
@@ -60,6 +59,7 @@ export default function CaseStudies() {
                       type="button"
                       onClick={() => setSelectedProjectId(project.id)}
                       intensity="medium"
+                      revealDelay={index * 0.04}
                       className={
                         isSelected
                           ? "group rounded-[1.6rem] border border-[color:var(--accent)] bg-[color:var(--bg)] p-4 text-left shadow-[0_0_42px_color-mix(in_srgb,var(--accent)_14%,transparent)] transition"

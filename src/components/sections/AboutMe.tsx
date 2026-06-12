@@ -1,4 +1,3 @@
-// src\components\sections\AboutMe.tsx
 "use client";
 
 import TiltCard from "@/components/ui/TiltCard";
@@ -31,16 +30,16 @@ export default function AboutMe() {
                     </p>
 
                     <div className="relative mb-8 aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-[2rem] border border-[color:var(--line)] bg-[color:var(--panel)] shadow-2xl">
-  <img
-    src={aboutProfile.image}
-    alt={aboutProfile.name}
-    className="h-full w-full object-cover object-[center_18%]"
-  />
+                      <img
+                        src={aboutProfile.image}
+                        alt={aboutProfile.name}
+                        className="h-full w-full object-cover object-[center_18%]"
+                      />
 
-  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
 
-  <div className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-white/10" />
-</div>
+                      <div className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-white/10" />
+                    </div>
                   </div>
 
                   <TiltCard
@@ -78,11 +77,12 @@ export default function AboutMe() {
                 </div>
 
                 <div className="grid gap-5 md:grid-cols-2">
-                  {aboutProfile.education.map((item) => (
+                  {aboutProfile.education.map((item, index) => (
                     <TiltCard
                       as="article"
                       key={item.title}
                       intensity="medium"
+                      revealDelay={index * 0.06}
                       className="group rounded-[1.5rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
                     >
                       <p className="text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
@@ -126,6 +126,7 @@ export default function AboutMe() {
                   as="article"
                   key={item.title}
                   intensity="medium"
+                  revealDelay={index * 0.06}
                   className="group rounded-[1.5rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
                 >
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
@@ -166,6 +167,7 @@ export default function AboutMe() {
                   as="article"
                   key={service.title}
                   intensity="medium"
+                  revealDelay={index * 0.06}
                   className="group rounded-[1.5rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
                 >
                   <p className="text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
@@ -223,6 +225,7 @@ export default function AboutMe() {
                   as="article"
                   key={group.title}
                   intensity="medium"
+                  revealDelay={groupIndex * 0.06}
                   className="group rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
                 >
                   <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-[color:var(--accent)]/10 blur-2xl opacity-0 transition group-hover:opacity-100" />
@@ -369,6 +372,7 @@ export default function AboutMe() {
                       <TiltCard
                         as="div"
                         intensity="medium"
+                        revealDelay={index * 0.05}
                         className="group rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
                       >
                         <div className="pointer-events-none absolute -right-10 -top-10 h-28 w-28 rounded-full bg-[color:var(--accent)]/10 blur-2xl opacity-0 transition group-hover:opacity-100" />

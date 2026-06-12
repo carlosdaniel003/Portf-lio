@@ -17,6 +17,8 @@ type TiltCardProps = {
   className?: string;
   intensity?: TiltIntensity;
   glow?: boolean;
+  reveal?: boolean;
+  revealDelay?: number;
   type?: "button" | "submit" | "reset";
   href?: string;
   target?: string;
@@ -53,6 +55,8 @@ export default function TiltCard({
   className = "",
   intensity = "medium",
   glow = true,
+  reveal = true,
+  revealDelay = 0,
   type = "button",
   href,
   target,
@@ -110,11 +114,37 @@ export default function TiltCard({
 
   return (
     <MotionComponent
+      initial={
+        reveal
+          ? {
+              opacity: 0,
+              y: 22,
+              scale: 0.975,
+              filter: "blur(8px)",
+            }
+          : undefined
+      }
+      whileInView={
+        reveal
+          ? {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              filter: "blur(0px)",
+            }
+          : undefined
+      }
+      viewport={reveal ? { once: true, margin: "-80px", amount: 0.18 } : undefined}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onClick={onClick}
       whileHover={{ y: config.lift }}
-      transition={{ type: "spring", stiffness: 260, damping: 20 }}
+      transition={{
+        type: "spring",
+        stiffness: 260,
+        damping: 20,
+        delay: revealDelay,
+      }}
       className={`relative overflow-hidden ${className}`}
       style={{
         rotateX,
