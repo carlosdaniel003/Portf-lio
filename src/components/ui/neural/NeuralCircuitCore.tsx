@@ -1,3 +1,4 @@
+// src\components\ui\neural\NeuralCircuitCore.tsx
 "use client";
 
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";

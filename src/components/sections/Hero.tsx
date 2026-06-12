@@ -1,6 +1,6 @@
+// src\components\sections\Hero.tsx
 "use client";
 
-import InteractiveBackground from "@/components/ui/InteractiveBackground";
 import NeuralCircuitCore from "@/components/ui/neural/NeuralCircuitCore";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
@@ -8,7 +8,6 @@ import { ArrowRight } from "lucide-react";
 export default function Hero() {
   return (
     <section id="inicio" className="relative flex min-h-[680px] items-start overflow-hidden pt-0">
-      <InteractiveBackground />
 
       <div className="portfolio-container relative z-10 grid items-center gap-12 pt-8 pb-16 lg:grid-cols-[1.05fr_0.95fr]">
         <motion.div
