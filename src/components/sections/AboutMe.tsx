@@ -30,14 +30,17 @@ export default function AboutMe() {
                       Quem sou eu
                     </p>
 
-                    <div className="relative mb-8 aspect-square max-w-[340px] overflow-hidden rounded-[2rem] border border-[color:var(--line)] bg-[color:var(--panel)] shadow-2xl">
-                      <img
-                        src={aboutProfile.image}
-                        alt={aboutProfile.name}
-                        className="h-full w-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-                    </div>
+                    <div className="relative mb-8 aspect-[4/5] w-full max-w-[360px] overflow-hidden rounded-[2rem] border border-[color:var(--line)] bg-[color:var(--panel)] shadow-2xl">
+  <img
+    src={aboutProfile.image}
+    alt={aboutProfile.name}
+    className="h-full w-full object-cover object-[center_18%]"
+  />
+
+  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+
+  <div className="pointer-events-none absolute inset-0 rounded-[2rem] ring-1 ring-white/10" />
+</div>
                   </div>
 
                   <TiltCard
