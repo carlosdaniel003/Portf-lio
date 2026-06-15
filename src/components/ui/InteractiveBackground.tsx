@@ -1,7 +1,8 @@
+// src\components\ui\InteractiveBackground.tsx
 "use client";
 
 import { motion, useMotionTemplate, useMotionValue, useSpring } from "framer-motion";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 const circuitPaths = [
   "M60 120 H250 V180 H390",
@@ -60,17 +61,34 @@ const circuitNodes = [
 export default function InteractiveBackground() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const smoothX = useSpring(mouseX, { stiffness: 60, damping: 22 });
-  const smoothY = useSpring(mouseY, { stiffness: 60, damping: 22 });
+  const smoothX = useSpring(mouseX, { stiffness: 50, damping: 28 });
+  const smoothY = useSpring(mouseY, { stiffness: 50, damping: 28 });
+
+  const rafRef = useRef<number>();
+  const lastMouseUpdateRef = useRef(0);
 
   useEffect(() => {
     function handleMouseMove(event: MouseEvent) {
+      const now = Date.now();
+      
+      // Throttle para ~30fps (33ms)
+      if (now - lastMouseUpdateRef.current < 33) {
+        return;
+      }
+      
+      lastMouseUpdateRef.current = now;
       mouseX.set(event.clientX);
       mouseY.set(event.clientY);
     }
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (rafRef.current) {
+        cancelAnimationFrame(rafRef.current);
+      }
+    };
   }, [mouseX, mouseY]);
 
   const glow = useMotionTemplate`radial-gradient(560px circle at ${smoothX}px ${smoothY}px, color-mix(in srgb, var(--accent) 18%, transparent), transparent 44%)`;
@@ -81,7 +99,7 @@ export default function InteractiveBackground() {
         aria-hidden="true"
         viewBox="0 0 1440 900"
         preserveAspectRatio="xMidYMid slice"
-        className="absolute inset-0 h-full w-full opacity-45"
+        className="absolute inset-0 h-full w-full opacity-45 will-change-auto"
       >
         <defs>
           <linearGradient id="backgroundCircuitTrace" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -137,6 +155,7 @@ export default function InteractiveBackground() {
                   delay: index * 0.08,
                   repeat: Infinity,
                   ease: "linear",
+                  repeatType: "loop",
                 }}
               />
             </g>
@@ -155,6 +174,7 @@ export default function InteractiveBackground() {
                 delay: node.delay,
                 repeat: Infinity,
                 ease: "easeInOut",
+                repeatType: "loop",
               }}
             >
               <circle
@@ -199,20 +219,20 @@ export default function InteractiveBackground() {
         </g>
       </svg>
 
-      <motion.div className="absolute inset-0" style={{ background: glow }} />
+      <motion.div className="absolute inset-0 will-change-transform" style={{ background: glow }} />
 
       <motion.div
         aria-hidden
-        className="absolute left-1/2 top-28 h-72 w-72 -translate-x-1/2 rounded-full bg-[color:var(--accent)]/10 blur-3xl"
+        className="absolute left-1/2 top-28 h-72 w-72 -translate-x-1/2 rounded-full bg-[color:var(--accent)]/10 blur-3xl will-change-transform"
         animate={{ scale: [1, 1.18, 1], opacity: [0.35, 0.55, 0.35] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", repeatType: "loop" }}
       />
 
       <motion.div
         aria-hidden
-        className="absolute bottom-20 right-10 h-80 w-80 rounded-full bg-[color:var(--accent-2)]/10 blur-3xl"
+        className="absolute bottom-20 right-10 h-80 w-80 rounded-full bg-[color:var(--accent-2)]/10 blur-3xl will-change-transform"
         animate={{ scale: [1.1, 0.92, 1.1], opacity: [0.3, 0.16, 0.3] }}
-        transition={{ duration: 8.5, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 8.5, repeat: Infinity, ease: "easeInOut", repeatType: "loop" }}
       />
     </div>
   );

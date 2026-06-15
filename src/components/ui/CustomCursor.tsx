@@ -2,7 +2,7 @@
 "use client";
 
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function CustomCursor() {
   const [isVisible, setIsVisible] = useState(false);
@@ -15,12 +15,23 @@ export default function CustomCursor() {
   const ringX = useSpring(cursorX, { stiffness: 160, damping: 22 });
   const ringY = useSpring(cursorY, { stiffness: 160, damping: 22 });
 
+  const lastUpdateRef = useRef(0);
+  const throttleDelayRef = useRef(16); // ~60fps
+
   useEffect(() => {
     const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
 
     if (!hasFinePointer) return;
 
     function handleMouseMove(event: MouseEvent) {
+      const now = Date.now();
+      
+      // Throttle mousemove para evitar excesso de atualizações
+      if (now - lastUpdateRef.current < throttleDelayRef.current) {
+        return;
+      }
+      
+      lastUpdateRef.current = now;
       cursorX.set(event.clientX);
       cursorY.set(event.clientY);
       setIsVisible(true);
@@ -45,10 +56,11 @@ export default function CustomCursor() {
       setIsClicking(false);
     }
 
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseleave", handleMouseLeave);
-    window.addEventListener("mousedown", handleMouseDown);
-    window.addEventListener("mouseup", handleMouseUp);
+    // Usar 'touchstart' para detectar melhor em mobile
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    window.addEventListener("mouseleave", handleMouseLeave, { passive: true });
+    window.addEventListener("mousedown", handleMouseDown, { passive: true });
+    window.addEventListener("mouseup", handleMouseUp, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);

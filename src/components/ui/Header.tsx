@@ -1,10 +1,11 @@
+// src\components\ui\Header.tsx
 "use client";
 
 import Logo from "@/components/ui/Logo";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { AnimatePresence, motion } from "framer-motion";
 import { Folder, Github, Home, Mail, Menu, User, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 
 const links = [
   {
@@ -32,35 +33,49 @@ const links = [
 export default function Header() {
   const [activeSection, setActiveSection] = useState("inicio");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout>();
 
-  useEffect(() => {
-    function handleScroll() {
-      const referencePoint = window.scrollY + window.innerHeight * 0.42;
+  const handleScroll = useCallback(() => {
+    const referencePoint = window.scrollY + window.innerHeight * 0.42;
 
-      let currentSection = "inicio";
+    let currentSection = "inicio";
 
-      links.forEach((link) => {
-        const sectionId = link.href.replace("#", "");
-        const section = document.getElementById(sectionId);
+    links.forEach((link) => {
+      const sectionId = link.href.replace("#", "");
+      const section = document.getElementById(sectionId);
 
-        if (section && section.offsetTop <= referencePoint) {
-          currentSection = sectionId;
-        }
-      });
+      if (section && section.offsetTop <= referencePoint) {
+        currentSection = sectionId;
+      }
+    });
 
-      setActiveSection(currentSection);
+    setActiveSection(currentSection);
+  }, []);
+
+  const debouncedHandleScroll = useCallback(() => {
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
     }
 
+    scrollTimeoutRef.current = setTimeout(() => {
+      handleScroll();
+    }, 50);
+  }, [handleScroll]);
+
+  useEffect(() => {
     handleScroll();
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
+    window.addEventListener("scroll", debouncedHandleScroll, { passive: true });
+    window.addEventListener("resize", debouncedHandleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
+      window.removeEventListener("scroll", debouncedHandleScroll);
+      window.removeEventListener("resize", debouncedHandleScroll);
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+      }
     };
-  }, []);
+  }, [debouncedHandleScroll, handleScroll]);
 
   return (
     <>
@@ -78,7 +93,7 @@ export default function Header() {
           >
             <Logo variant="mark" size="sm" />
 
-            <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-[color:var(--text)] opacity-0 shadow-xl backdrop-blur-xl transition group-hover:opacity-100 lg:block">
+            <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-[color:var(--text)] opacity-0 transition-opacity group-hover:opacity-100">
               Carlos Daniel
             </span>
           </a>
@@ -97,7 +112,7 @@ export default function Header() {
                 aria-label={link.label}
                 className={
                   isActive
-                    ? "group relative z-10 grid h-11 w-11 place-items-center rounded-full border border-[color:var(--accent)] bg-[color:var(--panel-strong)] text-[color:var(--accent)] shadow-[0_0_28px_color-mix(in_srgb,var(--accent)_22%,transparent)] transition hover:-translate-y-0.5"
+                    ? "group relative z-10 grid h-11 w-11 place-items-center rounded-full border border-[color:var(--accent)] bg-[color:var(--panel-strong)] text-[color:var(--accent)] shadow-[0_0_18px_var(--accent)] transition"
                     : "group relative z-10 grid h-11 w-11 place-items-center rounded-full text-[color:var(--muted)] transition hover:-translate-y-0.5 hover:bg-[color:var(--panel-strong)] hover:text-[color:var(--accent)]"
                 }
               >
@@ -107,7 +122,7 @@ export default function Header() {
 
                 <Icon size={18} strokeWidth={2.3} />
 
-                <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-[color:var(--text)] opacity-0 shadow-xl backdrop-blur-xl transition group-hover:opacity-100 lg:block">
+                <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-[color:var(--text)] opacity-0 transition-opacity group-hover:opacity-100">
                   {link.label}
                 </span>
               </a>
@@ -129,7 +144,7 @@ export default function Header() {
           >
             <Github size={18} strokeWidth={2.3} />
 
-            <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-[color:var(--text)] opacity-0 shadow-xl backdrop-blur-xl transition group-hover:opacity-100 lg:block">
+            <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-[color:var(--text)] opacity-0 transition-opacity group-hover:opacity-100">
               GitHub
             </span>
           </a>
@@ -137,16 +152,16 @@ export default function Header() {
       </header>
 
       <header className="fixed bottom-4 right-4 z-50 lg:hidden">
-        <AnimatePresence>
+        <AnimatePresence mode="wait">
           {isMobileMenuOpen && (
             <motion.nav
               key="mobile-menu"
               aria-label="Menu mobile"
-              initial={{ opacity: 0, y: 16, scale: 0.96, filter: "blur(8px)" }}
-              animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-              exit={{ opacity: 0, y: 16, scale: 0.96, filter: "blur(8px)" }}
+              initial={{ opacity: 0, y: 16, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 16, scale: 0.96 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="absolute bottom-16 right-0 w-[min(82vw,320px)] overflow-hidden rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel)] p-3 shadow-2xl backdrop-blur-2xl"
+              className="absolute bottom-16 right-0 w-[min(82vw,320px)] overflow-hidden rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel)] p-3 shadow-2xl backdrop-blur-2xl will-change-transform"
             >
               <div className="mb-3 flex items-center justify-between gap-3 rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-3">
                 <Logo variant="mark" size="sm" />
@@ -174,8 +189,8 @@ export default function Header() {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={
                         isActive
-                          ? "flex items-center gap-3 rounded-2xl border border-[color:var(--accent)] bg-[color:var(--panel-strong)] px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[color:var(--accent)] shadow-[0_0_24px_color-mix(in_srgb,var(--accent)_16%,transparent)]"
-                          : "flex items-center gap-3 rounded-2xl border border-transparent px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[color:var(--muted)] transition hover:border-[color:var(--line)] hover:bg-[color:var(--panel-strong)] hover:text-[color:var(--accent)]"
+                          ? "flex items-center gap-3 rounded-2xl border border-[color:var(--accent)] bg-[color:var(--panel-strong)] px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[color:var(--accent)] transition"
+                          : "flex items-center gap-3 rounded-2xl border border-transparent px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[color:var(--muted)] transition hover:border-[color:var(--line)] hover:bg-[color:var(--panel-strong)]"
                       }
                     >
                       <Icon size={18} strokeWidth={2.3} />
@@ -198,7 +213,7 @@ export default function Header() {
                   target="_blank"
                   rel="noreferrer"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[color:var(--muted)] transition hover:bg-[color:var(--panel-strong)] hover:text-[color:var(--accent)]"
+                  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[color:var(--muted)] transition hover:bg-[color:var(--panel-strong)]"
                 >
                   <Github size={18} strokeWidth={2.3} />
                   GitHub
@@ -212,7 +227,7 @@ export default function Header() {
           type="button"
           aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
           onClick={() => setIsMobileMenuOpen((current) => !current)}
-          className="grid h-14 w-14 place-items-center rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel)] text-[color:var(--accent)] shadow-[0_18px_60px_var(--shadow)] backdrop-blur-2xl transition hover:border-[color:var(--accent)]"
+          className="grid h-14 w-14 place-items-center rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel)] text-[color:var(--accent)] shadow-[0_18px_60px_var(--shadow)] backdrop-blur-2xl transition"
         >
           {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
         </button>
