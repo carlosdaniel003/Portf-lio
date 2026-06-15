@@ -64,7 +64,7 @@ export default function InteractiveBackground() {
   const smoothX = useSpring(mouseX, { stiffness: 50, damping: 28 });
   const smoothY = useSpring(mouseY, { stiffness: 50, damping: 28 });
 
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | null>(null);
   const lastMouseUpdateRef = useRef(0);
 
   useEffect(() => {
