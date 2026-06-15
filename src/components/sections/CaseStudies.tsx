@@ -1,6 +1,7 @@
 // src\components\sections\CaseStudies.tsx
 "use client";
 
+import ProjectImageModal from "@/components/ui/ProjectImageModal";
 import TiltCard from "@/components/ui/TiltCard";
 import { projectsData } from "@/data/portfolio";
 import { AnimatePresence, motion } from "framer-motion";
@@ -20,12 +21,51 @@ export default function CaseStudies() {
   const galleryImages = selectedProject.galleryUrls ?? [];
   const firstGalleryImage = galleryImages[0] ?? "";
   const [selectedGalleryImage, setSelectedGalleryImage] = useState(firstGalleryImage);
+  const [imageModal, setImageModal] = useState<{
+  projectTitle: string;
+  projectCategory: string;
+  images: string[];
+  initialIndex: number;
+} | null>(null);
 
   useEffect(() => {
     setSelectedGalleryImage(firstGalleryImage);
   }, [firstGalleryImage, selectedProject.id]);
 
+  function getProjectImages(project: (typeof projectsData)[number]) {
+  return Array.from(
+    new Set(
+      [
+        project.coverUrl,
+        project.thumbnailUrl,
+        ...(project.galleryUrls ?? []),
+      ].filter(Boolean) as string[]
+    )
+  );
+}
+
+function openProjectImageModal(
+  project: (typeof projectsData)[number],
+  imageUrl?: string
+) {
+  const images = getProjectImages(project);
+
+  if (images.length === 0) {
+    return;
+  }
+
+  const initialIndex = imageUrl ? Math.max(0, images.indexOf(imageUrl)) : 0;
+
+  setImageModal({
+    projectTitle: project.title,
+    projectCategory: project.category,
+    images,
+    initialIndex,
+  });
+}
+
   return (
+  <>
     <section id="projetos" className="relative py-24">
       <div className="portfolio-container">
         <div className="mb-14 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
@@ -82,7 +122,14 @@ export default function CaseStudies() {
                       />
 
                       <div className="relative z-10 flex gap-4">
-                        <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)]">
+                        <div
+  className="relative h-20 w-20 shrink-0 cursor-zoom-in overflow-hidden rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)]"
+  onClick={(event) => {
+    event.stopPropagation();
+    openProjectImageModal(project, project.thumbnailUrl ?? project.coverUrl);
+  }}
+  title="Expandir imagem"
+>
                           {project.thumbnailUrl ? (
                             <img
                               src={project.thumbnailUrl}
@@ -150,10 +197,13 @@ export default function CaseStudies() {
                   className="grid gap-6"
                 >
                   <TiltCard
-                    as="div"
-                    intensity="subtle"
-                    className="relative min-h-[320px] rounded-[2rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)]"
-                  >
+  as="button"
+  type="button"
+  intensity="subtle"
+  onClick={() => openProjectImageModal(selectedProject, selectedProject.coverUrl)}
+  ariaLabel={`Expandir imagem de capa do projeto ${selectedProject.shortTitle}`}
+  className="relative min-h-[320px] cursor-zoom-in rounded-[2rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] text-left"
+>
                     {selectedProject.coverUrl ? (
                       <img
                         src={selectedProject.coverUrl}
@@ -345,20 +395,28 @@ export default function CaseStudies() {
                         </div>
                       </div>
 
-                      <div className="relative overflow-hidden rounded-[1.4rem] border border-[color:var(--line)] bg-[color:var(--bg)]">
-                        <AnimatePresence mode="wait">
-                          <motion.img
-                            key={selectedGalleryImage}
-                            src={selectedGalleryImage}
-                            alt={`${selectedProject.shortTitle} screenshot`}
-                            initial={{ opacity: 0, scale: 1.02 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.98 }}
-                            transition={{ duration: 0.28 }}
-                            className="h-auto max-h-[520px] w-full object-contain"
-                          />
-                        </AnimatePresence>
-                      </div>
+                      <button
+  type="button"
+  onClick={() => openProjectImageModal(selectedProject, selectedGalleryImage)}
+  className="group relative w-full cursor-zoom-in overflow-hidden rounded-[1.4rem] border border-[color:var(--line)] bg-[color:var(--bg)] text-left"
+>
+  <AnimatePresence mode="wait">
+    <motion.img
+      key={selectedGalleryImage}
+      src={selectedGalleryImage}
+      alt={`${selectedProject.shortTitle} screenshot`}
+      initial={{ opacity: 0, scale: 1.02 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.98 }}
+      transition={{ duration: 0.28 }}
+      className="h-auto max-h-[520px] w-full object-contain"
+    />
+  </AnimatePresence>
+
+  <span className="pointer-events-none absolute right-4 top-4 rounded-full border border-white/15 bg-black/45 px-3 py-2 text-[10px] font-black uppercase tracking-[0.16em] text-white opacity-0 backdrop-blur-xl transition group-hover:opacity-100">
+    Expandir
+  </span>
+</button>
 
                       {galleryImages.length > 1 && (
                         <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-5">
@@ -399,5 +457,15 @@ export default function CaseStudies() {
         </div>
       </div>
     </section>
+
+        <ProjectImageModal
+      open={Boolean(imageModal)}
+      projectTitle={imageModal?.projectTitle ?? ""}
+      projectCategory={imageModal?.projectCategory ?? ""}
+      images={imageModal?.images ?? []}
+      initialIndex={imageModal?.initialIndex ?? 0}
+      onClose={() => setImageModal(null)}
+    />
+  </>
   );
 }

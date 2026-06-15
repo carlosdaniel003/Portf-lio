@@ -1,3 +1,4 @@
+// src\data\portfolio.ts
 import { Project, Service } from "@/core/types";
 
 export const servicesData: Service[] = [
