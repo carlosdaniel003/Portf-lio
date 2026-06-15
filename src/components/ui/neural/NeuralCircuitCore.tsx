@@ -152,7 +152,7 @@ export default function NeuralCircuitCore() {
         </div>
       </div>
 
-      <div className="relative z-10 flex min-h-[350px] items-center justify-center rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-3 sm:min-h-[390px]">
+      <div className="relative z-10 flex min-h-[350px] flex-col items-center justify-center rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-3 sm:min-h-[390px]">
         <motion.div
           className="absolute inset-x-6 top-8 h-px bg-gradient-to-r from-transparent via-[color:var(--accent)] to-transparent opacity-60"
           animate={{ y: [0, 295, 0], opacity: [0, 0.7, 0] }}
@@ -161,7 +161,7 @@ export default function NeuralCircuitCore() {
 
         <svg
           viewBox="0 0 100 100"
-          className="relative z-10 h-full max-h-[340px] w-full max-w-[430px] overflow-visible"
+          className="relative z-10 h-[260px] w-full max-w-[430px] overflow-visible sm:h-full sm:max-h-[340px]"
           role="img"
           aria-label="Chip eletrônico industrial com conexões inteligentes animadas"
         >
@@ -530,7 +530,7 @@ export default function NeuralCircuitCore() {
           ))}
         </svg>
 
-        <div className="pointer-events-none absolute bottom-4 left-4 right-4 z-20 grid gap-2 sm:grid-cols-3">
+        <div className="pointer-events-none relative z-20 mt-4 grid w-full gap-2 sm:absolute sm:bottom-4 sm:left-4 sm:right-4 sm:mt-0 sm:w-auto sm:grid-cols-3">
           <div className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel)] px-3 py-2 backdrop-blur-xl">
             <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[color:var(--accent)]">
               Input
