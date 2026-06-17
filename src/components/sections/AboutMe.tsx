@@ -3,7 +3,6 @@
 
 import TiltCard from "@/components/ui/TiltCard";
 import { aboutProfile } from "@/data/about";
-import { servicesData } from "@/data/portfolio";
 import { stackGroups } from "@/data/stack";
 import { motion } from "framer-motion";
 
@@ -146,54 +145,6 @@ export default function AboutMe() {
         </div>
 
         <div className="mt-8 grid gap-8">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.55 }}
-            className="glass-card rounded-[2rem] p-6 sm:p-8"
-          >
-            <div className="mb-8">
-              <p className="mb-4 text-xs font-black uppercase tracking-[0.28em] text-[color:var(--accent)]">
-                O que eu entrego
-              </p>
-              <h3 className="text-3xl font-black tracking-[-0.04em] text-[color:var(--text)]">
-                Soluções completas para problemas reais de operação.
-              </h3>
-            </div>
-
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-              {servicesData.map((service, index) => (
-                <TiltCard
-                  as="article"
-                  key={service.title}
-                  intensity="medium"
-                  revealDelay={index * 0.06}
-                  className="group rounded-[1.5rem] border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-5 transition hover:border-[color:var(--accent)]"
-                >
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-[color:var(--accent)]">
-                    0{index + 1}
-                  </p>
-                  <h4 className="mt-4 text-lg font-black text-[color:var(--text)]">
-                    {service.title}
-                  </h4>
-                  <p className="mt-3 text-sm leading-7 text-[color:var(--muted)]">
-                    {service.description}
-                  </p>
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {service.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full border border-[color:var(--line)] px-3 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-[color:var(--muted)]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </TiltCard>
-              ))}
-            </div>
-          </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 24 }}

@@ -4,7 +4,16 @@
 import Logo from "@/components/ui/Logo";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { AnimatePresence, motion } from "framer-motion";
-import { Folder, Github, Home, Mail, Menu, User, X } from "lucide-react";
+import {
+  Briefcase,
+  Folder,
+  Github,
+  Home,
+  Mail,
+  Menu,
+  User,
+  X,
+} from "lucide-react";
 import { useEffect, useState, useRef, useCallback } from "react";
 
 const links = [
@@ -23,6 +32,13 @@ const links = [
     href: "#projetos",
     icon: Folder,
   },
+
+  {
+    label: "Serviços",
+    href: "#solucoes",
+    icon: Briefcase,
+  },
+
   {
     label: "Contato",
     href: "#contato",

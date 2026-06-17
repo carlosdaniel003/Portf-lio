@@ -68,3 +68,21 @@ export type StackGroup = {
   description: string;
   technologies: StackTechnology[];
 };
+
+export type CommercialService = {
+  id:
+    | "sistemas-gestao"
+    | "dashboards"
+    | "visao-computacional"
+    | "presenca-digital";
+  title: string;
+  description: string;
+  deliverables: string[];
+  tags: string[];
+};
+
+export type ServiceProcessStep = {
+  number: string;
+  title: string;
+  description: string;
+};

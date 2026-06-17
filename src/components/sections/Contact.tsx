@@ -20,13 +20,13 @@ export default function Contact() {
                 </p>
 
                 <h2 className="max-w-3xl text-4xl font-black tracking-[-0.05em] text-[color:var(--text)] sm:text-6xl">
-                  Tem um problema que precise de solução?
+                  Vamos transformar seu problema em uma solução digital?
                 </h2>
 
                 <p className="mt-6 max-w-2xl text-sm leading-7 text-[color:var(--muted)]">
-                  Atuo transformando processos manuais, planilhas, falhas recorrentes e necessidades operacionais
-em sistemas web, dashboards, automações e soluções com IA aplicada. Se você precisa desenvolver
-uma solução, validar uma ideia ou conversar sobre projetos técnicos, envie uma mensagem.
+                  Envie uma mensagem explicando o processo, dificuldade ou ideia que deseja
+  desenvolver. O primeiro passo é entender o problema e avaliar a solução
+  mais adequada.
                 </p>
 
                 <div className="mt-8 grid gap-3 sm:grid-cols-[1fr_0.78fr]">
@@ -98,12 +98,13 @@ uma solução, validar uma ideia ou conversar sobre projetos técnicos, envie um
                 </p>
 
                 <h3 className="mt-3 text-2xl font-black tracking-[-0.04em] text-[color:var(--text)]">
-                  Vamos solucionar seu problema?
+                  Conte como seu processo funciona hoje.
                 </h3>
 
                 <p className="mt-4 text-sm leading-7 text-[color:var(--muted)]">
-                  Use o WhatsApp para contato rápido ou acesse meus perfis para ver projetos,
-código, trajetória técnica e soluções desenvolvidas em ambiente industrial.
+                  Você pode entrar em contato pelo WhatsApp para conversar sobre sistemas,
+  dashboards, automações, inteligência artificial, visão computacional ou
+  presença digital.
                 </p>
 
                 <div className="mt-5 grid gap-2 sm:grid-cols-2">
