@@ -1,6 +1,8 @@
 "use client";
 
+import TurnstileWidget from "@/components/ui/TurnstileWidget";
 import TiltCard from "@/components/ui/TiltCard";
+import Link from "next/link";
 import {
   AlertCircle,
   CheckCircle2,
@@ -14,6 +16,7 @@ import {
 } from "lucide-react";
 import {
   type FormEvent,
+  useCallback,
   useRef,
   useState,
 } from "react";
@@ -32,8 +35,25 @@ export default function Contact() {
 
   const [submitStatus, setSubmitStatus] =
     useState<SubmitStatus>("idle");
-
   const [statusMessage, setStatusMessage] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken("");
+  }, []);
+
+  const handleTurnstileError = useCallback(() => {
+    setTurnstileToken("");
+    setSubmitStatus("error");
+    setStatusMessage(
+      "Não foi possível concluir a verificação de segurança."
+    );
+  }, []);
 
   function focusContactForm() {
     formContainerRef.current?.scrollIntoView({
@@ -51,6 +71,21 @@ export default function Contact() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    const privacyAccepted = formData.get("privacy") === "on";
+
+    if (!turnstileToken) {
+      setSubmitStatus("error");
+      setStatusMessage("Conclua a verificação de segurança.");
+      return;
+    }
+
+    if (!privacyAccepted) {
+      setSubmitStatus("error");
+      setStatusMessage(
+        "Confirme que está ciente da Política de Privacidade."
+      );
+      return;
+    }
 
     setSubmitStatus("sending");
     setStatusMessage("");
@@ -68,6 +103,8 @@ export default function Contact() {
           service: formData.get("service"),
           message: formData.get("message"),
           website: formData.get("website"),
+          turnstileToken,
+          privacyAccepted,
         }),
       });
 
@@ -96,6 +133,9 @@ export default function Contact() {
           ? error.message
           : "Não foi possível enviar a mensagem."
       );
+    } finally {
+      setTurnstileToken("");
+      setTurnstileResetKey((current) => current + 1);
     }
   }
 
@@ -326,9 +366,50 @@ export default function Contact() {
                       </label>
                     </div>
 
+                    <div className="grid gap-2">
+                      <span className="text-xs font-black uppercase tracking-[0.15em] text-[color:var(--muted)]">
+                        Verificação de segurança
+                      </span>
+
+                      <TurnstileWidget
+                        key={turnstileResetKey}
+                        onVerify={handleTurnstileVerify}
+                        onExpire={handleTurnstileExpire}
+                        onError={handleTurnstileError}
+                      />
+                    </div>
+
+                    <label className="flex items-start gap-3 rounded-2xl border border-[color:var(--line)] bg-[color:var(--bg)] p-4 text-sm leading-6 text-[color:var(--muted)]">
+                      <input
+                        type="checkbox"
+                        name="privacy"
+                        required
+                        className="mt-1 h-4 w-4 shrink-0 accent-[color:var(--accent)]"
+                      />
+
+                      <span>
+                        Li e estou ciente da{" "}
+                        <Link
+                          href="/privacidade"
+                          className="font-bold text-[color:var(--accent)] underline decoration-[color:var(--accent)]/45 underline-offset-4"
+                        >
+                          Política de Privacidade
+                        </Link>
+                        .
+                      </span>
+                    </label>
+
+                    <p className="text-xs leading-5 text-[color:var(--muted)]">
+                      Os dados informados serão utilizados somente para responder
+                      ao contato, avaliar a solicitação apresentada e proteger o
+                      formulário contra usos automatizados.
+                    </p>
+
                     <button
                       type="submit"
-                      disabled={submitStatus === "sending"}
+                      disabled={
+                        submitStatus === "sending" || !turnstileToken
+                      }
                       className="mt-1 flex min-h-14 w-full items-center justify-center gap-3 rounded-2xl bg-[color:var(--accent)] px-6 py-4 text-sm font-black uppercase tracking-[0.16em] text-[#04110d] shadow-[0_18px_50px_color-mix(in_srgb,var(--accent)_18%,transparent)] transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60"
                     >
                       {submitStatus === "sending" ? (

@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
+const TURNSTILE_ENDPOINT =
+  "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
 const allowedServices = new Set([
   "Sistema de Gestão",
@@ -20,6 +22,15 @@ type ContactRequest = {
   service?: unknown;
   message?: unknown;
   website?: unknown;
+  turnstileToken?: unknown;
+  privacyAccepted?: unknown;
+};
+
+type TurnstileVerification = {
+  success?: boolean;
+  action?: string;
+  hostname?: string;
+  "error-codes"?: string[];
 };
 
 function getString(value: unknown) {
@@ -43,8 +54,51 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function getClientIp(request: Request) {
+  const cloudflareIp = request.headers.get("cf-connecting-ip");
+
+  if (cloudflareIp) {
+    return cloudflareIp;
+  }
+
+  const forwardedFor = request.headers.get("x-forwarded-for");
+
+  if (forwardedFor) {
+    return forwardedFor.split(",")[0]?.trim();
+  }
+
+  return undefined;
+}
+
+async function verifyTurnstile(
+  token: string,
+  secret: string,
+  remoteIp?: string
+) {
+  const response = await fetch(TURNSTILE_ENDPOINT, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      secret,
+      response: token,
+      remoteip: remoteIp,
+      idempotency_key: crypto.randomUUID(),
+    }),
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error("A Cloudflare não respondeu à verificação.");
+  }
+
+  return (await response.json()) as TurnstileVerification;
+}
+
 export async function POST(request: Request) {
   const apiKey = process.env.RESEND_API_KEY;
+  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
 
   if (!apiKey) {
     console.error("RESEND_API_KEY não foi configurada.");
@@ -53,6 +107,18 @@ export async function POST(request: Request) {
       {
         success: false,
         message: "O serviço de envio ainda não está configurado.",
+      },
+      { status: 500 }
+    );
+  }
+
+  if (!turnstileSecret) {
+    console.error("TURNSTILE_SECRET_KEY não foi configurada.");
+
+    return NextResponse.json(
+      {
+        success: false,
+        message: "A verificação de segurança ainda não está configurada.",
       },
       { status: 500 }
     );
@@ -78,10 +144,22 @@ export async function POST(request: Request) {
   const service = singleLine(getString(body.service));
   const message = getString(body.message);
   const website = getString(body.website);
+  const turnstileToken = getString(body.turnstileToken);
+  const privacyAccepted = body.privacyAccepted === true;
 
   // Campo invisível preenchido normalmente indica envio automatizado.
   if (website) {
     return NextResponse.json({ success: true });
+  }
+
+  if (!privacyAccepted) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Confirme que está ciente da Política de Privacidade.",
+      },
+      { status: 400 }
+    );
   }
 
   if (name.length < 2 || name.length > 80) {
@@ -131,6 +209,55 @@ export async function POST(request: Request) {
         message: "A mensagem deve possuir entre 20 e 3.000 caracteres.",
       },
       { status: 400 }
+    );
+  }
+
+  if (!turnstileToken || turnstileToken.length > 2048) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Conclua a verificação de segurança.",
+      },
+      { status: 400 }
+    );
+  }
+
+  try {
+    const verification = await verifyTurnstile(
+      turnstileToken,
+      turnstileSecret,
+      getClientIp(request)
+    );
+
+    if (
+      !verification.success ||
+      (verification.action &&
+        verification.action !== "portfolio_contact")
+    ) {
+      console.warn(
+        "Turnstile rejeitou a solicitação:",
+        verification["error-codes"] ?? []
+      );
+
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "A verificação de segurança expirou ou não foi aprovada. Tente novamente.",
+        },
+        { status: 400 }
+      );
+    }
+  } catch (error) {
+    console.error("Erro ao validar o Turnstile:", error);
+
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          "Não foi possível concluir a verificação de segurança. Tente novamente.",
+      },
+      { status: 502 }
     );
   }
 
