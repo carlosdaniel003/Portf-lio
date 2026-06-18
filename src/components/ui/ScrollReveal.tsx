@@ -20,56 +20,43 @@ const variants = {
     hidden: {
       opacity: 0,
       y: 34,
-      scale: 0.985,
-      filter: "blur(10px)",
     },
     visible: {
       opacity: 1,
       y: 0,
-      scale: 1,
-      filter: "blur(0px)",
     },
   },
+
   left: {
     hidden: {
       opacity: 0,
       x: -34,
-      scale: 0.985,
-      filter: "blur(10px)",
     },
     visible: {
       opacity: 1,
       x: 0,
-      scale: 1,
-      filter: "blur(0px)",
     },
   },
+
   right: {
     hidden: {
       opacity: 0,
       x: 34,
-      scale: 0.985,
-      filter: "blur(10px)",
     },
     visible: {
       opacity: 1,
       x: 0,
-      scale: 1,
-      filter: "blur(0px)",
     },
   },
+
   scale: {
     hidden: {
       opacity: 0,
       y: 18,
-      scale: 0.95,
-      filter: "blur(12px)",
     },
     visible: {
       opacity: 1,
       y: 0,
-      scale: 1,
-      filter: "blur(0px)",
     },
   },
 };
@@ -86,7 +73,11 @@ export default function ScrollReveal({
     <motion.div
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, margin: "-90px", amount: 0.16 }}
+      viewport={{
+        once,
+        margin: "-60px",
+        amount: 0.12,
+      }}
       variants={variants[variant]}
       transition={{
         duration,
@@ -94,6 +85,10 @@ export default function ScrollReveal({
         ease: [0.22, 1, 0.36, 1],
       }}
       className={className}
+      style={{
+        backfaceVisibility: "hidden",
+        WebkitBackfaceVisibility: "hidden",
+      }}
     >
       {children}
     </motion.div>

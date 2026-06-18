@@ -362,3 +362,16 @@ select,
     display: none;
   }
 }
+
+@media (hover: none), (pointer: coarse) {
+  .glass-card {
+    background: var(--panel-strong);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  [data-framer-motion] {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+}

@@ -8,7 +8,11 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import type { ReactNode } from "react";
+import {
+  type ReactNode,
+  useEffect,
+  useState,
+} from "react";
 
 type TiltIntensity = "subtle" | "medium" | "strong";
 
@@ -36,12 +40,14 @@ const tiltConfig = {
     lift: -3,
     glow: 12,
   },
+
   medium: {
     rotateX: 6,
     rotateY: 8,
     lift: -5,
     glow: 16,
   },
+
   strong: {
     rotateX: 7,
     rotateY: 9,
@@ -67,12 +73,20 @@ export default function TiltCard({
   onClick,
 }: TiltCardProps) {
   const config = tiltConfig[intensity];
+  const [canTilt, setCanTilt] = useState(false);
 
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const smoothX = useSpring(mouseX, { stiffness: 90, damping: 24 });
-  const smoothY = useSpring(mouseY, { stiffness: 90, damping: 24 });
+  const smoothX = useSpring(mouseX, {
+    stiffness: 90,
+    damping: 24,
+  });
+
+  const smoothY = useSpring(mouseY, {
+    stiffness: 90,
+    damping: 24,
+  });
 
   const rotateX = useTransform(
     smoothY,
@@ -86,8 +100,17 @@ export default function TiltCard({
     [-config.rotateY, config.rotateY]
   );
 
-  const glowX = useTransform(smoothX, [-0.5, 0.5], ["24%", "76%"]);
-  const glowY = useTransform(smoothY, [-0.5, 0.5], ["20%", "80%"]);
+  const glowX = useTransform(
+    smoothX,
+    [-0.5, 0.5],
+    ["24%", "76%"]
+  );
+
+  const glowY = useTransform(
+    smoothY,
+    [-0.5, 0.5],
+    ["20%", "80%"]
+  );
 
   const glowBackground = useMotionTemplate`
     radial-gradient(
@@ -97,10 +120,45 @@ export default function TiltCard({
     )
   `;
 
-  function handleMouseMove(event: React.MouseEvent<HTMLElement>) {
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
+  useEffect(() => {
+    const mediaQuery = window.matchMedia(
+      "(hover: hover) and (pointer: fine)"
+    );
+
+    function updateTiltAvailability() {
+      setCanTilt(mediaQuery.matches);
+    }
+
+    updateTiltAvailability();
+
+    mediaQuery.addEventListener(
+      "change",
+      updateTiltAvailability
+    );
+
+    return () => {
+      mediaQuery.removeEventListener(
+        "change",
+        updateTiltAvailability
+      );
+    };
+  }, []);
+
+  function handleMouseMove(
+    event: React.MouseEvent<HTMLElement>
+  ) {
+    if (!canTilt) {
+      return;
+    }
+
+    const rect =
+      event.currentTarget.getBoundingClientRect();
+
+    const x =
+      (event.clientX - rect.left) / rect.width - 0.5;
+
+    const y =
+      (event.clientY - rect.top) / rect.height - 0.5;
 
     mouseX.set(x);
     mouseY.set(y);
@@ -120,8 +178,6 @@ export default function TiltCard({
           ? {
               opacity: 0,
               y: 22,
-              scale: 0.975,
-              filter: "blur(8px)",
             }
           : undefined
       }
@@ -130,16 +186,32 @@ export default function TiltCard({
           ? {
               opacity: 1,
               y: 0,
-              scale: 1,
-              filter: "blur(0px)",
             }
           : undefined
       }
-      viewport={reveal ? { once: true, margin: "-80px", amount: 0.18 } : undefined}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      viewport={
+        reveal
+          ? {
+              once: true,
+              margin: "-60px",
+              amount: 0.12,
+            }
+          : undefined
+      }
+      onMouseMove={
+        canTilt ? handleMouseMove : undefined
+      }
+      onMouseLeave={
+        canTilt ? handleMouseLeave : undefined
+      }
       onClick={onClick}
-      whileHover={{ y: config.lift }}
+      whileHover={
+        canTilt
+          ? {
+              y: config.lift,
+            }
+          : undefined
+      }
       transition={{
         type: "spring",
         stiffness: 260,
@@ -147,11 +219,21 @@ export default function TiltCard({
         delay: revealDelay,
       }}
       className={`relative overflow-hidden ${className}`}
-      style={{
-        rotateX,
-        rotateY,
-        transformStyle: "preserve-3d",
-      }}
+      style={
+        canTilt
+          ? {
+              rotateX,
+              rotateY,
+              transformStyle: "preserve-3d",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+            }
+          : {
+              transformStyle: "flat",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+            }
+      }
       type={as === "button" ? type : undefined}
       href={as === "a" ? href : undefined}
       target={as === "a" ? target : undefined}
@@ -159,15 +241,19 @@ export default function TiltCard({
       aria-label={ariaLabel}
       disabled={as === "button" ? disabled : undefined}
     >
-      {glow && (
+      {glow && canTilt && (
         <motion.div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-          style={{ background: glowBackground }}
+          style={{
+            background: glowBackground,
+          }}
         />
       )}
 
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10">
+        {children}
+      </div>
     </MotionComponent>
   );
 }
