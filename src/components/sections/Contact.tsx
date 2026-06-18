@@ -5,10 +5,10 @@ import TiltCard from "@/components/ui/TiltCard";
 import Link from "next/link";
 import {
   AlertCircle,
+  Briefcase as Linkedin,
+  Camera as Instagram,
   CheckCircle2,
-  Github,
-  Instagram,
-  Linkedin,
+  Code as Github,
   Loader2,
   Mail,
   MessageCircle,
@@ -143,8 +143,8 @@ export default function Contact() {
     <section id="contato" className="relative py-24">
       <div className="portfolio-container">
         <div className="glass-card overflow-hidden rounded-[2.5rem] p-8 sm:p-12 lg:p-16">
-          <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-stretch">
-            <div className="flex flex-col justify-between">
+          <div className="grid gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:items-start">
+            <div className="flex flex-col gap-6">
               <div>
                 <p className="mb-4 text-xs font-black uppercase tracking-[0.28em] text-[color:var(--accent)]">
                   Próximos passos
@@ -191,7 +191,7 @@ export default function Contact() {
                 </div>
               </div>
 
-              <div className="mt-8 grid gap-3 text-sm text-[color:var(--muted)] sm:grid-cols-2">
+              <div className="grid gap-3 text-sm text-[color:var(--muted)] sm:grid-cols-2">
                 <TiltCard
                   as="div"
                   intensity="subtle"
@@ -218,6 +218,50 @@ export default function Contact() {
                   <p className="mt-2 break-all font-semibold text-[color:var(--text)]">
                     contato@carlosdaniel.dev.br
                   </p>
+                </TiltCard>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                <TiltCard
+                  as="a"
+                  href="https://www.linkedin.com/in/carlosdaniel003"
+                  target="_blank"
+                  rel="noreferrer"
+                  intensity="subtle"
+                  className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-4 transition hover:border-[color:var(--accent)]"
+                >
+                  <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
+                    <Linkedin size={19} />
+                    LinkedIn
+                  </span>
+                </TiltCard>
+
+                <TiltCard
+                  as="a"
+                  href="https://github.com/carlosdaniel003"
+                  target="_blank"
+                  rel="noreferrer"
+                  intensity="subtle"
+                  className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-4 transition hover:border-[color:var(--accent)]"
+                >
+                  <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
+                    <Github size={19} />
+                    GitHub
+                  </span>
+                </TiltCard>
+
+                <TiltCard
+                  as="a"
+                  href="https://www.instagram.com/carlos_daniel.003"
+                  target="_blank"
+                  rel="noreferrer"
+                  intensity="subtle"
+                  className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-4 transition hover:border-[color:var(--accent)]"
+                >
+                  <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
+                    <Instagram size={19} />
+                    Instagram
+                  </span>
                 </TiltCard>
               </div>
             </div>
@@ -315,22 +359,30 @@ export default function Contact() {
                           <option value="" disabled>
                             Selecione
                           </option>
+
                           <option value="Sistema de Gestão">
                             Sistema de Gestão
                           </option>
+
                           <option value="Dashboard e Controle">
                             Dashboard e Controle
                           </option>
+
                           <option value="Visão Computacional e AOI">
                             Visão Computacional e AOI
                           </option>
+
                           <option value="Landing Page">
                             Landing Page
                           </option>
+
                           <option value="Inteligência Artificial">
                             Inteligência Artificial
                           </option>
-                          <option value="Outro">Outro</option>
+
+                          <option value="Outro">
+                            Outro
+                          </option>
                         </select>
                       </label>
                     </div>
@@ -357,6 +409,7 @@ export default function Contact() {
                     >
                       <label>
                         Não preencha este campo
+
                         <input
                           type="text"
                           name="website"
@@ -418,6 +471,7 @@ export default function Contact() {
                             size={18}
                             className="animate-spin"
                           />
+
                           Enviando
                         </>
                       ) : (
@@ -454,50 +508,6 @@ export default function Contact() {
                     )}
                   </form>
                 </div>
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-3">
-                <TiltCard
-                  as="a"
-                  href="https://www.linkedin.com/in/carlosdaniel003"
-                  target="_blank"
-                  rel="noreferrer"
-                  intensity="subtle"
-                  className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-4 transition hover:border-[color:var(--accent)]"
-                >
-                  <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
-                    <Linkedin size={19} />
-                    LinkedIn
-                  </span>
-                </TiltCard>
-
-                <TiltCard
-                  as="a"
-                  href="https://github.com/carlosdaniel003"
-                  target="_blank"
-                  rel="noreferrer"
-                  intensity="subtle"
-                  className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-4 transition hover:border-[color:var(--accent)]"
-                >
-                  <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
-                    <Github size={19} />
-                    GitHub
-                  </span>
-                </TiltCard>
-
-                <TiltCard
-                  as="a"
-                  href="https://www.instagram.com/carlos_daniel.003"
-                  target="_blank"
-                  rel="noreferrer"
-                  intensity="subtle"
-                  className="rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-4 transition hover:border-[color:var(--accent)]"
-                >
-                  <span className="flex items-center gap-3 font-black text-[color:var(--text)]">
-                    <Instagram size={19} />
-                    Instagram
-                  </span>
-                </TiltCard>
               </div>
             </div>
           </div>
