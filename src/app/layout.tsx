@@ -20,7 +20,7 @@ const title =
 const description =
   "Desenvolvo sistemas, dashboards, automações e soluções com inteligência artificial e visão computacional para transformar problemas reais de indústria, qualidade e operação.";
 
-const socialImage = `${siteUrl}/opengraph-image`;
+const socialImage = `${siteUrl}/opengraph-image?v=cd3`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
