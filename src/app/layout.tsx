@@ -1,6 +1,7 @@
 // src\app\layout.tsx
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import CustomCursor from "@/components/ui/CustomCursor";
 import Footer from "@/components/ui/Footer";
 import Header from "@/components/ui/Header";
@@ -47,6 +48,7 @@ export default function RootLayout({
         <Header />
         {children}
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
