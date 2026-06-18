@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
+
 const TURNSTILE_ENDPOINT =
   "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -13,6 +14,16 @@ const allowedServices = new Set([
   "Landing Page",
   "Inteligência Artificial",
   "Outro",
+]);
+
+const productionTurnstileHostnames = new Set([
+  "carlosdaniel.dev.br",
+  "www.carlosdaniel.dev.br",
+]);
+
+const developmentTurnstileHostnames = new Set([
+  "localhost",
+  "127.0.0.1",
 ]);
 
 type ContactRequest = {
@@ -54,14 +65,56 @@ function isValidEmail(value: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 }
 
+function isAllowedTurnstileHostname(
+  hostname: string | undefined
+) {
+  if (!hostname) {
+    return false;
+  }
+
+  const normalizedHostname = hostname.toLowerCase();
+
+  if (
+    productionTurnstileHostnames.has(normalizedHostname)
+  ) {
+    return true;
+  }
+
+  return (
+    process.env.NODE_ENV !== "production" &&
+    developmentTurnstileHostnames.has(normalizedHostname)
+  );
+}
+
+function isAllowedTurnstileAction(
+  action: string | undefined
+) {
+  if (!action) {
+    return false;
+  }
+
+  if (action === "portfolio_contact") {
+    return true;
+  }
+
+  return (
+    process.env.NODE_ENV !== "production" &&
+    action === "test"
+  );
+}
+
 function getClientIp(request: Request) {
-  const cloudflareIp = request.headers.get("cf-connecting-ip");
+  const cloudflareIp = request.headers.get(
+    "cf-connecting-ip"
+  );
 
   if (cloudflareIp) {
     return cloudflareIp;
   }
 
-  const forwardedFor = request.headers.get("x-forwarded-for");
+  const forwardedFor = request.headers.get(
+    "x-forwarded-for"
+  );
 
   if (forwardedFor) {
     return forwardedFor.split(",")[0]?.trim();
@@ -77,20 +130,25 @@ async function verifyTurnstile(
 ) {
   const response = await fetch(TURNSTILE_ENDPOINT, {
     method: "POST",
+
     headers: {
       "Content-Type": "application/json",
     },
+
     body: JSON.stringify({
       secret,
       response: token,
       remoteip: remoteIp,
       idempotency_key: crypto.randomUUID(),
     }),
+
     cache: "no-store",
   });
 
   if (!response.ok) {
-    throw new Error("A Cloudflare não respondeu à verificação.");
+    throw new Error(
+      "A Cloudflare não respondeu à verificação."
+    );
   }
 
   return (await response.json()) as TurnstileVerification;
@@ -98,87 +156,139 @@ async function verifyTurnstile(
 
 export async function POST(request: Request) {
   const apiKey = process.env.RESEND_API_KEY;
-  const turnstileSecret = process.env.TURNSTILE_SECRET_KEY;
+
+  const turnstileSecret =
+    process.env.TURNSTILE_SECRET_KEY;
 
   if (!apiKey) {
-    console.error("RESEND_API_KEY não foi configurada.");
+    console.error(
+      "RESEND_API_KEY não foi configurada."
+    );
 
     return NextResponse.json(
       {
         success: false,
-        message: "O serviço de envio ainda não está configurado.",
+        message:
+          "O serviço de envio ainda não está configurado.",
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 
   if (!turnstileSecret) {
-    console.error("TURNSTILE_SECRET_KEY não foi configurada.");
+    console.error(
+      "TURNSTILE_SECRET_KEY não foi configurada."
+    );
 
     return NextResponse.json(
       {
         success: false,
-        message: "A verificação de segurança ainda não está configurada.",
+        message:
+          "A verificação de segurança ainda não está configurada.",
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 
   let body: ContactRequest;
 
   try {
-    body = (await request.json()) as ContactRequest;
+    body =
+      (await request.json()) as ContactRequest;
   } catch {
     return NextResponse.json(
       {
         success: false,
-        message: "Os dados enviados são inválidos.",
+        message:
+          "Os dados enviados são inválidos.",
       },
-      { status: 400 }
+      {
+        status: 400,
+      }
     );
   }
 
-  const name = singleLine(getString(body.name));
-  const email = singleLine(getString(body.email)).toLowerCase();
-  const company = singleLine(getString(body.company));
-  const service = singleLine(getString(body.service));
-  const message = getString(body.message);
-  const website = getString(body.website);
-  const turnstileToken = getString(body.turnstileToken);
-  const privacyAccepted = body.privacyAccepted === true;
+  const name = singleLine(
+    getString(body.name)
+  );
 
-  // Campo invisível preenchido normalmente indica envio automatizado.
+  const email = singleLine(
+    getString(body.email)
+  ).toLowerCase();
+
+  const company = singleLine(
+    getString(body.company)
+  );
+
+  const service = singleLine(
+    getString(body.service)
+  );
+
+  const message = getString(body.message);
+
+  const website = getString(body.website);
+
+  const turnstileToken = getString(
+    body.turnstileToken
+  );
+
+  const privacyAccepted =
+    body.privacyAccepted === true;
+
+  // Campo invisível preenchido normalmente
+  // indica envio automatizado.
   if (website) {
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+    });
   }
 
   if (!privacyAccepted) {
     return NextResponse.json(
       {
         success: false,
-        message: "Confirme que está ciente da Política de Privacidade.",
+        message:
+          "Confirme que está ciente da Política de Privacidade.",
       },
-      { status: 400 }
+      {
+        status: 400,
+      }
     );
   }
 
-  if (name.length < 2 || name.length > 80) {
+  if (
+    name.length < 2 ||
+    name.length > 80
+  ) {
     return NextResponse.json(
       {
         success: false,
-        message: "Informe um nome válido.",
+        message:
+          "Informe um nome válido.",
       },
-      { status: 400 }
+      {
+        status: 400,
+      }
     );
   }
 
-  if (!isValidEmail(email) || email.length > 160) {
+  if (
+    !isValidEmail(email) ||
+    email.length > 160
+  ) {
     return NextResponse.json(
       {
         success: false,
-        message: "Informe um e-mail válido.",
+        message:
+          "Informe um e-mail válido.",
       },
-      { status: 400 }
+      {
+        status: 400,
+      }
     );
   }
 
@@ -186,9 +296,12 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        message: "O nome da empresa é muito extenso.",
+        message:
+          "O nome da empresa é muito extenso.",
       },
-      { status: 400 }
+      {
+        status: 400,
+      }
     );
   }
 
@@ -196,47 +309,86 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        message: "Selecione um tipo de solução válido.",
+        message:
+          "Selecione um tipo de solução válido.",
       },
-      { status: 400 }
+      {
+        status: 400,
+      }
     );
   }
 
-  if (message.length < 20 || message.length > 3000) {
+  if (
+    message.length < 20 ||
+    message.length > 3000
+  ) {
     return NextResponse.json(
       {
         success: false,
-        message: "A mensagem deve possuir entre 20 e 3.000 caracteres.",
+        message:
+          "A mensagem deve possuir entre 20 e 3.000 caracteres.",
       },
-      { status: 400 }
+      {
+        status: 400,
+      }
     );
   }
 
-  if (!turnstileToken || turnstileToken.length > 2048) {
+  if (
+    !turnstileToken ||
+    turnstileToken.length > 2048
+  ) {
     return NextResponse.json(
       {
         success: false,
-        message: "Conclua a verificação de segurança.",
+        message:
+          "Conclua a verificação de segurança.",
       },
-      { status: 400 }
+      {
+        status: 400,
+      }
     );
   }
 
   try {
-    const verification = await verifyTurnstile(
-      turnstileToken,
-      turnstileSecret,
-      getClientIp(request)
-    );
+    const verification =
+      await verifyTurnstile(
+        turnstileToken,
+        turnstileSecret,
+        getClientIp(request)
+      );
+
+    const validHostname =
+      isAllowedTurnstileHostname(
+        verification.hostname
+      );
+
+    const validAction =
+      isAllowedTurnstileAction(
+        verification.action
+      );
 
     if (
       !verification.success ||
-      (verification.action &&
-        verification.action !== "portfolio_contact")
+      !validHostname ||
+      !validAction
     ) {
       console.warn(
         "Turnstile rejeitou a solicitação:",
-        verification["error-codes"] ?? []
+        {
+          hostname:
+            verification.hostname,
+
+          action:
+            verification.action,
+
+          validHostname,
+
+          validAction,
+
+          errors:
+            verification["error-codes"] ?? [],
+        }
       );
 
       return NextResponse.json(
@@ -245,11 +397,16 @@ export async function POST(request: Request) {
           message:
             "A verificação de segurança expirou ou não foi aprovada. Tente novamente.",
         },
-        { status: 400 }
+        {
+          status: 400,
+        }
       );
     }
   } catch (error) {
-    console.error("Erro ao validar o Turnstile:", error);
+    console.error(
+      "Erro ao validar o Turnstile:",
+      error
+    );
 
     return NextResponse.json(
       {
@@ -257,17 +414,29 @@ export async function POST(request: Request) {
         message:
           "Não foi possível concluir a verificação de segurança. Tente novamente.",
       },
-      { status: 502 }
+      {
+        status: 502,
+      }
     );
   }
 
   const safeName = escapeHtml(name);
-  const safeEmail = escapeHtml(email);
-  const safeCompany = escapeHtml(company || "Não informado");
-  const safeService = escapeHtml(service);
-  const safeMessage = escapeHtml(message).replaceAll("\n", "<br />");
 
-  const subject = `[Portfólio] ${service} — ${name}`;
+  const safeEmail = escapeHtml(email);
+
+  const safeCompany = escapeHtml(
+    company || "Não informado"
+  );
+
+  const safeService =
+    escapeHtml(service);
+
+  const safeMessage = escapeHtml(
+    message
+  ).replaceAll("\n", "<br />");
+
+  const subject =
+    `[Portfólio] ${service} — ${name}`;
 
   const text = [
     "Novo contato pelo portfólio",
@@ -283,55 +452,199 @@ export async function POST(request: Request) {
 
   const html = `
     <!doctype html>
+
     <html lang="pt-BR">
-      <body style="margin:0;padding:0;background:#061014;font-family:Arial,sans-serif;color:#edfdf8;">
-        <div style="padding:32px 16px;">
-          <div style="max-width:680px;margin:0 auto;border:1px solid rgba(125,255,201,.22);border-radius:24px;overflow:hidden;background:#0b1b22;">
-            <div style="padding:28px 30px;border-bottom:1px solid rgba(125,255,201,.16);background:#0d222a;">
-              <p style="margin:0 0 10px;font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:#27f29a;">
+      <body
+        style="
+          margin: 0;
+          padding: 0;
+          background: #061014;
+          font-family: Arial, sans-serif;
+          color: #edfdf8;
+        "
+      >
+        <div style="padding: 32px 16px;">
+          <div
+            style="
+              max-width: 680px;
+              margin: 0 auto;
+              border: 1px solid rgba(125, 255, 201, 0.22);
+              border-radius: 24px;
+              overflow: hidden;
+              background: #0b1b22;
+            "
+          >
+            <div
+              style="
+                padding: 28px 30px;
+                border-bottom: 1px solid rgba(125, 255, 201, 0.16);
+                background: #0d222a;
+              "
+            >
+              <p
+                style="
+                  margin: 0 0 10px;
+                  font-size: 11px;
+                  font-weight: 800;
+                  letter-spacing: 0.18em;
+                  text-transform: uppercase;
+                  color: #27f29a;
+                "
+              >
                 Novo contato pelo portfólio
               </p>
 
-              <h1 style="margin:0;font-size:26px;line-height:1.25;color:#edfdf8;">
+              <h1
+                style="
+                  margin: 0;
+                  font-size: 26px;
+                  line-height: 1.25;
+                  color: #edfdf8;
+                "
+              >
                 ${safeService}
               </h1>
             </div>
 
-            <div style="padding:30px;">
-              <table role="presentation" style="width:100%;border-collapse:collapse;">
+            <div style="padding: 30px;">
+              <table
+                role="presentation"
+                style="
+                  width: 100%;
+                  border-collapse: collapse;
+                "
+              >
                 <tr>
-                  <td style="padding:10px 0;color:#8fb0aa;width:120px;">Nome</td>
-                  <td style="padding:10px 0;color:#edfdf8;font-weight:700;">${safeName}</td>
+                  <td
+                    style="
+                      padding: 10px 0;
+                      color: #8fb0aa;
+                      width: 120px;
+                    "
+                  >
+                    Nome
+                  </td>
+
+                  <td
+                    style="
+                      padding: 10px 0;
+                      color: #edfdf8;
+                      font-weight: 700;
+                    "
+                  >
+                    ${safeName}
+                  </td>
                 </tr>
 
                 <tr>
-                  <td style="padding:10px 0;color:#8fb0aa;">E-mail</td>
-                  <td style="padding:10px 0;color:#edfdf8;font-weight:700;">${safeEmail}</td>
+                  <td
+                    style="
+                      padding: 10px 0;
+                      color: #8fb0aa;
+                    "
+                  >
+                    E-mail
+                  </td>
+
+                  <td
+                    style="
+                      padding: 10px 0;
+                      color: #edfdf8;
+                      font-weight: 700;
+                    "
+                  >
+                    ${safeEmail}
+                  </td>
                 </tr>
 
                 <tr>
-                  <td style="padding:10px 0;color:#8fb0aa;">Empresa</td>
-                  <td style="padding:10px 0;color:#edfdf8;font-weight:700;">${safeCompany}</td>
+                  <td
+                    style="
+                      padding: 10px 0;
+                      color: #8fb0aa;
+                    "
+                  >
+                    Empresa
+                  </td>
+
+                  <td
+                    style="
+                      padding: 10px 0;
+                      color: #edfdf8;
+                      font-weight: 700;
+                    "
+                  >
+                    ${safeCompany}
+                  </td>
                 </tr>
 
                 <tr>
-                  <td style="padding:10px 0;color:#8fb0aa;">Solução</td>
-                  <td style="padding:10px 0;color:#edfdf8;font-weight:700;">${safeService}</td>
+                  <td
+                    style="
+                      padding: 10px 0;
+                      color: #8fb0aa;
+                    "
+                  >
+                    Solução
+                  </td>
+
+                  <td
+                    style="
+                      padding: 10px 0;
+                      color: #edfdf8;
+                      font-weight: 700;
+                    "
+                  >
+                    ${safeService}
+                  </td>
                 </tr>
               </table>
 
-              <div style="margin-top:24px;padding:22px;border:1px solid rgba(125,255,201,.16);border-radius:18px;background:#061014;">
-                <p style="margin:0 0 12px;font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#27f29a;">
+              <div
+                style="
+                  margin-top: 24px;
+                  padding: 22px;
+                  border: 1px solid rgba(125, 255, 201, 0.16);
+                  border-radius: 18px;
+                  background: #061014;
+                "
+              >
+                <p
+                  style="
+                    margin: 0 0 12px;
+                    font-size: 11px;
+                    font-weight: 800;
+                    letter-spacing: 0.16em;
+                    text-transform: uppercase;
+                    color: #27f29a;
+                  "
+                >
                   Mensagem
                 </p>
 
-                <p style="margin:0;font-size:15px;line-height:1.8;color:#edfdf8;">
+                <p
+                  style="
+                    margin: 0;
+                    font-size: 15px;
+                    line-height: 1.8;
+                    color: #edfdf8;
+                  "
+                >
                   ${safeMessage}
                 </p>
               </div>
 
-              <p style="margin:24px 0 0;font-size:13px;line-height:1.6;color:#8fb0aa;">
-                Responda este e-mail normalmente. O endereço de resposta foi configurado para ${safeEmail}.
+              <p
+                style="
+                  margin: 24px 0 0;
+                  font-size: 13px;
+                  line-height: 1.6;
+                  color: #8fb0aa;
+                "
+              >
+                Responda este e-mail normalmente.
+                O endereço de resposta foi configurado
+                para ${safeEmail}.
               </p>
             </div>
           </div>
@@ -341,56 +654,87 @@ export async function POST(request: Request) {
   `;
 
   try {
-    const resendResponse = await fetch(RESEND_ENDPOINT, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-        "Idempotency-Key": crypto.randomUUID(),
-      },
-      body: JSON.stringify({
-        from: "Portfólio Carlos Daniel <formulario@mail.carlosdaniel.dev.br>",
-        to: ["contato@carlosdaniel.dev.br"],
-        reply_to: email,
-        subject,
-        html,
-        text,
-        tags: [
-          {
-            name: "source",
-            value: "portfolio",
-          },
-        ],
-      }),
-    });
+    const resendResponse = await fetch(
+      RESEND_ENDPOINT,
+      {
+        method: "POST",
 
-    const resendData = await resendResponse.json().catch(() => null);
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "Idempotency-Key":
+            crypto.randomUUID(),
+        },
+
+        body: JSON.stringify({
+          from:
+            "Portfólio Carlos Daniel <formulario@mail.carlosdaniel.dev.br>",
+
+          to: [
+            "contato@carlosdaniel.dev.br",
+          ],
+
+          reply_to: email,
+
+          subject,
+
+          html,
+
+          text,
+
+          tags: [
+            {
+              name: "source",
+              value: "portfolio",
+            },
+          ],
+        }),
+      }
+    );
+
+    const resendData =
+      await resendResponse
+        .json()
+        .catch(() => null);
 
     if (!resendResponse.ok) {
-      console.error("Erro retornado pelo Resend:", resendData);
+      console.error(
+        "Erro retornado pelo Resend:",
+        resendData
+      );
 
       return NextResponse.json(
         {
           success: false,
-          message: "Não foi possível enviar a mensagem agora.",
+          message:
+            "Não foi possível enviar a mensagem agora.",
         },
-        { status: 502 }
+        {
+          status: 502,
+        }
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: "Mensagem enviada com sucesso.",
+      message:
+        "Mensagem enviada com sucesso.",
     });
   } catch (error) {
-    console.error("Erro ao conectar com o Resend:", error);
+    console.error(
+      "Erro ao conectar com o Resend:",
+      error
+    );
 
     return NextResponse.json(
       {
         success: false,
-        message: "Não foi possível conectar ao serviço de envio.",
+        message:
+          "Não foi possível conectar ao serviço de envio.",
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }
