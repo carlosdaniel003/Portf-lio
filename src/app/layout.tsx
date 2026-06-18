@@ -7,47 +7,108 @@ import Footer from "@/components/ui/Footer";
 import Header from "@/components/ui/Header";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], display: "swap" });
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const title =
+  "Carlos Daniel | Software, IA e Automação Industrial";
+
+const description =
+  "Desenvolvo sistemas, dashboards, automações e soluções com inteligência artificial e visão computacional para transformar problemas reais de indústria, qualidade e operação.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://carlosdaniel.dev.br"),
+  metadataBase: new URL(
+    "https://carlosdaniel.dev.br"
+  ),
+
   title: {
-    default: "Carlos Daniel | Full Stack Developer",
+    default: title,
     template: "%s | Carlos Daniel",
   },
-  description:
-    "Portfólio de Carlos Daniel: sistemas industriais, IA aplicada, visão computacional, automação e desenvolvimento full stack.",
+
+  description,
+
+  applicationName: "Portfólio Carlos Daniel",
+
+  authors: [
+    {
+      name: "Carlos Daniel",
+      url: "https://carlosdaniel.dev.br",
+    },
+  ],
+
+  creator: "Carlos Daniel",
+  publisher: "Carlos Daniel",
+
+  alternates: {
+    canonical: "/",
+  },
+
   keywords: [
     "Carlos Daniel",
-    "Full Stack Developer",
-    "Portfólio",
-    "IA",
+    "Desenvolvedor Full Stack",
+    "Desenvolvimento de Sistemas",
+    "Software Industrial",
+    "Inteligência Artificial",
     "Visão Computacional",
     "Automação Industrial",
+    "Dashboards",
     "Next.js",
+    "TypeScript",
     "Python",
+    "OpenCV",
   ],
+
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    url: "https://carlosdaniel.dev.br",
+    siteName: "Carlos Daniel",
+    title,
+    description,
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+    creator: "@carlosdaniel003",
+  },
+
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
   },
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html
-  lang="pt-BR"
-  className="scroll-smooth"
-  data-scroll-behavior="smooth"
-  suppressHydrationWarning
->
+      lang="pt-BR"
+      className="scroll-smooth"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body className={inter.className}>
         <CustomCursor />
+
         <Header />
+
         {children}
+
         <Footer />
+
         <Analytics />
       </body>
     </html>
