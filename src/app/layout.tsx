@@ -12,16 +12,18 @@ const inter = Inter({
   display: "swap",
 });
 
+const siteUrl = "https://carlosdaniel.dev.br";
+
 const title =
   "Carlos Daniel | Software, IA e Automação Industrial";
 
 const description =
   "Desenvolvo sistemas, dashboards, automações e soluções com inteligência artificial e visão computacional para transformar problemas reais de indústria, qualidade e operação.";
 
+const socialImage = `${siteUrl}/opengraph-image`;
+
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    "https://carlosdaniel.dev.br"
-  ),
+  metadataBase: new URL(siteUrl),
 
   title: {
     default: title,
@@ -35,7 +37,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: "Carlos Daniel",
-      url: "https://carlosdaniel.dev.br",
+      url: siteUrl,
     },
   ],
 
@@ -64,10 +66,18 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pt_BR",
-    url: "https://carlosdaniel.dev.br",
+    url: siteUrl,
     siteName: "Carlos Daniel",
     title,
     description,
+    images: [
+      {
+        url: socialImage,
+        width: 1200,
+        height: 630,
+        alt: "Carlos Daniel | Software, IA e Automação Industrial",
+      },
+    ],
   },
 
   twitter: {
@@ -75,6 +85,7 @@ export const metadata: Metadata = {
     title,
     description,
     creator: "@carlosdaniel003",
+    images: [socialImage],
   },
 
   icons: {
