@@ -1,103 +1,348 @@
 // src\components\ui\CustomCursor.tsx
 "use client";
 
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useEffect, useState, useRef } from "react";
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+} from "framer-motion";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+type CursorMode =
+  | "default"
+  | "pointer"
+  | "text";
+
+const POINTER_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "select",
+  "summary",
+  "label[for]",
+  "[role='button']",
+  "[role='link']",
+  "[tabindex]:not([tabindex='-1'])",
+  "[data-cursor='pointer']",
+  "input[type='button']",
+  "input[type='submit']",
+  "input[type='reset']",
+  "input[type='checkbox']",
+  "input[type='radio']",
+  "input[type='range']",
+].join(", ");
+
+const TEXT_SELECTOR = [
+  "textarea",
+  "[contenteditable='true']",
+  "input:not([type])",
+  "input[type='text']",
+  "input[type='email']",
+  "input[type='password']",
+  "input[type='search']",
+  "input[type='tel']",
+  "input[type='url']",
+  "input[type='number']",
+].join(", ");
 
 export default function CustomCursor() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [isPointer, setIsPointer] = useState(false);
-  const [isClicking, setIsClicking] = useState(false);
+  const [isVisible, setIsVisible] =
+    useState(false);
+
+  const [isClicking, setIsClicking] =
+    useState(false);
+
+  const [cursorMode, setCursorMode] =
+    useState<CursorMode>("default");
 
   const cursorX = useMotionValue(-100);
   const cursorY = useMotionValue(-100);
 
-  const ringX = useSpring(cursorX, { stiffness: 160, damping: 22 });
-  const ringY = useSpring(cursorY, { stiffness: 160, damping: 22 });
+  /*
+   * A seta acompanha diretamente o mouse.
+   * Somente o anel utiliza uma mola curta.
+   */
+  const ringX = useSpring(cursorX, {
+    stiffness: 1100,
+    damping: 68,
+    mass: 0.08,
+  });
 
-  const lastUpdateRef = useRef(0);
-  const throttleDelayRef = useRef(16); // ~60fps
+  const ringY = useSpring(cursorY, {
+    stiffness: 1100,
+    damping: 68,
+    mass: 0.08,
+  });
+
+  const visibleRef = useRef(false);
+
+  const cursorModeRef =
+    useRef<CursorMode>("default");
 
   useEffect(() => {
-    const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
+    const finePointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)"
+    );
 
-    if (!hasFinePointer) return;
+    if (!finePointer.matches) {
+      return;
+    }
 
-    function handleMouseMove(event: MouseEvent) {
-      const now = Date.now();
-      
-      // Throttle mousemove para evitar excesso de atualizações
-      if (now - lastUpdateRef.current < throttleDelayRef.current) {
+    function updateVisibility(
+      visible: boolean
+    ) {
+      if (
+        visibleRef.current === visible
+      ) {
         return;
       }
-      
-      lastUpdateRef.current = now;
+
+      visibleRef.current = visible;
+      setIsVisible(visible);
+    }
+
+    function updateCursorMode(
+      mode: CursorMode
+    ) {
+      if (
+        cursorModeRef.current === mode
+      ) {
+        return;
+      }
+
+      cursorModeRef.current = mode;
+      setCursorMode(mode);
+    }
+
+    function handlePointerMove(
+      event: PointerEvent
+    ) {
+      if (
+        event.pointerType &&
+        event.pointerType !== "mouse"
+      ) {
+        return;
+      }
+
+      /*
+       * Sem throttle.
+       * A posição é enviada diretamente aos
+       * MotionValues para reduzir a latência.
+       */
       cursorX.set(event.clientX);
       cursorY.set(event.clientY);
-      setIsVisible(true);
 
-      const target = event.target as HTMLElement | null;
-      const interactiveElement = target?.closest(
-        "a, button, input, textarea, select, [role='button']"
-      );
+      updateVisibility(true);
 
-      setIsPointer(Boolean(interactiveElement));
+      const target =
+        event.target instanceof Element
+          ? event.target
+          : null;
+
+      if (
+        target?.closest(TEXT_SELECTOR)
+      ) {
+        updateCursorMode("text");
+        return;
+      }
+
+      if (
+        target?.closest(POINTER_SELECTOR)
+      ) {
+        updateCursorMode("pointer");
+        return;
+      }
+
+      updateCursorMode("default");
     }
 
-    function handleMouseLeave() {
-      setIsVisible(false);
-    }
+    function handlePointerDown(
+      event: PointerEvent
+    ) {
+      if (
+        event.pointerType &&
+        event.pointerType !== "mouse"
+      ) {
+        return;
+      }
 
-    function handleMouseDown() {
       setIsClicking(true);
     }
 
-    function handleMouseUp() {
+    function handlePointerUp() {
       setIsClicking(false);
     }
 
-    // Usar 'touchstart' para detectar melhor em mobile
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("mouseleave", handleMouseLeave, { passive: true });
-    window.addEventListener("mousedown", handleMouseDown, { passive: true });
-    window.addEventListener("mouseup", handleMouseUp, { passive: true });
+    function handlePointerLeave(
+      event: MouseEvent
+    ) {
+      if (!event.relatedTarget) {
+        updateVisibility(false);
+        setIsClicking(false);
+      }
+    }
+
+    function handleWindowBlur() {
+      updateVisibility(false);
+      setIsClicking(false);
+    }
+
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        updateVisibility(false);
+        setIsClicking(false);
+      }
+    }
+
+    window.addEventListener(
+      "pointermove",
+      handlePointerMove,
+      {
+        passive: true,
+      }
+    );
+
+    window.addEventListener(
+      "pointerdown",
+      handlePointerDown,
+      {
+        passive: true,
+      }
+    );
+
+    window.addEventListener(
+      "pointerup",
+      handlePointerUp,
+      {
+        passive: true,
+      }
+    );
+
+    window.addEventListener(
+      "mouseout",
+      handlePointerLeave,
+      {
+        passive: true,
+      }
+    );
+
+    window.addEventListener(
+      "blur",
+      handleWindowBlur
+    );
+
+    document.addEventListener(
+      "visibilitychange",
+      handleVisibilityChange
+    );
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseleave", handleMouseLeave);
-      window.removeEventListener("mousedown", handleMouseDown);
-      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener(
+        "pointermove",
+        handlePointerMove
+      );
+
+      window.removeEventListener(
+        "pointerdown",
+        handlePointerDown
+      );
+
+      window.removeEventListener(
+        "pointerup",
+        handlePointerUp
+      );
+
+      window.removeEventListener(
+        "mouseout",
+        handlePointerLeave
+      );
+
+      window.removeEventListener(
+        "blur",
+        handleWindowBlur
+      );
+
+      document.removeEventListener(
+        "visibilitychange",
+        handleVisibilityChange
+      );
     };
   }, [cursorX, cursorY]);
+
+  const showCustomCursor =
+    isVisible && cursorMode !== "text";
 
   return (
     <>
       <motion.div
         aria-hidden
-        className="custom-cursor-dot"
+        className={`custom-cursor-arrow is-${cursorMode}`}
         style={{
           x: cursorX,
           y: cursorY,
         }}
         animate={{
-          opacity: isVisible ? 1 : 0,
-          scale: isClicking ? 0.75 : 1,
+          opacity:
+            showCustomCursor ? 1 : 0,
+
+          scale: isClicking
+            ? 0.84
+            : cursorMode === "pointer"
+              ? 1.06
+              : 1,
         }}
-        transition={{ duration: 0.16 }}
-      />
+        transition={{
+          duration: 0.065,
+          ease: "easeOut",
+        }}
+      >
+        <svg
+          viewBox="0 0 24 32"
+          role="presentation"
+          focusable="false"
+        >
+          <path
+            d="
+              M2.5 2.5
+              V25.2
+              L8.7 19.3
+              L13.3 29.2
+              L18.1 27
+              L13.5 17.2
+              H22.2
+              Z
+            "
+          />
+        </svg>
+      </motion.div>
 
       <motion.div
         aria-hidden
-        className="custom-cursor-ring"
+        className={`custom-cursor-ring is-${cursorMode}`}
         style={{
           x: ringX,
           y: ringY,
         }}
         animate={{
-          opacity: isVisible ? 1 : 0,
-          scale: isPointer ? 1.75 : isClicking ? 0.82 : 1,
+          opacity: showCustomCursor
+            ? cursorMode === "pointer"
+              ? 1
+              : 0.58
+            : 0,
+
+          scale: isClicking
+            ? 0.76
+            : cursorMode === "pointer"
+              ? 1.38
+              : 1,
         }}
-        transition={{ duration: 0.18 }}
+        transition={{
+          duration: 0.085,
+          ease: "easeOut",
+        }}
       />
     </>
   );
