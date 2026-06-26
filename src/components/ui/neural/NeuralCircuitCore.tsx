@@ -397,341 +397,586 @@ export default function NeuralCircuitCore() {
           );
         })}
 
-        {/* Placa 3D */}
-        <div className="absolute left-1/2 top-1/2 h-[68%] w-[68%] max-h-[450px] max-w-[450px] -translate-x-1/2 -translate-y-1/2">
-          <motion.div
-            className="absolute inset-0"
-            style={{
-              x: boardX,
-              y: boardY,
-              transformStyle: "preserve-3d",
-            }}
-          >
-          {/* Camadas inferiores */}
-          <div
-  aria-hidden="true"
-  className="absolute inset-[5%] rounded-[2.4rem] border border-[color:var(--line-soft)] bg-[color:var(--bg-deepest)] opacity-[0.55] shadow-[0_34px_80px_var(--shadow-deep)]"
-  style={{
-    transform: "translateY(1.75rem) scale(0.94)",
-  }}
-/>
+        {/* Núcleo tecnológico central aberto */}
+<div
+  className="
+    pointer-events-none
+    absolute left-1/2 top-1/2
+    z-20
 
+    h-[60%] w-[60%]
+    max-h-[410px] max-w-[410px]
+
+    -translate-x-1/2
+    -translate-y-1/2
+  "
+>
+  <motion.div
+    className="absolute inset-0"
+    style={{
+      x: boardX,
+      y: boardY,
+    }}
+  >
+    {/* Halo externo */}
+    <motion.div
+      aria-hidden="true"
+      className="
+        absolute inset-0
+        rounded-full
+        border
+        border-[color:var(--line)]
+      "
+      animate={
+        shouldReduceMotion
+          ? undefined
+          : {
+              rotate: 360,
+            }
+      }
+      transition={{
+        duration: 30,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+    >
+      <span
+        className="
+          absolute left-1/2 top-[-4px]
+          h-2 w-2
+          -translate-x-1/2
+          rounded-full
+          bg-[color:var(--accent)]
+          shadow-[0_0_18px_var(--accent)]
+        "
+      />
+
+      <span
+        className="
+          absolute bottom-[-4px] left-1/2
+          h-2 w-2
+          -translate-x-1/2
+          rounded-full
+          bg-[color:var(--accent-2)]
+          shadow-[0_0_18px_var(--accent-2)]
+        "
+      />
+    </motion.div>
+
+    {/* Segundo anel */}
+    <motion.div
+      aria-hidden="true"
+      className="
+        absolute inset-[8%]
+        rounded-full
+        border
+        border-dashed
+        border-[color:var(--accent)]/30
+      "
+      animate={
+        shouldReduceMotion
+          ? undefined
+          : {
+              rotate: -360,
+            }
+      }
+      transition={{
+        duration: 22,
+        repeat: Infinity,
+        ease: "linear",
+      }}
+    />
+
+    {/* Anel interno pulsante */}
+    <motion.div
+      aria-hidden="true"
+      className="
+        absolute inset-[18%]
+        rounded-full
+        border
+        border-[color:var(--accent-2)]/25
+
+        bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--accent)_12%,transparent),transparent_68%)]
+      "
+      animate={
+        shouldReduceMotion
+          ? undefined
+          : {
+              scale: [0.97, 1.04, 0.97],
+              opacity: [0.48, 0.88, 0.48],
+            }
+      }
+      transition={{
+        duration: 4.8,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
+
+    {/* Circuitos sem fundo quadrado */}
+    <svg
+      viewBox="0 0 200 200"
+      className="
+        absolute inset-[3%]
+        z-10
+        h-[94%] w-[94%]
+        overflow-visible
+      "
+      aria-hidden="true"
+    >
+      <defs>
+        <filter
+          id="open-core-glow"
+          x="-100%"
+          y="-100%"
+          width="300%"
+          height="300%"
+          colorInterpolationFilters="sRGB"
+        >
+          <feGaussianBlur
+            stdDeviation="1.7"
+            result="blurred"
+          />
+
+          <feMerge>
+            <feMergeNode in="blurred" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+
+        <radialGradient
+          id="open-core-center"
+          cx="50%"
+          cy="50%"
+          r="50%"
+        >
+          <stop
+            offset="0%"
+            stopColor="var(--accent)"
+            stopOpacity="0.2"
+          />
+
+          <stop
+            offset="55%"
+            stopColor="var(--accent-2)"
+            stopOpacity="0.06"
+          />
+
+          <stop
+            offset="100%"
+            stopColor="var(--accent)"
+            stopOpacity="0"
+          />
+        </radialGradient>
+      </defs>
+
+      <circle
+        cx="100"
+        cy="100"
+        r="76"
+        fill="url(#open-core-center)"
+      />
+
+      <circle
+        cx="100"
+        cy="100"
+        r="72"
+        fill="none"
+        stroke="var(--line)"
+        strokeWidth="0.7"
+        strokeDasharray="3 8"
+      />
+
+      <circle
+        cx="100"
+        cy="100"
+        r="54"
+        fill="none"
+        stroke="var(--line-soft)"
+        strokeWidth="0.8"
+      />
+
+      {circuitPaths.map((path) => (
+        <g key={path.id}>
+          <path
+            d={path.d}
+            fill="none"
+            stroke="var(--line)"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+
+          <motion.path
+            d={path.d}
+            fill="none"
+            stroke={
+              path.tone === "primary"
+                ? "var(--accent)"
+                : "var(--accent-2)"
+            }
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeDasharray="8 22"
+            filter="url(#open-core-glow)"
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    strokeDashoffset: [30, 0],
+                  }
+            }
+            transition={{
+              duration: 2.7,
+              delay: path.delay,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+        </g>
+      ))}
+
+      {[24, 50, 100, 150, 176].map(
+        (coordinate, index) => (
+          <motion.circle
+            key={`open-signal-${coordinate}`}
+            cx={
+              index % 2 === 0
+                ? coordinate
+                : 100
+            }
+            cy={
+              index % 2 === 0
+                ? 100
+                : coordinate
+            }
+            r="2.5"
+            fill={
+              index % 2 === 0
+                ? "var(--accent)"
+                : "var(--accent-2)"
+            }
+            filter="url(#open-core-glow)"
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    scale: [0.75, 1.5, 0.75],
+                    opacity: [0.4, 1, 0.4],
+                  }
+            }
+            transition={{
+              duration: 2.4,
+              delay: index * 0.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        )
+      )}
+    </svg>
+
+    {/* Base inferior do chip */}
 <div
   aria-hidden="true"
-  className="absolute inset-[2.5%] rounded-[2.4rem] border border-[color:var(--line)] bg-[color:var(--bg-deep)] opacity-[0.82]"
-  style={{
-    transform: "translateY(1rem) scale(0.97)",
-  }}
-/>
+  className="
+    absolute left-1/2 top-1/2
+    z-20
 
-          {/* Superfície da placa */}
-          <div className="gradient-border absolute inset-0 isolate overflow-hidden rounded-[2.5rem] border border-[color:var(--line-strong)] bg-[color:var(--panel-strong)] shadow-[0_30px_90px_var(--shadow-deep)]">
-            <div className="soft-grid pointer-events-none absolute inset-0 opacity-[0.28]" />
+    h-[42%] w-[42%]
 
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-[8%] rounded-[2rem] border border-[color:var(--line-soft)]"
-            />
-
-            <motion.div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-x-[12%] top-[10%] h-px bg-gradient-to-r from-transparent via-[color:var(--accent)] to-transparent"
-              animate={
-                shouldReduceMotion
-                  ? undefined
-                  : {
-                      y: [0, 300, 0],
-                      opacity: [0, 0.8, 0],
-                    }
-              }
-              transition={{
-                duration: 6.2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-
-            <svg
-  viewBox="0 0 200 200"
-  className="pointer-events-none absolute inset-0 z-10 h-full w-full"
-  aria-hidden="true"
+    -translate-x-1/2
+    -translate-y-1/2
+  "
 >
-              <defs>
-                <linearGradient
-                  id="neural-board-gradient"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="100%"
-                >
-                  <stop
-                    offset="0%"
-                    stopColor="var(--accent)"
-                    stopOpacity="0.12"
-                  />
-                  <stop
-                    offset="48%"
-                    stopColor="var(--accent)"
-                    stopOpacity="0.95"
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor="var(--accent-2)"
-                    stopOpacity="0.18"
-                  />
-                </linearGradient>
+  <div
+    className="
+      absolute inset-0
 
-                <filter
-                  id="neural-soft-glow"
-                  x="-100%"
-                  y="-100%"
-                  width="300%"
-                  height="300%"
-                  colorInterpolationFilters="sRGB"
-                >
-                  <feGaussianBlur
-                    stdDeviation="1.8"
-                    result="blurred"
-                  />
-                  <feMerge>
-                    <feMergeNode in="blurred" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
+      rounded-[1.8rem]
+      border
+      border-[color:var(--line)]
 
-              <rect
-                x="18"
-                y="18"
-                width="164"
-                height="164"
-                rx="26"
-                fill="none"
-                stroke="var(--line)"
-                strokeWidth="0.7"
-                strokeDasharray="3 7"
-              />
+      bg-[color:var(--bg-deepest)]
+      opacity-70
 
-              {circuitPaths.map((path) => (
-                <g key={path.id}>
-                  <path
-                    d={path.d}
-                    fill="none"
-                    stroke="var(--line)"
-                    strokeWidth="1.1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
+      shadow-[0_30px_60px_var(--shadow-deep)]
+    "
+    style={{
+      transform:
+        "translateY(12px) scale(0.94)",
+    }}
+  />
+</div>
 
-                  <motion.path
-                    d={path.d}
-                    fill="none"
-                    stroke={
-                      path.tone === "primary"
-                        ? "var(--accent)"
-                        : "var(--accent-2)"
-                    }
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeDasharray="8 24"
-                    filter="url(#neural-soft-glow)"
-                    animate={
-                      shouldReduceMotion
-                        ? undefined
-                        : {
-                            strokeDashoffset: [32, 0],
-                          }
-                    }
-                    transition={{
-                      duration: 2.8,
-                      delay: path.delay,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                  />
-                </g>
-              ))}
+    {/* Chip central */}
+    <div
+      className="
+        absolute left-1/2 top-1/2
+        z-30
 
-              {[24, 50, 100, 150, 176].map((coordinate, index) => (
-                <motion.circle
-                  key={`signal-${coordinate}`}
-                  cx={
-                    index % 2 === 0
-                      ? coordinate
-                      : 100
-                  }
-                  cy={
-                    index % 2 === 0
-                      ? 100
-                      : coordinate
-                  }
-                  r="2.5"
-                  fill={
-                    index % 2 === 0
-                      ? "var(--accent)"
-                      : "var(--accent-2)"
-                  }
-                  filter="url(#neural-soft-glow)"
-                  animate={
-                    shouldReduceMotion
-                      ? undefined
-                      : {
-                          scale: [0.8, 1.5, 0.8],
-                          opacity: [0.45, 1, 0.45],
-                        }
-                  }
-                  transition={{
-                    duration: 2.3,
-                    delay: index * 0.22,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-              ))}
-            </svg>
+        h-[42%] w-[42%]
 
-            {/* Chip central */}
-            <div className="absolute left-1/2 top-1/2 z-20 h-[38%] w-[38%] -translate-x-1/2 -translate-y-1/2">
-              <motion.div
-                className="absolute inset-0"
-                style={{
-                  transformStyle: "preserve-3d",
-                }}
-                animate={
-                  shouldReduceMotion
-                    ? undefined
-                    : {
-                        y: [0, -4, 0],
-                      }
+        -translate-x-1/2
+        -translate-y-1/2
+      "
+    >
+      <motion.div
+        className="
+          absolute inset-0
+
+          rounded-[1.8rem]
+          border
+          border-[color:var(--accent)]
+
+          bg-[color:var(--bg-deep)]
+
+          shadow-[0_0_55px_color-mix(in_srgb,var(--accent)_28%,transparent)]
+        "
+        animate={
+          shouldReduceMotion
+            ? undefined
+            : {
+                y: [0, -5, 0],
+              }
+        }
+        transition={{
+          duration: 4.2,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      >
+      {/* Pinos laterais */}
+      {chipPins.map((position) => (
+        <span
+          key={`open-left-${position}`}
+          aria-hidden="true"
+          className="
+            absolute -left-3
+            h-1.5 w-3
+            rounded-l-full
+            bg-[color:var(--accent)]/75
+          "
+          style={{
+            top: `${position}%`,
+          }}
+        />
+      ))}
+
+      {chipPins.map((position) => (
+        <span
+          key={`open-right-${position}`}
+          aria-hidden="true"
+          className="
+            absolute -right-3
+            h-1.5 w-3
+            rounded-r-full
+            bg-[color:var(--accent-2)]/75
+          "
+          style={{
+            top: `${position}%`,
+          }}
+        />
+      ))}
+
+      {chipPins.map((position) => (
+        <span
+          key={`open-top-${position}`}
+          aria-hidden="true"
+          className="
+            absolute -top-3
+            h-3 w-1.5
+            rounded-t-full
+            bg-[color:var(--accent)]/75
+          "
+          style={{
+            left: `${position}%`,
+          }}
+        />
+      ))}
+
+      {chipPins.map((position) => (
+        <span
+          key={`open-bottom-${position}`}
+          aria-hidden="true"
+          className="
+            absolute -bottom-3
+            h-3 w-1.5
+            rounded-b-full
+            bg-[color:var(--accent-2)]/75
+          "
+          style={{
+            left: `${position}%`,
+          }}
+        />
+      ))}
+
+      {/* Corpo interno */}
+      <div
+        className="
+          absolute inset-[9%]
+          rounded-[1.4rem]
+          border
+          border-[color:var(--line-strong)]
+
+          bg-[color:var(--panel-strong)]
+        "
+      />
+
+      <div
+        className="
+          absolute inset-[17%]
+          grid place-items-center
+          overflow-hidden
+
+          rounded-[1.1rem]
+          border
+          border-[color:var(--accent)]/60
+
+          bg-[color:var(--bg-deepest)]
+        "
+      >
+        <motion.div
+          aria-hidden="true"
+          className="
+            absolute inset-0
+
+            bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--accent)_35%,transparent),transparent_68%)]
+          "
+          animate={
+            shouldReduceMotion
+              ? undefined
+              : {
+                  opacity: [
+                    0.48,
+                    0.95,
+                    0.48,
+                  ],
+                  scale: [
+                    0.92,
+                    1.1,
+                    0.92,
+                  ],
                 }
-                transition={{
-                  duration: 4.2,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-              <div
-  aria-hidden="true"
-  className="absolute inset-0 rounded-[1.6rem] border border-[color:var(--line)] bg-[color:var(--bg-deepest)] opacity-75"
-  style={{
-    transform: "translateY(0.75rem) scale(0.94)",
-  }}
-/>
+          }
+          transition={{
+            duration: 3.2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+        />
 
-              <div className="absolute inset-0 z-20 rounded-[1.6rem] border border-[color:var(--accent)] bg-[color:var(--bg-deep)] shadow-[0_0_48px_color-mix(in_srgb,var(--accent)_24%,transparent)]">
-                {chipPins.map((position) => (
-                  <span
-                    key={`left-${position}`}
-                    aria-hidden="true"
-                    className="absolute -left-3 h-1.5 w-3 rounded-l-full bg-[color:var(--accent)]/75"
-                    style={{ top: `${position}%` }}
-                  />
-                ))}
+        <div className="relative z-10 text-center">
+          <span
+            className="
+              block
+              font-display
+              text-3xl
+              font-bold
+              tracking-[-0.08em]
+              text-[color:var(--accent)]
 
-                {chipPins.map((position) => (
-                  <span
-                    key={`right-${position}`}
-                    aria-hidden="true"
-                    className="absolute -right-3 h-1.5 w-3 rounded-r-full bg-[color:var(--accent-2)]/75"
-                    style={{ top: `${position}%` }}
-                  />
-                ))}
+              sm:text-4xl
+            "
+          >
+            CD
+          </span>
 
-                {chipPins.map((position) => (
-                  <span
-                    key={`top-${position}`}
-                    aria-hidden="true"
-                    className="absolute -top-3 h-3 w-1.5 rounded-t-full bg-[color:var(--accent)]/75"
-                    style={{ left: `${position}%` }}
-                  />
-                ))}
+          <span
+            className="
+              mt-1 block
+              font-mono
+              text-[6px]
+              font-semibold
+              uppercase
+              tracking-[0.22em]
+              text-[color:var(--muted)]
 
-                {chipPins.map((position) => (
-                  <span
-                    key={`bottom-${position}`}
-                    aria-hidden="true"
-                    className="absolute -bottom-3 h-3 w-1.5 rounded-b-full bg-[color:var(--accent-2)]/75"
-                    style={{ left: `${position}%` }}
-                  />
-                ))}
-
-                <div className="absolute inset-[10%] rounded-[1.25rem] border border-[color:var(--line-strong)] bg-[color:var(--panel-strong)]" />
-
-                <div className="absolute inset-[18%] grid place-items-center overflow-hidden rounded-[1rem] border border-[color:var(--accent)]/65 bg-[color:var(--bg-deepest)]">
-                  <motion.div
-                    aria-hidden="true"
-                    className="absolute inset-0 bg-[radial-gradient(circle_at_center,color-mix(in_srgb,var(--accent)_28%,transparent),transparent_68%)]"
-                    animate={
-                      shouldReduceMotion
-                        ? undefined
-                        : {
-                            opacity: [0.45, 0.92, 0.45],
-                            scale: [0.94, 1.08, 0.94],
-                          }
-                    }
-                    transition={{
-                      duration: 3.2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                  />
-
-                  <div className="relative z-10 text-center">
-                    <span className="block font-display text-3xl font-bold tracking-[-0.08em] text-[color:var(--accent)] sm:text-4xl">
-                      CD
-                    </span>
-
-                    <span className="mt-1 block font-mono text-[6px] font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)] sm:text-[7px]">
-                      Intelligent systems
-                    </span>
-                  </div>
-                </div>
-
-                <motion.span
-                  aria-hidden="true"
-                  className="absolute right-[13%] top-[13%] h-2.5 w-2.5 rounded-full bg-[color:var(--accent)] shadow-[0_0_18px_var(--accent)]"
-                  animate={
-                    shouldReduceMotion
-                      ? undefined
-                      : {
-                          scale: [1, 1.7, 1],
-                          opacity: [0.55, 1, 0.55],
-                        }
-                  }
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                />
-              </div>
-              </motion.div>
-            </div>
-
-            {/* Legendas técnicas */}
-            <div className="absolute left-5 top-5 z-30 flex items-center gap-2 rounded-full border border-[color:var(--line-soft)] bg-[color:var(--bg-deep)]/60 px-3 py-1.5 backdrop-blur-xl">
-              <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--accent)] shadow-[0_0_10px_var(--accent)]" />
-
-              <span className="font-mono text-[7px] font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)] sm:text-[8px]">
-                Core online
-              </span>
-            </div>
-
-            <div className="absolute bottom-5 right-5 z-30 hidden items-center gap-2 sm:flex">
-              <span className="font-mono text-[7px] font-semibold uppercase tracking-[0.18em] text-[color:var(--subtle)]">
-                Signal
-              </span>
-
-              <span className="h-px w-8 bg-gradient-to-r from-[color:var(--accent)] to-[color:var(--accent-2)]" />
-
-              <span className="font-mono text-[7px] font-semibold uppercase tracking-[0.18em] text-[color:var(--muted)]">
-                Stable
-              </span>
-            </div>
-          </div>
-          </motion.div>
+              sm:text-[7px]
+            "
+          >
+            Intelligent systems
+          </span>
         </div>
+      </div>
+
+      <motion.span
+        aria-hidden="true"
+        className="
+          absolute right-[12%] top-[12%]
+          h-2.5 w-2.5
+
+          rounded-full
+          bg-[color:var(--accent)]
+
+          shadow-[0_0_18px_var(--accent)]
+        "
+        animate={
+          shouldReduceMotion
+            ? undefined
+            : {
+                scale: [1, 1.7, 1],
+                opacity: [0.55, 1, 0.55],
+              }
+        }
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+    </motion.div>
+
+    {/* Etiqueta do núcleo */}
+    <div
+      className="
+        absolute left-1/2 top-[3%]
+        z-40
+
+        flex
+        -translate-x-1/2
+        items-center
+        gap-2
+
+        whitespace-nowrap
+        rounded-full
+        border
+        border-[color:var(--line)]
+
+        bg-[color:var(--panel-strong)]
+        px-3 py-1.5
+
+        backdrop-blur-xl
+      "
+    >
+      <span
+        className="
+          h-1.5 w-1.5
+          rounded-full
+          bg-[color:var(--accent)]
+          shadow-[0_0_10px_var(--accent)]
+        "
+      />
+
+      <span
+        className="
+          font-mono
+          text-[7px]
+          font-semibold
+          uppercase
+          tracking-[0.18em]
+          text-[color:var(--muted)]
+
+          sm:text-[8px]
+        "
+      >
+        Core online
+      </span>
+    </div>
+    </div>
+  </motion.div>
+</div>
 
         {/* Indicador inferior */}
         <div className="absolute bottom-[3%] left-1/2 z-40 -translate-x-1/2">
