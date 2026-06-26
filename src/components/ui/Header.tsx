@@ -3,251 +3,898 @@
 
 import Logo from "@/components/ui/Logo";
 import ThemeToggle from "@/components/ui/ThemeToggle";
-import { AnimatePresence, motion } from "framer-motion";
+
 import {
-  Briefcase,
-  Folder,
+  AnimatePresence,
+  motion,
+} from "framer-motion";
+
+import {
+  ArrowUpRight,
   Github,
-  Home,
-  Mail,
   Menu,
-  User,
   X,
 } from "lucide-react";
-import { useEffect, useState, useRef, useCallback } from "react";
 
-const links = [
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+const navigationItems = [
   {
+    index: "01",
     label: "Início",
     href: "#inicio",
-    icon: Home,
+    id: "inicio",
   },
   {
-    label: "Sobre",
-    href: "#sobre",
-    icon: User,
-  },
-  {
+    index: "02",
     label: "Projetos",
     href: "#projetos",
-    icon: Folder,
+    id: "projetos",
   },
-
   {
-    label: "Serviços",
+    index: "03",
+    label: "Soluções",
     href: "#solucoes",
-    icon: Briefcase,
+    id: "solucoes",
   },
-
   {
-    label: "Contato",
-    href: "#contato",
-    icon: Mail,
+    index: "04",
+    label: "Sobre",
+    href: "#sobre",
+    id: "sobre",
   },
+] as const;
+
+type NavigationSection =
+  | (typeof navigationItems)[number]["id"]
+  | "contato";
+
+const trackedSections: NavigationSection[] = [
+  "inicio",
+  "sobre",
+  "projetos",
+  "solucoes",
+  "contato",
 ];
 
 export default function Header() {
-  const [activeSection, setActiveSection] = useState("inicio");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const [activeSection, setActiveSection] =
+    useState<NavigationSection>("inicio");
 
-  const handleScroll = useCallback(() => {
-    const referencePoint = window.scrollY + window.innerHeight * 0.42;
+  const [
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
+  ] = useState(false);
 
-    let currentSection = "inicio";
+  const [isScrolled, setIsScrolled] =
+    useState(false);
 
-    links.forEach((link) => {
-      const sectionId = link.href.replace("#", "");
-      const section = document.getElementById(sectionId);
+  const animationFrameRef =
+    useRef<number | null>(null);
 
-      if (section && section.offsetTop <= referencePoint) {
-        currentSection = sectionId;
+  const updateHeaderState =
+    useCallback(() => {
+      setIsScrolled(window.scrollY > 24);
+
+      const referencePoint =
+        window.scrollY +
+        window.innerHeight * 0.36;
+
+      const availableSections =
+        trackedSections
+          .map((id) => {
+            const element =
+              document.getElementById(id);
+
+            if (!element) {
+              return null;
+            }
+
+            return {
+              id,
+              top: element.offsetTop,
+            };
+          })
+          .filter(
+            (
+              section
+            ): section is {
+              id: NavigationSection;
+              top: number;
+            } => section !== null
+          )
+          .sort(
+            (first, second) =>
+              first.top - second.top
+          );
+
+      let currentSection:
+        NavigationSection = "inicio";
+
+      availableSections.forEach(
+        (section) => {
+          if (
+            section.top <=
+            referencePoint
+          ) {
+            currentSection =
+              section.id;
+          }
+        }
+      );
+
+      setActiveSection(
+        currentSection
+      );
+    }, []);
+
+  const scheduleHeaderUpdate =
+    useCallback(() => {
+      if (
+        animationFrameRef.current !==
+        null
+      ) {
+        return;
       }
-    });
 
-    setActiveSection(currentSection);
-  }, []);
+      animationFrameRef.current =
+        window.requestAnimationFrame(
+          () => {
+            updateHeaderState();
 
-  const debouncedHandleScroll = useCallback(() => {
-    if (scrollTimeoutRef.current) {
-      clearTimeout(scrollTimeoutRef.current);
-    }
-
-    scrollTimeoutRef.current = setTimeout(() => {
-      handleScroll();
-    }, 50);
-  }, [handleScroll]);
+            animationFrameRef.current =
+              null;
+          }
+        );
+    }, [updateHeaderState]);
 
   useEffect(() => {
-    handleScroll();
+    updateHeaderState();
 
-    window.addEventListener("scroll", debouncedHandleScroll, { passive: true });
-    window.addEventListener("resize", debouncedHandleScroll, { passive: true });
+    window.addEventListener(
+      "scroll",
+      scheduleHeaderUpdate,
+      {
+        passive: true,
+      }
+    );
+
+    window.addEventListener(
+      "resize",
+      scheduleHeaderUpdate,
+      {
+        passive: true,
+      }
+    );
 
     return () => {
-      window.removeEventListener("scroll", debouncedHandleScroll);
-      window.removeEventListener("resize", debouncedHandleScroll);
-      if (scrollTimeoutRef.current) {
-        clearTimeout(scrollTimeoutRef.current);
+      window.removeEventListener(
+        "scroll",
+        scheduleHeaderUpdate
+      );
+
+      window.removeEventListener(
+        "resize",
+        scheduleHeaderUpdate
+      );
+
+      if (
+        animationFrameRef.current !==
+        null
+      ) {
+        window.cancelAnimationFrame(
+          animationFrameRef.current
+        );
       }
     };
-  }, [debouncedHandleScroll, handleScroll]);
+  }, [
+    scheduleHeaderUpdate,
+    updateHeaderState,
+  ]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) {
+      return;
+    }
+
+    function handleKeyDown(
+      event: KeyboardEvent
+    ) {
+      if (event.key === "Escape") {
+        setIsMobileMenuOpen(false);
+      }
+    }
+
+    function handleResize() {
+      if (window.innerWidth >= 1024) {
+        setIsMobileMenuOpen(false);
+      }
+    }
+
+    window.addEventListener(
+      "keydown",
+      handleKeyDown
+    );
+
+    window.addEventListener(
+      "resize",
+      handleResize
+    );
+
+    return () => {
+      window.removeEventListener(
+        "keydown",
+        handleKeyDown
+      );
+
+      window.removeEventListener(
+        "resize",
+        handleResize
+      );
+    };
+  }, [isMobileMenuOpen]);
+
+  function closeMobileMenu() {
+    setIsMobileMenuOpen(false);
+  }
 
   return (
-    <>
-      <header className="fixed left-4 top-1/2 z-50 hidden -translate-y-1/2 lg:block">
-        <nav
-          aria-label="Menu principal"
-          className="relative flex flex-col items-center gap-3 rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] p-2 shadow-2xl backdrop-blur-2xl"
-        >
-          <span className="pointer-events-none absolute inset-y-5 left-1/2 w-px -translate-x-1/2 bg-gradient-to-b from-transparent via-[color:var(--accent)]/25 to-transparent" />
+    <header
+      className="
+        sticky top-0 z-50
+        px-3 pt-3
+        sm:px-5 sm:pt-4
+        lg:px-8
+      "
+    >
+      <motion.div
+        initial={{
+          opacity: 0,
+          y: -18,
+        }}
+        animate={{
+          opacity: 1,
+          y: 0,
+        }}
+        transition={{
+          duration: 0.55,
+          ease: [0.22, 1, 0.36, 1],
+        }}
+        className={`
+          relative mx-auto
+          max-w-[1400px]
+          overflow-visible
+          rounded-[1.5rem]
+          border
+          backdrop-blur-2xl
+          transition-all
+          duration-300
 
+          ${
+            isScrolled
+              ? `
+                border-[color:var(--line-strong)]
+                bg-[color:var(--panel-strong)]
+                shadow-[0_22px_70px_var(--shadow-deep)]
+              `
+              : `
+                border-[color:var(--line)]
+                bg-[color:var(--panel)]
+                shadow-[0_18px_54px_var(--shadow)]
+              `
+          }
+        `}
+      >
+        {/* Linha luminosa superior */}
+        <span
+          aria-hidden="true"
+          className="
+            pointer-events-none
+            absolute inset-x-10 top-0
+            h-px
+            bg-gradient-to-r
+            from-transparent
+            via-[color:var(--accent)]
+            to-transparent
+            opacity-45
+          "
+        />
+
+        <div
+          className="
+            flex min-h-[68px]
+            items-center
+            justify-between
+            gap-3
+            px-3
+            sm:px-4
+            lg:px-5
+          "
+        >
+          {/* Marca */}
           <a
             href="#inicio"
-            aria-label="Carlos Daniel - início"
-            className="group relative z-10 transition"
+            aria-label="Carlos Daniel — início"
+            onClick={closeMobileMenu}
+            className="
+              group flex
+              shrink-0
+              items-center
+              rounded-2xl
+              focus-visible:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-[color:var(--accent)]
+            "
           >
-            <Logo variant="mark" size="sm" />
+            <span className="sm:hidden">
+              <Logo
+                variant="mark"
+                size="sm"
+              />
+            </span>
 
-            <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-[color:var(--text)] opacity-0 transition-opacity group-hover:opacity-100">
-              Carlos Daniel
+            <span className="hidden sm:block">
+              <Logo
+                variant="full"
+                size="sm"
+              />
             </span>
           </a>
 
-          <div className="relative z-10 h-px w-7 bg-[color:var(--line)]" />
-
-          {links.map((link) => {
-            const Icon = link.icon;
-            const sectionId = link.href.replace("#", "");
-            const isActive = activeSection === sectionId;
-
-            return (
-              <a
-                key={link.href}
-                href={link.href}
-                aria-label={link.label}
-                className={
-                  isActive
-                    ? "group relative z-10 grid h-11 w-11 place-items-center rounded-full border border-[color:var(--accent)] bg-[color:var(--panel-strong)] text-[color:var(--accent)] shadow-[0_0_18px_var(--accent)] transition"
-                    : "group relative z-10 grid h-11 w-11 place-items-center rounded-full text-[color:var(--muted)] transition hover:-translate-y-0.5 hover:bg-[color:var(--panel-strong)] hover:text-[color:var(--accent)]"
-                }
-              >
-                {isActive && (
-                  <span className="absolute -right-1 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-[color:var(--accent)] shadow-[0_0_18px_var(--accent)]" />
-                )}
-
-                <Icon size={18} strokeWidth={2.3} />
-
-                <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-[color:var(--text)] opacity-0 transition-opacity group-hover:opacity-100">
-                  {link.label}
-                </span>
-              </a>
-            );
-          })}
-
-          <div className="relative z-10 h-px w-7 bg-[color:var(--line)]" />
-
-          <div className="relative z-10">
-            <ThemeToggle />
-          </div>
-
-          <a
-            href="https://github.com/carlosdaniel003"
-            target="_blank"
-            rel="noreferrer"
-            aria-label="GitHub"
-            className="group relative z-10 grid h-11 w-11 place-items-center rounded-full text-[color:var(--muted)] transition hover:-translate-y-0.5 hover:bg-[color:var(--panel-strong)] hover:text-[color:var(--accent)]"
+          {/* Navegação desktop */}
+          <nav
+            aria-label="Navegação principal"
+            className="
+              hidden items-center
+              gap-1
+              rounded-full
+              border
+              border-[color:var(--line-soft)]
+              bg-[color:var(--bg-deep)]/30
+              p-1.5
+              lg:flex
+            "
           >
-            <Github size={18} strokeWidth={2.3} />
+            {navigationItems.map(
+              (item) => {
+                const isActive =
+                  activeSection ===
+                  item.id;
 
-            <span className="pointer-events-none absolute left-14 top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-full border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-1.5 text-xs font-black uppercase tracking-[0.08em] text-[color:var(--text)] opacity-0 transition-opacity group-hover:opacity-100">
-              GitHub
-            </span>
-          </a>
-        </nav>
-      </header>
+                return (
+                  <a
+                    key={item.id}
+                    href={item.href}
+                    aria-current={
+                      isActive
+                        ? "location"
+                        : undefined
+                    }
+                    className={`
+                      group relative
+                      flex h-11
+                      items-center
+                      gap-2
+                      rounded-full
+                      px-4
+                      transition-all
 
-      <header className="fixed bottom-4 right-4 z-50 lg:hidden">
-        <AnimatePresence mode="wait">
-          {isMobileMenuOpen && (
-            <motion.nav
-              key="mobile-menu"
-              aria-label="Menu mobile"
-              initial={{ opacity: 0, y: 16, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 16, scale: 0.96 }}
-              transition={{ duration: 0.22, ease: "easeOut" }}
-              className="absolute bottom-16 right-0 w-[min(82vw,320px)] overflow-hidden rounded-[1.7rem] border border-[color:var(--line)] bg-[color:var(--panel)] p-3 shadow-2xl backdrop-blur-2xl will-change-transform"
-            >
-              <div className="mb-3 flex items-center justify-between gap-3 rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] p-3">
-                <Logo variant="mark" size="sm" />
-
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-xs font-black uppercase tracking-[0.18em] text-[color:var(--text)]">
-                    Carlos Daniel
-                  </p>
-                  <p className="mt-1 truncate text-[10px] font-black uppercase tracking-[0.14em] text-[color:var(--muted)]">
-                    Software Industrial & IA
-                  </p>
-                </div>
-              </div>
-
-              <div className="grid gap-2">
-                {links.map((link) => {
-                  const Icon = link.icon;
-                  const sectionId = link.href.replace("#", "");
-                  const isActive = activeSection === sectionId;
-
-                  return (
-                    <a
-                      key={link.href}
-                      href={link.href}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className={
+                      ${
                         isActive
-                          ? "flex items-center gap-3 rounded-2xl border border-[color:var(--accent)] bg-[color:var(--panel-strong)] px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[color:var(--accent)] transition"
-                          : "flex items-center gap-3 rounded-2xl border border-transparent px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[color:var(--muted)] transition hover:border-[color:var(--line)] hover:bg-[color:var(--panel-strong)]"
+                          ? `
+                            bg-[color:var(--panel-raised)]
+                            text-[color:var(--text)]
+                            shadow-[0_8px_24px_var(--shadow)]
+                          `
+                          : `
+                            text-[color:var(--muted)]
+                            hover:bg-[color:var(--panel)]
+                            hover:text-[color:var(--text)]
+                          `
                       }
+                    `}
+                  >
+                    <span
+                      className={`
+                        font-mono
+                        text-[9px]
+                        font-semibold
+                        tracking-[0.16em]
+
+                        ${
+                          isActive
+                            ? `
+                              text-[color:var(--accent)]
+                            `
+                            : `
+                              text-[color:var(--subtle)]
+                              group-hover:text-[color:var(--accent)]
+                            `
+                        }
+                      `}
                     >
-                      <Icon size={18} strokeWidth={2.3} />
-                      {link.label}
-                    </a>
-                  );
-                })}
+                      {item.index}
+                    </span>
 
-                <div className="my-1 h-px bg-[color:var(--line)]" />
+                    <span
+                      className="
+                        text-xs
+                        font-extrabold
+                        uppercase
+                        tracking-[0.13em]
+                      "
+                    >
+                      {item.label}
+                    </span>
 
-                <div className="flex items-center justify-between gap-3 rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel-strong)] px-3 py-2">
-                  <span className="pl-1 text-xs font-black uppercase tracking-[0.16em] text-[color:var(--muted)]">
-                    Tema
-                  </span>
-                  <ThemeToggle />
+                    <span
+                      aria-hidden="true"
+                      className={`
+                        absolute
+                        bottom-1.5
+                        left-1/2
+                        h-[2px]
+                        -translate-x-1/2
+                        rounded-full
+                        bg-[color:var(--accent)]
+                        shadow-[0_0_10px_var(--accent)]
+                        transition-all
+
+                        ${
+                          isActive
+                            ? "w-5 opacity-100"
+                            : "w-0 opacity-0"
+                        }
+                      `}
+                    />
+                  </a>
+                );
+              }
+            )}
+          </nav>
+
+          {/* Ações */}
+          <div
+            className="
+              flex shrink-0
+              items-center
+              gap-1
+              sm:gap-2
+            "
+          >
+            <ThemeToggle />
+
+            <a
+              href="https://github.com/carlosdaniel003"
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Abrir GitHub de Carlos Daniel"
+              className="
+                hidden h-11 w-11
+                place-items-center
+                rounded-full
+                border
+                border-transparent
+                text-[color:var(--muted)]
+                transition
+                hover:-translate-y-0.5
+                hover:border-[color:var(--line)]
+                hover:bg-[color:var(--panel-strong)]
+                hover:text-[color:var(--accent)]
+                sm:grid
+              "
+            >
+              <Github
+                size={18}
+                strokeWidth={2.2}
+              />
+            </a>
+
+            <a
+              href="#contato"
+              aria-current={
+                activeSection ===
+                "contato"
+                  ? "location"
+                  : undefined
+              }
+              className={`
+                group hidden h-11
+                items-center
+                justify-center
+                gap-2
+                rounded-full
+                border
+                px-5
+                text-[11px]
+                font-extrabold
+                uppercase
+                tracking-[0.14em]
+                transition
+                xl:flex
+
+                ${
+                  activeSection ===
+                  "contato"
+                    ? `
+                      border-[color:var(--accent)]
+                      bg-[color:var(--accent)]
+                      text-[color:var(--ink)]
+                      shadow-[0_14px_36px_color-mix(in_srgb,var(--accent)_25%,transparent)]
+                    `
+                    : `
+                      border-[color:var(--line-strong)]
+                      bg-[color:var(--panel-strong)]
+                      text-[color:var(--text)]
+                      hover:-translate-y-0.5
+                      hover:border-[color:var(--accent)]
+                      hover:bg-[color:var(--accent)]
+                      hover:text-[color:var(--ink)]
+                    `
+                }
+              `}
+            >
+              Falar sobre um projeto
+
+              <ArrowUpRight
+                size={16}
+                strokeWidth={2.4}
+                className="
+                  transition-transform
+                  group-hover:
+                  translate-x-0.5
+                  group-hover:
+                  -translate-y-0.5
+                "
+              />
+            </a>
+
+            <button
+              type="button"
+              aria-label={
+                isMobileMenuOpen
+                  ? "Fechar menu"
+                  : "Abrir menu"
+              }
+              aria-expanded={
+                isMobileMenuOpen
+              }
+              aria-controls="mobile-navigation"
+              onClick={() =>
+                setIsMobileMenuOpen(
+                  (current) => !current
+                )
+              }
+              className="
+                grid h-11 w-11
+                place-items-center
+                rounded-full
+                border
+                border-[color:var(--line)]
+                bg-[color:var(--panel-strong)]
+                text-[color:var(--accent)]
+                shadow-[0_10px_30px_var(--shadow)]
+                transition
+                hover:border-[color:var(--accent)]
+                lg:hidden
+              "
+            >
+              <AnimatePresence
+                initial={false}
+                mode="wait"
+              >
+                <motion.span
+                  key={
+                    isMobileMenuOpen
+                      ? "close"
+                      : "menu"
+                  }
+                  initial={{
+                    opacity: 0,
+                    rotate: -18,
+                    scale: 0.8,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    rotate: 0,
+                    scale: 1,
+                  }}
+                  exit={{
+                    opacity: 0,
+                    rotate: 18,
+                    scale: 0.8,
+                  }}
+                  transition={{
+                    duration: 0.15,
+                  }}
+                >
+                  {isMobileMenuOpen ? (
+                    <X size={20} />
+                  ) : (
+                    <Menu size={20} />
+                  )}
+                </motion.span>
+              </AnimatePresence>
+            </button>
+          </div>
+        </div>
+
+        {/* Navegação mobile */}
+        <AnimatePresence initial={false}>
+          {isMobileMenuOpen && (
+            <motion.div
+              id="mobile-navigation"
+              initial={{
+                opacity: 0,
+                height: 0,
+              }}
+              animate={{
+                opacity: 1,
+                height: "auto",
+              }}
+              exit={{
+                opacity: 0,
+                height: 0,
+              }}
+              transition={{
+                duration: 0.24,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="
+                overflow-hidden
+                lg:hidden
+              "
+            >
+              <div
+                className="
+                  border-t
+                  border-[color:var(--line-soft)]
+                  px-3
+                  pb-3
+                  pt-3
+                  sm:px-4
+                "
+              >
+                <nav
+                  aria-label="Navegação mobile"
+                  className="
+                    grid gap-2
+                    sm:grid-cols-2
+                  "
+                >
+                  {navigationItems.map(
+                    (item) => {
+                      const isActive =
+                        activeSection ===
+                        item.id;
+
+                      return (
+                        <a
+                          key={item.id}
+                          href={item.href}
+                          aria-current={
+                            isActive
+                              ? "location"
+                              : undefined
+                          }
+                          onClick={
+                            closeMobileMenu
+                          }
+                          className={`
+                            flex min-h-14
+                            items-center
+                            justify-between
+                            gap-4
+                            rounded-[1.1rem]
+                            border
+                            px-4
+                            transition
+
+                            ${
+                              isActive
+                                ? `
+                                  border-[color:var(--accent)]
+                                  bg-[color:var(--panel-raised)]
+                                  text-[color:var(--text)]
+                                `
+                                : `
+                                  border-[color:var(--line-soft)]
+                                  bg-[color:var(--panel)]
+                                  text-[color:var(--muted)]
+                                `
+                            }
+                          `}
+                        >
+                          <span
+                            className="
+                              text-sm
+                              font-extrabold
+                              uppercase
+                              tracking-[0.12em]
+                            "
+                          >
+                            {item.label}
+                          </span>
+
+                          <span
+                            className={`
+                              font-mono
+                              text-[10px]
+                              font-semibold
+                              tracking-[0.18em]
+
+                              ${
+                                isActive
+                                  ? `
+                                    text-[color:var(--accent)]
+                                  `
+                                  : `
+                                    text-[color:var(--subtle)]
+                                  `
+                              }
+                            `}
+                          >
+                            {item.index}
+                          </span>
+                        </a>
+                      );
+                    }
+                  )}
+                </nav>
+
+                <div
+                  className="
+                    mt-2 grid
+                    gap-2
+                    sm:grid-cols-[1fr_auto]
+                  "
+                >
+                  <a
+                    href="#contato"
+                    onClick={
+                      closeMobileMenu
+                    }
+                    className="
+                      group flex
+                      min-h-14
+                      items-center
+                      justify-between
+                      gap-4
+                      rounded-[1.1rem]
+                      bg-[color:var(--accent)]
+                      px-4
+                      text-[color:var(--ink)]
+                      shadow-[0_14px_34px_color-mix(in_srgb,var(--accent)_22%,transparent)]
+                    "
+                  >
+                    <span
+                      className="
+                        text-sm
+                        font-extrabold
+                        uppercase
+                        tracking-[0.12em]
+                      "
+                    >
+                      Falar sobre um projeto
+                    </span>
+
+                    <ArrowUpRight
+                      size={18}
+                      strokeWidth={2.4}
+                      className="
+                        transition-transform
+                        group-hover:
+                        translate-x-0.5
+                        group-hover:
+                        -translate-y-0.5
+                      "
+                    />
+                  </a>
+
+                  <a
+                    href="https://github.com/carlosdaniel003"
+                    target="_blank"
+                    rel="noreferrer"
+                    onClick={
+                      closeMobileMenu
+                    }
+                    className="
+                      flex min-h-14
+                      items-center
+                      justify-center
+                      gap-3
+                      rounded-[1.1rem]
+                      border
+                      border-[color:var(--line)]
+                      bg-[color:var(--panel-strong)]
+                      px-5
+                      text-sm
+                      font-extrabold
+                      uppercase
+                      tracking-[0.12em]
+                      text-[color:var(--text)]
+                      transition
+                      hover:border-[color:var(--accent)]
+                    "
+                  >
+                    <Github
+                      size={18}
+                      strokeWidth={2.2}
+                    />
+
+                    GitHub
+                  </a>
                 </div>
 
-                <a
-                  href="https://github.com/carlosdaniel003"
-                  target="_blank"
-                  rel="noreferrer"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-black uppercase tracking-[0.14em] text-[color:var(--muted)] transition hover:bg-[color:var(--panel-strong)]"
+                <div
+                  className="
+                    mt-3 flex
+                    items-center
+                    justify-between
+                    border-t
+                    border-[color:var(--line-soft)]
+                    px-1
+                    pt-3
+                  "
                 >
-                  <Github size={18} strokeWidth={2.3} />
-                  GitHub
-                </a>
+                  <div>
+                    <p
+                      className="
+                        font-mono
+                        text-[9px]
+                        font-semibold
+                        uppercase
+                        tracking-[0.2em]
+                        text-[color:var(--accent)]
+                      "
+                    >
+                      Software industrial
+                    </p>
+
+                    <p
+                      className="
+                        mt-1 text-xs
+                        text-[color:var(--muted)]
+                      "
+                    >
+                      Sistemas, IA e automação.
+                    </p>
+                  </div>
+
+                  <span
+                    className="
+                      flex items-center
+                      gap-2
+                      font-mono
+                      text-[9px]
+                      font-semibold
+                      uppercase
+                      tracking-[0.16em]
+                      text-[color:var(--muted)]
+                    "
+                  >
+                    <span
+                      className="
+                        h-2 w-2
+                        rounded-full
+                        bg-[color:var(--accent)]
+                        shadow-[0_0_12px_var(--accent)]
+                      "
+                    />
+
+                    Online
+                  </span>
+                </div>
               </div>
-            </motion.nav>
+            </motion.div>
           )}
         </AnimatePresence>
-
-        <button
-          type="button"
-          aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
-          onClick={() => setIsMobileMenuOpen((current) => !current)}
-          className="grid h-14 w-14 place-items-center rounded-2xl border border-[color:var(--line)] bg-[color:var(--panel)] text-[color:var(--accent)] shadow-[0_18px_60px_var(--shadow)] backdrop-blur-2xl transition"
-        >
-          {isMobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-        </button>
-      </header>
-    </>
+      </motion.div>
+    </header>
   );
 }
