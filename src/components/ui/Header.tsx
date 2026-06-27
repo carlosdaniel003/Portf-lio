@@ -1,7 +1,7 @@
 // src\components\ui\Header.tsx
 "use client";
 
-import Logo from "@/components/ui/Logo";
+import Image from "next/image";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 import {
@@ -316,33 +316,101 @@ export default function Header() {
             lg:px-5
           "
         >
-          {/* Marca */}
+          {/* Perfil */}
           <a
             href="#inicio"
             aria-label="Carlos Daniel — início"
             onClick={closeMobileMenu}
             className="
-              group flex
-              shrink-0
+              group
+              flex shrink-0
               items-center
+              gap-3
+
               rounded-2xl
+
               focus-visible:outline-none
               focus-visible:ring-2
               focus-visible:ring-[color:var(--accent)]
             "
           >
-            <span className="sm:hidden">
-              <Logo
-                variant="mark"
-                size="sm"
+            <span
+              className="
+                relative
+                h-11 w-11
+                shrink-0
+                overflow-hidden
+
+                rounded-full
+                border
+                border-[color:var(--accent)]/55
+
+                bg-[color:var(--panel-strong)]
+
+                shadow-[0_0_24px_color-mix(in_srgb,var(--accent)_18%,transparent)]
+              "
+            >
+              <Image
+                src="/images/carlos-daniel-profile.jpg"
+                alt=""
+                fill
+                priority
+                sizes="44px"
+                className="
+                  object-cover
+                  object-[center_38%]
+
+                  transition-transform
+                  duration-300
+
+                  group-hover:scale-105
+                "
+              />
+
+              <span
+                aria-hidden="true"
+                className="
+                  pointer-events-none
+                  absolute inset-0
+
+                  rounded-full
+                  ring-1
+                  ring-inset
+                  ring-white/15
+                "
               />
             </span>
 
-            <span className="hidden sm:block">
-              <Logo
-                variant="full"
-                size="sm"
-              />
+            <span className="hidden min-w-0 sm:block">
+              <span
+                className="
+                  block
+                  whitespace-nowrap
+
+                  text-sm
+                  font-bold
+                  tracking-[-0.025em]
+                  text-[color:var(--text)]
+                "
+              >
+                Carlos Daniel
+              </span>
+
+              <span
+                className="
+                  mt-0.5 block
+                  whitespace-nowrap
+
+                  font-mono
+                  text-[7px]
+                  font-semibold
+                  uppercase
+                  tracking-[0.16em]
+                  text-[color:var(--muted)]
+                "
+              >
+                Eletrônica · Software · IA
+              </span>
             </span>
           </a>
 
