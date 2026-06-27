@@ -9,6 +9,7 @@ import Services from "@/components/sections/Services";
 import InteractiveBackground from "@/components/ui/InteractiveBackground";
 import Loader from "@/components/ui/Loader";
 import SectionDivider from "@/components/ui/SectionDivider";
+import WebDemosCTA from "@/components/sections/WebDemosCTA";
 
 const editorialTopics = [
   "Software industrial",
@@ -122,6 +123,9 @@ export default function Home() {
             <Services />
           </div>
         </div>
+
+        {/* Ponte para websites e landing pages */}
+        <WebDemosCTA />
 
         {/* 03 — Identidade técnica */}
         <div className="relative">
