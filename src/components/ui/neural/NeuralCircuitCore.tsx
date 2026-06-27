@@ -867,37 +867,37 @@ export default function NeuralCircuitCore() {
           }}
         />
 
-        <div className="relative z-10 text-center">
-          <span
-            className="
-              block
-              font-display
-              text-3xl
-              font-bold
-              tracking-[-0.08em]
-              text-[color:var(--accent)]
-
-              sm:text-4xl
-            "
+        <div className="relative z-10 flex items-center justify-center">
+          <svg
+            width="64"
+            height="64"
+            viewBox="0 0 64 64"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-14 w-14 sm:h-16 sm:w-16"
+            aria-hidden="true"
           >
-            CD
-          </span>
-
-          <span
-            className="
-              mt-1 block
-              font-mono
-              text-[6px]
-              font-semibold
-              uppercase
-              tracking-[0.22em]
-              text-[color:var(--muted)]
-
-              sm:text-[7px]
-            "
-          >
-            Intelligent systems
-          </span>
+            <path
+              d="M28 16C18.6 16 12 22.7 12 32C12 41.3 18.6 48 28 48C31.7 48 35 46.9 37.7 44.8"
+              stroke="#27F29A"
+              strokeWidth="6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M34 16V48"
+              stroke="#46D9FF"
+              strokeWidth="6"
+              strokeLinecap="round"
+            />
+            <path
+              d="M34 16H40C47.5 16 52 22 52 32C52 42 47.5 48 40 48H34"
+              stroke="#46D9FF"
+              strokeWidth="6"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
         </div>
       </div>
 

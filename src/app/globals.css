@@ -205,9 +205,19 @@ html[data-accent-theme="green"] {
 html {
   scroll-behavior: smooth;
   background: var(--bg-deep);
-  scrollbar-width: thin;
-  scrollbar-color: var(--accent) var(--bg-deep);
-  scrollbar-gutter: stable;
+
+  /*
+   * Oculta a barra no Firefox e navegadores antigos,
+   * sem bloquear a rolagem da página.
+   */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  /*
+   * Evita que o navegador reserve um espaço vazio
+   * onde anteriormente ficava a barra.
+   */
+  scrollbar-gutter: auto;
 }
 
 body {
@@ -1033,42 +1043,24 @@ span {
 
 /*
  * ============================================================
- * SCROLLBAR
+ * SCROLLBAR INVISÍVEL
  * ============================================================
+ *
+ * A página continua rolando normalmente.
+ * Apenas a barra visual do navegador é ocultada.
  */
 
-::-webkit-scrollbar {
-  width: 11px;
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-deep);
-  border-left: 1px solid var(--line-soft);
-}
-
-::-webkit-scrollbar-thumb {
-  border: 3px solid var(--bg-deep);
-  border-radius: 999px;
-
-  background: linear-gradient(
-    180deg,
-    var(--accent),
-    var(--accent-2)
-  );
-
-  transition: background 220ms ease;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(
-    180deg,
-    var(--accent-hover),
-    var(--accent-2-hover)
-  );
-}
-
-::-webkit-scrollbar-corner {
-  background: var(--bg-deep);
+html,
+body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 /*
