@@ -1,6 +1,8 @@
 // src\components\sections\WebDemosCTA.tsx
 "use client";
 
+import Image from "next/image";
+
 import {
   motion,
   useMotionTemplate,
@@ -46,26 +48,6 @@ const showcaseItems = [
   },
 ] as const;
 
-const previewCards = [
-  {
-    title: "Norte Detail",
-    label: "Estética automotiva",
-    position:
-      "left-[7%] top-[14%] w-[42%]",
-  },
-  {
-    title: "Studio",
-    label: "Landing page",
-    position:
-      "right-[7%] top-[22%] w-[37%]",
-  },
-  {
-    title: "Business",
-    label: "Website institucional",
-    position:
-      "bottom-[11%] left-[18%] w-[48%]",
-  },
-] as const;
 
 const revealTransition = {
   duration: 0.68,
@@ -664,376 +646,105 @@ export default function WebDemosCTA() {
                 />
               </div>
 
-              {/* Preview construída em CSS */}
+              {/* Preview real do site */}
               <a
                 href={demosUrl}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Abrir catálogo de websites e landing pages"
                 className="
+                  group/preview
                   relative
                   block
-                  aspect-[1.28/1]
                   overflow-hidden
 
                   bg-[color:var(--bg-deepest)]
                 "
               >
+                <Image
+                  src="/images/demos-website-preview.webp.jpg"
+                  alt="Prévia do site demos.carlosdaniel.dev.br"
+                  width={1366}
+                  height={768}
+                  sizes="
+                    (min-width: 1280px) 760px,
+                    (min-width: 1024px) 54vw,
+                    100vw
+                  "
+                  className="
+                    h-auto
+                    w-full
+
+                    object-cover
+                    object-top
+
+                    transition-transform
+                    duration-700
+                    ease-out
+
+                    group-hover/preview:scale-[1.018]
+                  "
+                />
+
+                {/* Leve proteção visual sobre a captura */}
                 <div
                   aria-hidden="true"
                   className="
-                    soft-grid
+                    pointer-events-none
                     absolute inset-0
-                    opacity-25
+
+                    bg-[linear-gradient(180deg,transparent_58%,color-mix(in_srgb,var(--bg-deepest)_28%,transparent)_100%)]
+
+                    opacity-75
                   "
                 />
 
+                {/* Brilho discreto no hover */}
                 <div
                   aria-hidden="true"
                   className="
-                    absolute
-                    left-[10%]
-                    top-[12%]
+                    pointer-events-none
+                    absolute inset-0
 
-                    h-28 w-28
-                    rounded-full
+                    bg-[linear-gradient(115deg,transparent_18%,rgba(255,255,255,0.09)_43%,transparent_68%)]
 
-                    bg-[color:var(--accent)]/20
-                    blur-[70px]
+                    -translate-x-full
+                    opacity-0
+
+                    transition-all
+                    duration-700
+                    ease-out
+
+                    group-hover/preview:translate-x-full
+                    group-hover/preview:opacity-100
                   "
                 />
-
-                <div
-                  aria-hidden="true"
-                  className="
-                    absolute
-                    bottom-[8%]
-                    right-[8%]
-
-                    h-36 w-36
-                    rounded-full
-
-                    bg-[color:var(--accent-2)]/18
-                    blur-[80px]
-                  "
-                />
-
-                {/* Cabeçalho da mini página */}
-                <div
-                  className="
-                    absolute
-                    inset-x-[7%]
-                    top-[7%]
-
-                    flex items-center
-                    justify-between
-                    gap-4
-                  "
-                >
-                  <div
-                    className="
-                      flex items-center
-                      gap-3
-                    "
-                  >
-                    <span
-                      className="
-                        grid h-9 w-9
-                        place-items-center
-
-                        rounded-xl
-                        border
-                        border-[color:var(--accent)]/40
-
-                        bg-[color:var(--accent)]/10
-                        text-[color:var(--accent)]
-                      "
-                    >
-                      <Globe2
-                        size={15}
-                        strokeWidth={2}
-                      />
-                    </span>
-
-                    <span
-                      className="
-                        font-mono
-                        text-[8px]
-                        font-semibold
-                        uppercase
-                        tracking-[0.18em]
-                        text-[color:var(--text)]
-                      "
-                    >
-                      Website demos
-                    </span>
-                  </div>
-
-                  <div
-                    className="
-                      hidden items-center
-                      gap-4
-                      sm:flex
-                    "
-                  >
-                    {[
-                      "Sites",
-                      "Landing pages",
-                      "Contato",
-                    ].map(
-                      (
-                        label
-                      ) => (
-                        <span
-                          key={
-                            label
-                          }
-                          className="
-                            font-mono
-                            text-[6px]
-                            font-semibold
-                            uppercase
-                            tracking-[0.15em]
-                            text-[color:var(--muted)]
-                          "
-                        >
-                          {
-                            label
-                          }
-                        </span>
-                      )
-                    )}
-                  </div>
-                </div>
-
-                {/* Hero da mini página */}
-                <div
-                  className="
-                    absolute
-                    left-[8%]
-                    top-[23%]
-
-                    max-w-[58%]
-                  "
-                >
-                  <span
-                    className="
-                      font-mono
-                      text-[7px]
-                      font-semibold
-                      uppercase
-                      tracking-[0.18em]
-                      text-[color:var(--accent)]
-                    "
-                  >
-                    Web design / Development
-                  </span>
-
-                  <p
-                    className="
-                      mt-3
-
-                      font-display
-                      text-[clamp(1.35rem,4.2vw,3.15rem)]
-                      font-bold
-                      leading-[0.9]
-                      tracking-[-0.065em]
-                      text-[color:var(--text)]
-                    "
-                  >
-                    Presença digital
-                    <span className="block text-gradient">
-                      que gera valor.
-                    </span>
-                  </p>
-
-                  <div
-                    className="
-                      mt-5
-                      h-2.5 w-[82%]
-                      rounded-full
-                      bg-[color:var(--text)]/10
-                    "
-                  />
-
-                  <div
-                    className="
-                      mt-2
-                      h-2.5 w-[61%]
-                      rounded-full
-                      bg-[color:var(--text)]/[0.065]
-                    "
-                  />
-
-                  <div
-                    className="
-                      mt-6
-                      inline-flex
-                      items-center
-                      gap-2
-
-                      rounded-full
-                      bg-[color:var(--accent)]
-                      px-4 py-2
-
-                      font-mono
-                      text-[7px]
-                      font-bold
-                      uppercase
-                      tracking-[0.14em]
-                      text-[color:var(--ink)]
-                    "
-                  >
-                    Explorar projetos
-
-                    <ArrowUpRight
-                      size={10}
-                      strokeWidth={2.4}
-                    />
-                  </div>
-                </div>
-
-                {/* Cards de projetos */}
-                {previewCards.map(
-                  (
-                    card,
-                    index
-                  ) => (
-                    <motion.div
-                      key={
-                        card.title
-                      }
-                      className={`
-                        absolute
-                        ${card.position}
-
-                        overflow-hidden
-                        rounded-[1rem]
-                        border
-                        border-[color:var(--line)]
-
-                        bg-[color:var(--panel-strong)]
-                        p-3
-
-                        shadow-[0_16px_42px_var(--shadow)]
-                        backdrop-blur-xl
-                      `}
-                      style={{
-                        transform:
-                          "translateZ(28px)",
-                      }}
-                      animate={
-                        shouldReduceMotion
-                          ? undefined
-                          : {
-                              y: [
-                                0,
-                                index %
-                                  2 ===
-                                0
-                                  ? -7
-                                  : 7,
-                                0,
-                              ],
-                            }
-                      }
-                      transition={{
-                        duration:
-                          6.2 +
-                          index,
-                        delay:
-                          index *
-                          0.35,
-                        repeat:
-                          Infinity,
-                        ease:
-                          "easeInOut",
-                      }}
-                    >
-                      <div
-                        className="
-                          h-16
-                          overflow-hidden
-                          rounded-[0.7rem]
-
-                          border
-                          border-[color:var(--line-soft)]
-
-                          bg-[linear-gradient(135deg,color-mix(in_srgb,var(--accent)_18%,var(--bg-deep)),color-mix(in_srgb,var(--accent-2)_10%,var(--bg-deepest)))]
-                        "
-                      >
-                        <div
-                          className="
-                            ml-3 mt-3
-                            h-2 w-10
-                            rounded-full
-
-                            bg-[color:var(--text)]/18
-                          "
-                        />
-
-                        <div
-                          className="
-                            ml-3 mt-2
-                            h-1.5 w-16
-                            rounded-full
-
-                            bg-[color:var(--text)]/10
-                          "
-                        />
-                      </div>
-
-                      <p
-                        className="
-                          mt-3
-                          text-[10px]
-                          font-bold
-                          tracking-[-0.02em]
-                          text-[color:var(--text)]
-                        "
-                      >
-                        {
-                          card.title
-                        }
-                      </p>
-
-                      <p
-                        className="
-                          mt-1
-                          font-mono
-                          text-[6px]
-                          font-semibold
-                          uppercase
-                          tracking-[0.14em]
-                          text-[color:var(--muted)]
-                        "
-                      >
-                        {
-                          card.label
-                        }
-                      </p>
-                    </motion.div>
-                  )
-                )}
 
                 {/* Estado de interação */}
                 <div
                   className="
                     absolute
-                    bottom-[5%]
-                    right-[5%]
+                    bottom-4
+                    right-4
 
                     flex items-center
                     gap-2
 
                     rounded-full
                     border
-                    border-[color:var(--line)]
+                    border-[color:var(--line-strong)]
 
-                    bg-[color:var(--bg-deep)]/80
+                    bg-[color:var(--bg-deep)]/88
                     px-3 py-2
 
+                    shadow-[0_12px_34px_var(--shadow)]
                     backdrop-blur-xl
+
+                    transition
+                    duration-300
+
+                    group-hover/preview:border-[color:var(--accent)]/60
+                    group-hover/preview:bg-[color:var(--panel-strong)]
                   "
                 >
                   <MousePointerClick
@@ -1051,11 +762,25 @@ export default function WebDemosCTA() {
                       font-semibold
                       uppercase
                       tracking-[0.16em]
-                      text-[color:var(--muted)]
+                      text-[color:var(--text-soft)]
+
+                      sm:text-[7px]
                     "
                   >
                     Abrir experiência
                   </span>
+
+                  <ArrowUpRight
+                    size={11}
+                    strokeWidth={2.2}
+                    className="
+                      text-[color:var(--accent)]
+                      transition-transform
+
+                      group-hover/preview:translate-x-0.5
+                      group-hover/preview:-translate-y-0.5
+                    "
+                  />
                 </div>
               </a>
             </motion.div>
