@@ -12,184 +12,143 @@ import {
   useVelocity,
 } from "framer-motion";
 
-import { useEffect, useRef } from "react";
+import {
+  useEffect,
+  useRef,
+} from "react";
 
 /*
  * ============================================================
- * CIRCUITOS DE FUNDO
+ * TRILHAS DE PCB
  * ============================================================
  *
- * Menos densos que a versão anterior.
- * Eles funcionam como estrutura técnica da composição,
- * não como elemento principal da página.
+ * As trilhas permanecem concentradas nas bordas da tela.
+ * O centro recebe uma máscara de leitura para não competir
+ * com títulos, textos e painéis transparentes.
  */
 
-const circuitPaths = [
-  "M40 130 H230 V190 H390",
-  "M0 430 H180 V500 H360",
-  "M90 735 H270 V670 H470",
-  "M1400 120 H1210 V185 H1040",
-  "M1440 440 H1260 V510 H1080",
-  "M1350 730 H1170 V660 H980",
-  "M370 0 V150 H510 V260",
-  "M1050 0 V170 H910 V290",
-  "M700 0 V110 H790 V230",
-  "M720 900 V770 H620 V640",
+const pcbPaths = [
+  "M0 118 H188 V168 H336",
+  "M0 246 H118 V312 H292 V354 H430",
+  "M0 486 H176 V438 H332",
+  "M0 704 H132 V642 H274 V590 H420",
+  "M166 0 V126 H268 V220",
+  "M390 0 V92 H492 V184",
+
+  "M1440 126 H1260 V184 H1110",
+  "M1440 286 H1320 V342 H1160 V402 H1032",
+  "M1440 506 H1264 V454 H1128",
+  "M1440 724 H1290 V654 H1160 V596 H1018",
+  "M1262 0 V142 H1164 V238",
+  "M1042 0 V102 H944 V198",
+
+  "M548 900 V798 H466 V706",
+  "M892 900 V776 H988 V678",
 ] as const;
 
-const signalNodes = [
-  {
-    id: "node-01",
-    x: 40,
-    y: 130,
-    delay: 0,
-  },
-  {
-    id: "node-02",
-    x: 230,
-    y: 190,
-    delay: 0.18,
-  },
-  {
-    id: "node-03",
-    x: 180,
-    y: 500,
-    delay: 0.36,
-  },
-  {
-    id: "node-04",
-    x: 470,
-    y: 670,
-    delay: 0.54,
-  },
-  {
-    id: "node-05",
-    x: 1210,
-    y: 185,
-    delay: 0.12,
-  },
-  {
-    id: "node-06",
-    x: 1260,
-    y: 510,
-    delay: 0.3,
-  },
-  {
-    id: "node-07",
-    x: 980,
-    y: 660,
-    delay: 0.48,
-  },
-  {
-    id: "node-08",
-    x: 790,
-    y: 230,
-    delay: 0.66,
-  },
+const circuitNodes = [
+  { id: "pcb-01", x: 188, y: 168, tone: "primary", delay: 0 },
+  { id: "pcb-02", x: 292, y: 354, tone: "secondary", delay: 0.25 },
+  { id: "pcb-03", x: 176, y: 438, tone: "primary", delay: 0.5 },
+  { id: "pcb-04", x: 274, y: 590, tone: "secondary", delay: 0.75 },
+  { id: "pcb-05", x: 1260, y: 184, tone: "secondary", delay: 0.15 },
+  { id: "pcb-06", x: 1160, y: 402, tone: "primary", delay: 0.4 },
+  { id: "pcb-07", x: 1264, y: 454, tone: "secondary", delay: 0.65 },
+  { id: "pcb-08", x: 1160, y: 596, tone: "primary", delay: 0.9 },
 ] as const;
 
 /*
  * ============================================================
- * PARTÍCULAS
+ * REDE NEURAL
  * ============================================================
  */
 
-const particles = [
+const neuralConnections = [
+  [1052, 174, 1150, 118],
+  [1052, 174, 1168, 216],
+  [1150, 118, 1260, 160],
+  [1168, 216, 1260, 160],
+  [1168, 216, 1278, 260],
+  [1260, 160, 1362, 208],
+  [1278, 260, 1362, 208],
+
+  [78, 616, 170, 558],
+  [78, 616, 176, 684],
+  [170, 558, 276, 616],
+  [176, 684, 276, 616],
+  [276, 616, 366, 554],
+  [276, 616, 380, 700],
+] as const;
+
+const neuralNodes = [
+  { id: "ai-01", x: 1052, y: 174, tone: "primary", delay: 0 },
+  { id: "ai-02", x: 1150, y: 118, tone: "secondary", delay: 0.2 },
+  { id: "ai-03", x: 1168, y: 216, tone: "primary", delay: 0.4 },
+  { id: "ai-04", x: 1260, y: 160, tone: "secondary", delay: 0.6 },
+  { id: "ai-05", x: 1278, y: 260, tone: "primary", delay: 0.8 },
+  { id: "ai-06", x: 1362, y: 208, tone: "secondary", delay: 1 },
+
+  { id: "ai-07", x: 78, y: 616, tone: "secondary", delay: 0.1 },
+  { id: "ai-08", x: 170, y: 558, tone: "primary", delay: 0.3 },
+  { id: "ai-09", x: 176, y: 684, tone: "secondary", delay: 0.5 },
+  { id: "ai-10", x: 276, y: 616, tone: "primary", delay: 0.7 },
+  { id: "ai-11", x: 366, y: 554, tone: "secondary", delay: 0.9 },
+  { id: "ai-12", x: 380, y: 700, tone: "primary", delay: 1.1 },
+] as const;
+
+/*
+ * ============================================================
+ * BARRAMENTOS DE DADOS
+ * ============================================================
+ */
+
+const dataLanes = [
   {
-    id: "particle-01",
-    left: "7%",
-    top: "17%",
-    size: 4,
+    id: "lane-01",
+    top: "21%",
+    side: "left",
+    width: "19rem",
     delay: 0,
-    duration: 7,
-    tone: "primary",
   },
   {
-    id: "particle-02",
-    left: "18%",
-    top: "72%",
-    size: 3,
-    delay: 1.2,
-    duration: 8.4,
-    tone: "secondary",
-  },
-  {
-    id: "particle-03",
-    left: "34%",
-    top: "28%",
-    size: 3,
+    id: "lane-02",
+    top: "38%",
+    side: "right",
+    width: "23rem",
     delay: 0.7,
-    duration: 6.8,
-    tone: "primary",
   },
   {
-    id: "particle-04",
-    left: "48%",
-    top: "84%",
-    size: 4,
-    delay: 1.8,
-    duration: 9,
-    tone: "secondary",
+    id: "lane-03",
+    top: "63%",
+    side: "left",
+    width: "21rem",
+    delay: 1.4,
   },
   {
-    id: "particle-05",
-    left: "64%",
-    top: "16%",
-    size: 3,
-    delay: 2.2,
-    duration: 7.6,
-    tone: "primary",
-  },
-  {
-    id: "particle-06",
-    left: "76%",
-    top: "64%",
-    size: 4,
-    delay: 0.4,
-    duration: 8.2,
-    tone: "secondary",
-  },
-  {
-    id: "particle-07",
-    left: "91%",
-    top: "31%",
-    size: 3,
-    delay: 1.5,
-    duration: 6.7,
-    tone: "primary",
-  },
-  {
-    id: "particle-08",
-    left: "87%",
-    top: "86%",
-    size: 3,
-    delay: 2.8,
-    duration: 9.4,
-    tone: "secondary",
+    id: "lane-04",
+    top: "79%",
+    side: "right",
+    width: "18rem",
+    delay: 2.1,
   },
 ] as const;
 
 export default function InteractiveBackground() {
-  const shouldReduceMotion =
+  const reducedMotionPreference =
     useReducedMotion();
 
+  const shouldReduceMotion =
+    Boolean(reducedMotionPreference);
+
   /*
-   * Posição percentual do cursor.
-   * O glow começa próximo ao centro,
-   * evitando aparecer no canto ao carregar.
+   * Cursor.
    */
   const pointerPercentX =
     useMotionValue(50);
 
   const pointerPercentY =
-    useMotionValue(35);
+    useMotionValue(36);
 
-  /*
-   * Valores normalizados:
-   * -0.5 até 0.5.
-   *
-   * São usados no parallax dos objetos.
-   */
   const pointerNormalizedX =
     useMotionValue(0);
 
@@ -198,30 +157,30 @@ export default function InteractiveBackground() {
 
   const smoothPointerPercentX =
     useSpring(pointerPercentX, {
-      stiffness: 55,
-      damping: 24,
-      mass: 0.7,
+      stiffness: 62,
+      damping: 28,
+      mass: 0.62,
     });
 
   const smoothPointerPercentY =
     useSpring(pointerPercentY, {
-      stiffness: 55,
-      damping: 24,
-      mass: 0.7,
+      stiffness: 62,
+      damping: 28,
+      mass: 0.62,
     });
 
   const smoothPointerX =
     useSpring(pointerNormalizedX, {
-      stiffness: 70,
-      damping: 26,
-      mass: 0.65,
+      stiffness: 76,
+      damping: 28,
+      mass: 0.6,
     });
 
   const smoothPointerY =
     useSpring(pointerNormalizedY, {
-      stiffness: 70,
-      damping: 26,
-      mass: 0.65,
+      stiffness: 76,
+      damping: 28,
+      mass: 0.6,
     });
 
   /*
@@ -235,6 +194,10 @@ export default function InteractiveBackground() {
   const scrollVelocity =
     useVelocity(scrollY);
 
+  /*
+   * O desfoque dinâmico foi reduzido.
+   * Ele afeta somente os elementos decorativos.
+   */
   const rawMotionBlur =
     useTransform(
       scrollVelocity,
@@ -244,17 +207,17 @@ export default function InteractiveBackground() {
         }
 
         return Math.min(
-          Math.abs(velocity) / 320,
-          4.5
+          Math.abs(velocity) / 1100,
+          0.8
         );
       }
     );
 
   const motionBlur =
     useSpring(rawMotionBlur, {
-      stiffness: 150,
-      damping: 30,
-      mass: 0.35,
+      stiffness: 170,
+      damping: 34,
+      mass: 0.32,
     });
 
   /*
@@ -266,7 +229,7 @@ export default function InteractiveBackground() {
       [0, 1],
       shouldReduceMotion
         ? [0, 0]
-        : [0, -90]
+        : [0, -72]
     );
 
   const middleLayerY =
@@ -275,7 +238,7 @@ export default function InteractiveBackground() {
       [0, 1],
       shouldReduceMotion
         ? [0, 0]
-        : [0, -150]
+        : [0, -126]
     );
 
   const nearLayerY =
@@ -284,25 +247,7 @@ export default function InteractiveBackground() {
       [0, 1],
       shouldReduceMotion
         ? [0, 0]
-        : [0, -230]
-    );
-
-  const longRotation =
-    useTransform(
-      scrollYProgress,
-      [0, 1],
-      shouldReduceMotion
-        ? [0, 0]
-        : [0, 75]
-    );
-
-  const reverseRotation =
-    useTransform(
-      scrollYProgress,
-      [0, 1],
-      shouldReduceMotion
-        ? [0, 0]
-        : [0, -52]
+        : [0, -178]
     );
 
   /*
@@ -314,7 +259,7 @@ export default function InteractiveBackground() {
       [-0.5, 0.5],
       shouldReduceMotion
         ? [0, 0]
-        : [-8, 8]
+        : [-7, 7]
     );
 
   const farPointerY =
@@ -323,7 +268,7 @@ export default function InteractiveBackground() {
       [-0.5, 0.5],
       shouldReduceMotion
         ? [0, 0]
-        : [-6, 6]
+        : [-5, 5]
     );
 
   const middlePointerX =
@@ -332,7 +277,7 @@ export default function InteractiveBackground() {
       [-0.5, 0.5],
       shouldReduceMotion
         ? [0, 0]
-        : [-18, 18]
+        : [-14, 14]
     );
 
   const middlePointerY =
@@ -341,7 +286,7 @@ export default function InteractiveBackground() {
       [-0.5, 0.5],
       shouldReduceMotion
         ? [0, 0]
-        : [-13, 13]
+        : [-10, 10]
     );
 
   const nearPointerX =
@@ -350,37 +295,28 @@ export default function InteractiveBackground() {
       [-0.5, 0.5],
       shouldReduceMotion
         ? [0, 0]
-        : [-34, 34]
-    );
-
-  const nearPointerY =
-    useTransform(
-      smoothPointerY,
-      [-0.5, 0.5],
-      shouldReduceMotion
-        ? [0, 0]
-        : [-24, 24]
+        : [-22, 22]
     );
 
   /*
-   * Glow que acompanha o mouse.
+   * Glow discreto do cursor.
    */
   const pointerGlow =
     useMotionTemplate`
       radial-gradient(
-        620px circle at
+        540px circle at
         ${smoothPointerPercentX}%
         ${smoothPointerPercentY}%,
         color-mix(
           in srgb,
-          var(--accent) 13%,
+          var(--accent) 8%,
           transparent
         ),
         color-mix(
           in srgb,
-          var(--accent-2) 5%,
+          var(--accent-2) 3%,
           transparent
-        ) 42%,
+        ) 44%,
         transparent 72%
       )
     `;
@@ -423,20 +359,19 @@ export default function InteractiveBackground() {
           1
         );
 
-      const percentX =
+      pointerPercentX.set(
         (
           pendingPointer.clientX /
           viewportWidth
-        ) * 100;
+        ) * 100
+      );
 
-      const percentY =
+      pointerPercentY.set(
         (
           pendingPointer.clientY /
           viewportHeight
-        ) * 100;
-
-      pointerPercentX.set(percentX);
-      pointerPercentY.set(percentY);
+        ) * 100
+      );
 
       pointerNormalizedX.set(
         pendingPointer.clientX /
@@ -459,7 +394,10 @@ export default function InteractiveBackground() {
     ) {
       if (
         shouldReduceMotion ||
-        event.pointerType !== "mouse"
+        (
+          event.pointerType &&
+          event.pointerType !== "mouse"
+        )
       ) {
         return;
       }
@@ -482,8 +420,7 @@ export default function InteractiveBackground() {
 
     function resetPointer() {
       pointerPercentX.set(50);
-      pointerPercentY.set(35);
-
+      pointerPercentY.set(36);
       pointerNormalizedX.set(0);
       pointerNormalizedY.set(0);
     }
@@ -540,24 +477,37 @@ export default function InteractiveBackground() {
       "
     >
       {/* =====================================================
-          BASE ATMOSFÉRICA
+          BASE
           ===================================================== */}
 
       <div
         className="
           absolute inset-0
-
-          bg-[radial-gradient(circle_at_50%_-10%,color-mix(in_srgb,var(--accent)_8%,transparent),transparent_38%),linear-gradient(180deg,transparent_0%,color-mix(in_srgb,var(--bg-deepest)_32%,transparent)_100%)]
         "
+        style={{
+          background:
+            "radial-gradient(circle at 50% -12%, color-mix(in srgb, var(--accent) 6%, transparent), transparent 38%), linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--bg-deepest) 34%, transparent) 100%)",
+        }}
       />
 
       <motion.div
         className="
           absolute inset-0
-          opacity-90
+          opacity-80
         "
         style={{
           background: pointerGlow,
+        }}
+      />
+
+      {/* Proteção central de leitura */}
+      <div
+        className="
+          absolute inset-0
+        "
+        style={{
+          background:
+            "radial-gradient(ellipse 62% 72% at 50% 47%, color-mix(in srgb, var(--bg-deepest) 19%, transparent) 0%, color-mix(in srgb, var(--bg-deepest) 8%, transparent) 48%, transparent 78%)",
         }}
       />
 
@@ -565,35 +515,54 @@ export default function InteractiveBackground() {
       <div
         className="
           absolute inset-0
-
-          bg-[linear-gradient(90deg,color-mix(in_srgb,var(--bg-deepest)_30%,transparent),transparent_16%,transparent_84%,color-mix(in_srgb,var(--bg-deepest)_30%,transparent))]
         "
+        style={{
+          background:
+            "linear-gradient(90deg, color-mix(in srgb, var(--bg-deepest) 22%, transparent), transparent 15%, transparent 85%, color-mix(in srgb, var(--bg-deepest) 22%, transparent))",
+        }}
       />
 
       {/* =====================================================
-          CAMADA DISTANTE — ESTRUTURA TÉCNICA
+          CAMADA DISTANTE — PCB E ELETRÔNICA
           ===================================================== */}
 
       <motion.div
         className="
-          absolute inset-[-4%]
-          opacity-55
+          absolute inset-[-3%]
+          opacity-[0.46]
         "
         style={{
           x: farPointerX,
           y: farLayerY,
+          filter: blurFilter,
+          maskImage:
+            "radial-gradient(ellipse 58% 70% at center, transparent 0%, rgba(0,0,0,0.16) 43%, rgba(0,0,0,0.82) 76%, black 100%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 58% 70% at center, transparent 0%, rgba(0,0,0,0.16) 43%, rgba(0,0,0,0.82) 76%, black 100%)",
         }}
       >
         <svg
           viewBox="0 0 1440 900"
           preserveAspectRatio="xMidYMid slice"
-          className="
-            h-full w-full
-          "
+          className="h-full w-full"
         >
           <defs>
+            <pattern
+              id="pcb-grid"
+              width="58"
+              height="58"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M58 0H0V58"
+                fill="none"
+                stroke="var(--line-soft)"
+                strokeWidth="0.7"
+              />
+            </pattern>
+
             <linearGradient
-              id="background-circuit-gradient"
+              id="pcb-signal-gradient"
               x1="0%"
               y1="0%"
               x2="100%"
@@ -602,24 +571,24 @@ export default function InteractiveBackground() {
               <stop
                 offset="0%"
                 stopColor="var(--accent)"
-                stopOpacity="0.04"
+                stopOpacity="0.03"
               />
 
               <stop
                 offset="48%"
                 stopColor="var(--accent)"
-                stopOpacity="0.6"
+                stopOpacity="0.78"
               />
 
               <stop
                 offset="100%"
                 stopColor="var(--accent-2)"
-                stopOpacity="0.06"
+                stopOpacity="0.05"
               />
             </linearGradient>
 
             <filter
-              id="background-circuit-glow"
+              id="pcb-glow"
               x="-100%"
               y="-100%"
               width="300%"
@@ -627,7 +596,7 @@ export default function InteractiveBackground() {
               colorInterpolationFilters="sRGB"
             >
               <feGaussianBlur
-                stdDeviation="1.7"
+                stdDeviation="1.2"
                 result="blurred"
               />
 
@@ -636,64 +605,94 @@ export default function InteractiveBackground() {
                 <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
-
-            <radialGradient
-              id="background-orbit-glow"
-              cx="50%"
-              cy="50%"
-              r="50%"
-            >
-              <stop
-                offset="0%"
-                stopColor="var(--accent)"
-                stopOpacity="0.07"
-              />
-
-              <stop
-                offset="72%"
-                stopColor="var(--accent-2)"
-                stopOpacity="0.015"
-              />
-
-              <stop
-                offset="100%"
-                stopColor="var(--accent)"
-                stopOpacity="0"
-              />
-            </radialGradient>
           </defs>
 
-          {/* Círculos editoriais */}
-          <circle
-            cx="1140"
-            cy="220"
-            r="250"
-            fill="url(#background-orbit-glow)"
-            stroke="var(--line-soft)"
-            strokeWidth="1"
+          <rect
+            width="1440"
+            height="900"
+            fill="url(#pcb-grid)"
+            opacity="0.28"
           />
 
-          <circle
-            cx="1140"
-            cy="220"
-            r="185"
-            fill="none"
-            stroke="var(--line-soft)"
-            strokeWidth="0.7"
-            strokeDasharray="6 13"
-          />
+          {/* Circuitos integrados nas bordas */}
+          <g opacity="0.58">
+            <rect
+              x="78"
+              y="154"
+              width="156"
+              height="104"
+              rx="14"
+              fill="none"
+              stroke="var(--line)"
+            />
 
-          <circle
-            cx="270"
-            cy="690"
-            r="205"
-            fill="none"
-            stroke="var(--line-soft)"
-            strokeWidth="0.8"
-          />
+            <rect
+              x="102"
+              y="178"
+              width="108"
+              height="56"
+              rx="8"
+              fill="none"
+              stroke="var(--accent)"
+              strokeOpacity="0.28"
+            />
 
-          {/* Circuitos */}
-          {circuitPaths.map(
+            {Array.from({
+              length: 6,
+            }).map((_, index) => (
+              <g key={`left-pin-${index}`}>
+                <path
+                  d={`M62 ${170 + index * 15}H78`}
+                  stroke="var(--line-strong)"
+                />
+
+                <path
+                  d={`M234 ${170 + index * 15}H250`}
+                  stroke="var(--line-strong)"
+                />
+              </g>
+            ))}
+
+            <rect
+              x="1200"
+              y="572"
+              width="164"
+              height="112"
+              rx="14"
+              fill="none"
+              stroke="var(--line)"
+            />
+
+            <rect
+              x="1226"
+              y="598"
+              width="112"
+              height="60"
+              rx="8"
+              fill="none"
+              stroke="var(--accent-2)"
+              strokeOpacity="0.28"
+            />
+
+            {Array.from({
+              length: 6,
+            }).map((_, index) => (
+              <g key={`right-pin-${index}`}>
+                <path
+                  d={`M1184 ${589 + index * 16}H1200`}
+                  stroke="var(--line-strong)"
+                />
+
+                <path
+                  d={`M1364 ${589 + index * 16}H1380`}
+                  stroke="var(--line-strong)"
+                />
+              </g>
+            ))}
+          </g>
+
+          {/* Trilhas */}
+          {pcbPaths.map(
             (path, index) => (
               <g key={path}>
                 <path
@@ -709,29 +708,29 @@ export default function InteractiveBackground() {
                 <motion.path
                   d={path}
                   fill="none"
-                  stroke="url(#background-circuit-gradient)"
-                  strokeWidth="1.35"
+                  stroke="url(#pcb-signal-gradient)"
+                  strokeWidth="1.25"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeDasharray="12 48"
+                  strokeDasharray="10 54"
                   vectorEffect="non-scaling-stroke"
-                  filter="url(#background-circuit-glow)"
+                  filter="url(#pcb-glow)"
                   animate={
                     shouldReduceMotion
                       ? undefined
                       : {
                           strokeDashoffset: [
-                            60,
+                            64,
                             0,
                           ],
                         }
                   }
                   transition={{
                     duration:
-                      5.2 +
-                      index * 0.08,
+                      6.2 +
+                      index * 0.07,
                     delay:
-                      index * 0.1,
+                      index * 0.11,
                     repeat: Infinity,
                     ease: "linear",
                   }}
@@ -740,460 +739,419 @@ export default function InteractiveBackground() {
             )
           )}
 
-          {/* Nós */}
-          {signalNodes.map(
-            (node, index) => (
-              <motion.g
-                key={node.id}
-                animate={
-                  shouldReduceMotion
-                    ? undefined
-                    : {
-                        opacity: [
-                          0.25,
-                          0.9,
-                          0.25,
-                        ],
-                      }
-                }
-                transition={{
-                  duration: 3.4,
-                  delay: node.delay,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <circle
-                  cx={node.x}
-                  cy={node.y}
-                  r="4"
-                  fill="var(--bg-deep)"
-                  stroke={
-                    index % 2 === 0
-                      ? "var(--accent)"
-                      : "var(--accent-2)"
-                  }
-                  strokeWidth="1.1"
-                  vectorEffect="non-scaling-stroke"
-                />
+          {/* Pads e vias */}
+          {circuitNodes.map(
+            (node) => {
+              const color =
+                node.tone === "primary"
+                  ? "var(--accent)"
+                  : "var(--accent-2)";
 
-                <circle
-                  cx={node.x}
-                  cy={node.y}
-                  r="1.5"
-                  fill={
-                    index % 2 === 0
-                      ? "var(--accent)"
-                      : "var(--accent-2)"
+              return (
+                <motion.g
+                  key={node.id}
+                  animate={
+                    shouldReduceMotion
+                      ? undefined
+                      : {
+                          opacity: [
+                            0.3,
+                            0.92,
+                            0.3,
+                          ],
+                        }
                   }
-                  filter="url(#background-circuit-glow)"
-                />
-              </motion.g>
-            )
+                  transition={{
+                    duration: 3.8,
+                    delay: node.delay,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <circle
+                    cx={node.x}
+                    cy={node.y}
+                    r="6"
+                    fill="var(--bg-deep)"
+                    stroke={color}
+                    strokeOpacity="0.7"
+                    strokeWidth="1"
+                  />
+
+                  <circle
+                    cx={node.x}
+                    cy={node.y}
+                    r="2"
+                    fill={color}
+                    filter="url(#pcb-glow)"
+                  />
+                </motion.g>
+              );
+            }
           )}
         </svg>
       </motion.div>
 
       {/* =====================================================
-          CAMADA INTERMEDIÁRIA — OBJETOS
+          CAMADA INTERMEDIÁRIA — REDE NEURAL
           ===================================================== */}
 
       <motion.div
         className="
-          absolute inset-0
+          absolute inset-[-2%]
+          hidden
+          opacity-[0.48]
+          sm:block
         "
         style={{
           x: middlePointerX,
           y: middleLayerY,
+          maskImage:
+            "radial-gradient(ellipse 62% 74% at center, transparent 0%, rgba(0,0,0,0.08) 45%, black 77%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse 62% 74% at center, transparent 0%, rgba(0,0,0,0.08) 45%, black 77%)",
         }}
       >
-        {/* Esfera superior direita */}
-        <motion.div
-          className="
-            absolute
-            right-[-7rem]
-            top-[7%]
-
-            h-64 w-64
-
-            sm:right-[-5rem]
-            sm:h-80 sm:w-80
-
-            xl:right-[2%]
-            xl:h-96 xl:w-96
-          "
-          style={{
-            rotate: longRotation,
-          }}
+        <svg
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="xMidYMid slice"
+          className="h-full w-full"
         >
-          <div
-            className="
-              tech-object
-              tech-object-mid
-              tech-object-blue
-              tech-orb
-              !relative
+          <defs>
+            <linearGradient
+              id="neural-line-gradient"
+              x1="0%"
+              y1="0%"
+              x2="100%"
+              y2="100%"
+            >
+              <stop
+                offset="0%"
+                stopColor="var(--accent)"
+                stopOpacity="0.12"
+              />
 
-              h-full w-full
-            "
-          />
+              <stop
+                offset="100%"
+                stopColor="var(--accent-2)"
+                stopOpacity="0.5"
+              />
+            </linearGradient>
 
-          <div
-            className="
-              absolute inset-[14%]
-              rounded-full
-              border
-              border-white/10
-            "
-          />
+            <filter
+              id="neural-glow"
+              x="-100%"
+              y="-100%"
+              width="300%"
+              height="300%"
+            >
+              <feGaussianBlur
+                stdDeviation="2"
+                result="blurred"
+              />
 
-          <div
-            className="
-              absolute inset-[30%]
-              rounded-full
+              <feMerge>
+                <feMergeNode in="blurred" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
 
-              bg-white/10
-              blur-xl
-            "
-          />
-        </motion.div>
+          {neuralConnections.map(
+            (
+              [
+                x1,
+                y1,
+                x2,
+                y2,
+              ],
+              index
+            ) => (
+              <g
+                key={`${x1}-${y1}-${x2}-${y2}`}
+              >
+                <line
+                  x1={x1}
+                  y1={y1}
+                  x2={x2}
+                  y2={y2}
+                  stroke="var(--line-soft)"
+                  strokeWidth="1"
+                />
 
-        {/* Anel esquerdo */}
-        <motion.div
-          className="
-            absolute
-            left-[-8rem]
-            top-[47%]
+                <motion.line
+                  x1={x1}
+                  y1={y1}
+                  x2={x2}
+                  y2={y2}
+                  stroke="url(#neural-line-gradient)"
+                  strokeWidth="1.15"
+                  strokeDasharray="5 24"
+                  animate={
+                    shouldReduceMotion
+                      ? undefined
+                      : {
+                          strokeDashoffset: [
+                            30,
+                            0,
+                          ],
+                        }
+                  }
+                  transition={{
+                    duration:
+                      4.8 +
+                      index * 0.08,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+              </g>
+            )
+          )}
 
-            h-72 w-72
+          {neuralNodes.map(
+            (node) => {
+              const color =
+                node.tone === "primary"
+                  ? "var(--accent)"
+                  : "var(--accent-2)";
 
-            sm:left-[-6rem]
-            sm:h-96 sm:w-96
+              return (
+                <motion.g
+                  key={node.id}
+                  animate={
+                    shouldReduceMotion
+                      ? undefined
+                      : {
+                          opacity: [
+                            0.34,
+                            1,
+                            0.34,
+                          ],
+                        }
+                  }
+                  transition={{
+                    duration: 3.1,
+                    delay: node.delay,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                >
+                  <circle
+                    cx={node.x}
+                    cy={node.y}
+                    r="10"
+                    fill="var(--bg-deep)"
+                    fillOpacity="0.7"
+                    stroke={color}
+                    strokeOpacity="0.35"
+                  />
 
-            xl:left-[1%]
-          "
-          style={{
-            rotate:
-              reverseRotation,
-          }}
-        >
-          <div
-            className="
-              absolute inset-0
-              rounded-full
+                  <circle
+                    cx={node.x}
+                    cy={node.y}
+                    r="3"
+                    fill={color}
+                    filter="url(#neural-glow)"
+                  />
+                </motion.g>
+              );
+            }
+          )}
 
-              border
-              border-[color:var(--accent)]/20
-            "
-          />
-
-          <div
-            className="
-              absolute inset-[15%]
-              rounded-full
-
-              border
-              border-dashed
-              border-[color:var(--accent-2)]/18
-            "
-          />
-
-          <div
-            className="
-              absolute inset-[33%]
-              rounded-full
-
-              border
-              border-[color:var(--line)]
-            "
-          />
-        </motion.div>
-
-        {/* Pequeno módulo técnico */}
-        <motion.div
-          className="
-            absolute
-            right-[10%]
-            top-[58%]
-
-            hidden
-            h-24 w-28
-
-            lg:block
-          "
-          animate={
-            shouldReduceMotion
-              ? undefined
-              : {
-                  y: [
-                    0,
-                    -12,
-                    0,
-                  ],
-                  rotate: [
-                    -5,
-                    -1,
-                    -5,
-                  ],
-                }
-          }
-          transition={{
-            duration: 8,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <div
-            className="
-              tech-object
-              tech-object-mid
-              tech-object-glass
-              tech-chip
-              !relative
-
-              h-full w-full
-            "
-          />
-
-          <div
-            className="
-              absolute inset-[20%]
-              rounded-xl
-              border
-              border-[color:var(--accent)]/25
-            "
-          />
-
-          <span
-            className="
-              absolute
-              left-1/2 top-1/2
-
-              -translate-x-1/2
-              -translate-y-1/2
-
-              font-mono
-              text-[8px]
-              font-semibold
-              uppercase
-              tracking-[0.2em]
-              text-[color:var(--accent)]
-            "
+          <text
+            x="1040"
+            y="88"
+            fill="var(--subtle)"
+            fontSize="9"
+            fontFamily="var(--font-mono)"
+            letterSpacing="2.4"
+            opacity="0.6"
           >
-            Data
-          </span>
-        </motion.div>
+            NEURAL PROCESSING / 01
+          </text>
+
+          <text
+            x="74"
+            y="744"
+            fill="var(--subtle)"
+            fontSize="9"
+            fontFamily="var(--font-mono)"
+            letterSpacing="2.4"
+            opacity="0.6"
+          >
+            SENSOR INPUT / 02
+          </text>
+        </svg>
       </motion.div>
 
       {/* =====================================================
-          CAMADA PRÓXIMA
+          CAMADA PRÓXIMA — BARRAMENTOS E SINAIS
           ===================================================== */}
 
       <motion.div
         className="
           absolute inset-0
+          hidden
+          lg:block
         "
         style={{
           x: nearPointerX,
           y: nearLayerY,
-          filter: blurFilter,
         }}
       >
-        {/* Cubo de vidro */}
-        <motion.div
-          className="
-            absolute
-            bottom-[8%]
-            left-[6%]
-
-            hidden
-            h-28 w-28
-
-            lg:block
-            xl:h-36 xl:w-36
-          "
-          animate={
-            shouldReduceMotion
-              ? undefined
-              : {
-                  rotate: [
-                    -8,
-                    4,
-                    -8,
-                  ],
-                  y: [
-                    0,
-                    16,
-                    0,
-                  ],
-                }
-          }
-          transition={{
-            duration: 9.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <div
-            className="
-              tech-object
-              tech-object-near
-              tech-object-glass
-              tech-cube
-              !relative
-
-              h-full w-full
-            "
-          />
-
-          <div
-            className="
-              absolute inset-[22%]
-              rounded-[20%]
-
-              border
-              border-white/15
-            "
-          />
-        </motion.div>
-
-        {/* Esfera próxima */}
-        <motion.div
-          className="
-            absolute
-            right-[-4rem]
-            top-[72%]
-
-            hidden
-            h-44 w-44
-
-            xl:block
-          "
-          animate={
-            shouldReduceMotion
-              ? undefined
-              : {
-                  y: [
-                    0,
-                    -18,
-                    0,
-                  ],
-                  scale: [
-                    1,
-                    1.04,
-                    1,
-                  ],
-                }
-          }
-          transition={{
-            duration: 7.5,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <div
-            className="
-              tech-object
-              tech-object-near
-              tech-object-green
-              tech-orb
-              !relative
-
-              h-full w-full
-            "
-          />
-        </motion.div>
-      </motion.div>
-
-      {/* =====================================================
-          PARTÍCULAS
-          ===================================================== */}
-
-      <motion.div
-        className="
-          absolute inset-0
-        "
-        style={{
-          x: farPointerX,
-          y: farPointerY,
-        }}
-      >
-        {particles.map(
-          (particle) => {
-            const isPrimary =
-              particle.tone ===
-              "primary";
+        {dataLanes.map(
+          (lane) => {
+            const isLeft =
+              lane.side === "left";
 
             return (
-              <motion.span
-                key={particle.id}
-                className={`
+              <div
+                key={lane.id}
+                className="
                   absolute
-                  rounded-full
-
-                  ${
-                    isPrimary
-                      ? `
-                        bg-[color:var(--accent)]
-                        shadow-[0_0_12px_var(--accent)]
-                      `
-                      : `
-                        bg-[color:var(--accent-2)]
-                        shadow-[0_0_12px_var(--accent-2)]
-                      `
-                  }
-                `}
+                  h-px
+                  overflow-visible
+                "
                 style={{
-                  left: particle.left,
-                  top: particle.top,
-                  width:
-                    particle.size,
-                  height:
-                    particle.size,
-                }}
-                animate={
-                  shouldReduceMotion
+                  top: lane.top,
+                  width: lane.width,
+                  left: isLeft
+                    ? "-2rem"
+                    : undefined,
+                  right: isLeft
                     ? undefined
-                    : {
-                        y: [
-                          0,
-                          -16,
-                          0,
-                        ],
-                        opacity: [
-                          0.18,
-                          0.75,
-                          0.18,
-                        ],
-                        scale: [
-                          0.75,
-                          1.2,
-                          0.75,
-                        ],
-                      }
-                }
-                transition={{
-                  duration:
-                    particle.duration,
-                  delay:
-                    particle.delay,
-                  repeat: Infinity,
-                  ease: "easeInOut",
+                    : "-2rem",
+                  background:
+                    isLeft
+                      ? "linear-gradient(90deg, transparent, color-mix(in srgb, var(--line-strong) 72%, transparent))"
+                      : "linear-gradient(90deg, color-mix(in srgb, var(--line-strong) 72%, transparent), transparent)",
                 }}
-              />
+              >
+                <motion.span
+                  className="
+                    absolute
+                    top-1/2
+
+                    h-1.5 w-8
+
+                    -translate-y-1/2
+                    rounded-full
+
+                    bg-gradient-to-r
+                    from-transparent
+                    via-[color:var(--accent)]
+                    to-[color:var(--accent-2)]
+
+                    shadow-[0_0_14px_var(--accent)]
+                  "
+                  animate={
+                    shouldReduceMotion
+                      ? undefined
+                      : isLeft
+                        ? {
+                            left: [
+                              "0%",
+                              "88%",
+                            ],
+                            opacity: [
+                              0,
+                              1,
+                              0,
+                            ],
+                          }
+                        : {
+                            right: [
+                              "0%",
+                              "88%",
+                            ],
+                            opacity: [
+                              0,
+                              1,
+                              0,
+                            ],
+                          }
+                  }
+                  transition={{
+                    duration: 4.2,
+                    delay: lane.delay,
+                    repeat: Infinity,
+                    ease: "linear",
+                  }}
+                />
+              </div>
             );
           }
         )}
+
+        {/* Sinal elétrico discreto */}
+        <svg
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="none"
+          className="
+            absolute inset-0
+            h-full w-full
+            opacity-[0.28]
+          "
+        >
+          <motion.path
+            d="M0 816 H118 L146 816 L166 774 L192 850 L216 816 H356"
+            fill="none"
+            stroke="var(--accent)"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+            strokeDasharray="14 38"
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    strokeDashoffset: [
+                      52,
+                      0,
+                    ],
+                  }
+            }
+            transition={{
+              duration: 4.6,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+
+          <motion.path
+            d="M1440 346 H1322 L1294 346 L1274 304 L1248 380 L1224 346 H1084"
+            fill="none"
+            stroke="var(--accent-2)"
+            strokeWidth="1"
+            vectorEffect="non-scaling-stroke"
+            strokeDasharray="14 38"
+            animate={
+              shouldReduceMotion
+                ? undefined
+                : {
+                    strokeDashoffset: [
+                      -52,
+                      0,
+                    ],
+                  }
+            }
+            transition={{
+              duration: 5.1,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+          />
+        </svg>
       </motion.div>
 
       {/* =====================================================
-          LINHAS EDITORIAIS
+          ESTRUTURA EDITORIAL
           ===================================================== */}
 
       <div
         className="
           absolute
-          left-[8%]
+          left-[7.5%]
           top-0
 
           hidden h-full
@@ -1204,6 +1162,7 @@ export default function InteractiveBackground() {
           via-[color:var(--line-soft)]
           to-transparent
 
+          opacity-60
           xl:block
         "
       />
@@ -1211,7 +1170,7 @@ export default function InteractiveBackground() {
       <div
         className="
           absolute
-          right-[8%]
+          right-[7.5%]
           top-0
 
           hidden h-full
@@ -1222,6 +1181,7 @@ export default function InteractiveBackground() {
           via-[color:var(--line-soft)]
           to-transparent
 
+          opacity-60
           xl:block
         "
       />
@@ -1239,8 +1199,19 @@ export default function InteractiveBackground() {
           via-[color:var(--line-soft)]
           to-transparent
 
-          opacity-40
+          opacity-25
         "
+      />
+
+      {/* Camada final de contraste */}
+      <div
+        className="
+          absolute inset-0
+        "
+        style={{
+          background:
+            "linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--bg-deepest) 4%, transparent) 52%, color-mix(in srgb, var(--bg-deepest) 13%, transparent) 100%)",
+        }}
       />
     </div>
   );
