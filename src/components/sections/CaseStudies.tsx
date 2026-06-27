@@ -234,7 +234,7 @@ export default function CaseStudies() {
                 />
 
                 <p className="tech-label">
-                  Projetos reais / sistemas aplicados
+                  Projetos / sistemas aplicados
                 </p>
               </div>
 

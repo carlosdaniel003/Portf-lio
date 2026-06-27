@@ -370,7 +370,7 @@ export default function Hero() {
                   text-[color:var(--muted)]
                 "
               >
-                Software para problemas reais
+                Problemas revelam oportunidades
               </span>
             </motion.div>
 
@@ -399,7 +399,7 @@ export default function Hero() {
                   text-[color:var(--text)]
                 "
               >
-                Problemas
+                Funcionar
               </span>
 
               <span
@@ -408,7 +408,7 @@ export default function Hero() {
                   text-[color:var(--text)]
                 "
               >
-                reais.
+                é o começo.
               </span>
 
               <span
@@ -418,7 +418,7 @@ export default function Hero() {
                   pb-[0.08em]
                 "
               >
-                Sistemas
+                Evoluir
               </span>
 
               <span
@@ -428,7 +428,7 @@ export default function Hero() {
                   pb-[0.08em]
                 "
               >
-                inteligentes.
+                é o objetivo.
               </span>
             </motion.h1>
 
@@ -486,11 +486,7 @@ export default function Hero() {
                   sm:leading-9
                 "
               >
-                Desenvolvo sistemas que conectam
-                operação, dados e tecnologia para
-                transformar falhas, processos manuais e
-                decisões lentas em soluções digitais
-                aplicáveis à indústria.
+                Desenvolvo sistemas que conectam operação, dados e tecnologia para identificar oportunidades de melhoria e tornar processos mais eficientes, inteligentes e confiáveis.
               </p>
             </motion.div>
 

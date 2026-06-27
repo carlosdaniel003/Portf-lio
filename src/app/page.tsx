@@ -16,7 +16,7 @@ const editorialTopics = [
   "Visão computacional",
   "Automação",
   "Dashboards",
-  "Sistemas reais",
+  "Sistemas",
 ];
 
 export default function Home() {

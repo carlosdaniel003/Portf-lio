@@ -288,7 +288,7 @@ export default function Footer() {
               Tecnologia aplicada a
               <span className="text-gradient">
                 {" "}
-                problemas reais.
+                oportunidades de melhoria.
               </span>
             </h2>
 
