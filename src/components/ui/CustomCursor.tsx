@@ -1,11 +1,7 @@
-// src\components\ui\CustomCursor.tsx
+// src/components/ui/CustomCursor.tsx
 "use client";
 
-import {
-  motion,
-  useMotionValue,
-  useReducedMotion,
-} from "framer-motion";
+import { useReducedMotion } from "framer-motion";
 import {
   useEffect,
   useRef,
@@ -54,25 +50,19 @@ export default function CustomCursor() {
 
   const [isEnabled, setIsEnabled] =
     useState(false);
-
   const [isVisible, setIsVisible] =
     useState(false);
-
   const [isClicking, setIsClicking] =
     useState(false);
-
   const [cursorMode, setCursorMode] =
     useState<CursorMode>("default");
 
-  /*
-   * As duas camadas usam exatamente os mesmos MotionValues.
-   * Não existe mola, interpolação ou atraso de posição.
-   */
-  const cursorX = useMotionValue(-120);
-  const cursorY = useMotionValue(-120);
+  const arrowPositionRef =
+    useRef<HTMLDivElement>(null);
+  const ringPositionRef =
+    useRef<HTMLDivElement>(null);
 
   const visibleRef = useRef(false);
-
   const cursorModeRef =
     useRef<CursorMode>("default");
 
@@ -82,17 +72,16 @@ export default function CustomCursor() {
     );
 
     function updatePointerAvailability() {
-      const enabled =
-        finePointer.matches;
+      const enabled = finePointer.matches;
 
       setIsEnabled(enabled);
 
       if (!enabled) {
         visibleRef.current = false;
+        cursorModeRef.current = "default";
         setIsVisible(false);
         setIsClicking(false);
         setCursorMode("default");
-        cursorModeRef.current = "default";
       }
     }
 
@@ -119,9 +108,7 @@ export default function CustomCursor() {
     function updateVisibility(
       visible: boolean
     ) {
-      if (
-        visibleRef.current === visible
-      ) {
+      if (visibleRef.current === visible) {
         return;
       }
 
@@ -132,9 +119,7 @@ export default function CustomCursor() {
     function updateCursorMode(
       mode: CursorMode
     ) {
-      if (
-        cursorModeRef.current === mode
-      ) {
+      if (cursorModeRef.current === mode) {
         return;
       }
 
@@ -150,16 +135,12 @@ export default function CustomCursor() {
           ? target
           : null;
 
-      if (
-        element?.closest(TEXT_SELECTOR)
-      ) {
+      if (element?.closest(TEXT_SELECTOR)) {
         updateCursorMode("text");
         return;
       }
 
-      if (
-        element?.closest(POINTER_SELECTOR)
-      ) {
+      if (element?.closest(POINTER_SELECTOR)) {
         updateCursorMode("pointer");
         return;
       }
@@ -167,9 +148,29 @@ export default function CustomCursor() {
       updateCursorMode("default");
     }
 
-    function handlePointerMove(
-      event: PointerEvent
+    function setCursorPosition(
+      clientX: number,
+      clientY: number
     ) {
+      const transform =
+        `translate3d(${clientX}px, ${clientY}px, 0)`;
+
+      if (arrowPositionRef.current) {
+        arrowPositionRef.current.style.transform =
+          transform;
+      }
+
+      if (ringPositionRef.current) {
+        ringPositionRef.current.style.transform =
+          transform;
+      }
+    }
+
+    function handlePointerPosition(
+      rawEvent: Event
+    ) {
+      const event = rawEvent as PointerEvent;
+
       if (
         event.pointerType &&
         event.pointerType !== "mouse"
@@ -177,16 +178,12 @@ export default function CustomCursor() {
         return;
       }
 
-      /*
-       * Atualização direta em cada evento do mouse.
-       * A posição visual acompanha o ponteiro nativo
-       * sem spring, throttle ou requestAnimationFrame.
-       */
-      cursorX.set(event.clientX);
-      cursorY.set(event.clientY);
+      setCursorPosition(
+        event.clientX,
+        event.clientY
+      );
 
       updateVisibility(true);
-      detectCursorMode(event.target);
     }
 
     function handlePointerOver(
@@ -240,52 +237,50 @@ export default function CustomCursor() {
       }
     }
 
+    /*
+     * pointerrawupdate acompanha a taxa real do mouse quando
+     * o navegador oferece suporte. Nos demais navegadores,
+     * pointermove permanece como fallback.
+     */
+    const movementEvent =
+      "onpointerrawupdate" in window
+        ? "pointerrawupdate"
+        : "pointermove";
+
     window.addEventListener(
-      "pointermove",
-      handlePointerMove,
-      {
-        passive: true,
-      }
+      movementEvent,
+      handlePointerPosition,
+      { passive: true }
     );
 
     window.addEventListener(
       "pointerover",
       handlePointerOver,
-      {
-        passive: true,
-      }
+      { passive: true }
     );
 
     window.addEventListener(
       "pointerdown",
       handlePointerDown,
-      {
-        passive: true,
-      }
+      { passive: true }
     );
 
     window.addEventListener(
       "pointerup",
       handlePointerUp,
-      {
-        passive: true,
-      }
+      { passive: true }
     );
 
     window.addEventListener(
       "pointercancel",
       handlePointerUp,
-      {
-        passive: true,
-      }
+      { passive: true }
     );
 
     window.addEventListener(
       "mouseout",
       handleMouseOut,
-      {
-        passive: true,
-      }
+      { passive: true }
     );
 
     window.addEventListener(
@@ -300,60 +295,48 @@ export default function CustomCursor() {
 
     return () => {
       window.removeEventListener(
-        "pointermove",
-        handlePointerMove
+        movementEvent,
+        handlePointerPosition
       );
-
       window.removeEventListener(
         "pointerover",
         handlePointerOver
       );
-
       window.removeEventListener(
         "pointerdown",
         handlePointerDown
       );
-
       window.removeEventListener(
         "pointerup",
         handlePointerUp
       );
-
       window.removeEventListener(
         "pointercancel",
         handlePointerUp
       );
-
       window.removeEventListener(
         "mouseout",
         handleMouseOut
       );
-
       window.removeEventListener(
         "blur",
         handleWindowBlur
       );
-
       document.removeEventListener(
         "visibilitychange",
         handleVisibilityChange
       );
     };
-  }, [
-    cursorX,
-    cursorY,
-    isEnabled,
-  ]);
+  }, [isEnabled]);
 
   if (!isEnabled) {
     return null;
   }
 
   const showCustomCursor =
-    isVisible &&
-    cursorMode !== "text";
+    isVisible && cursorMode !== "text";
 
-  const interactionScale =
+  const arrowScale =
     prefersReducedMotion
       ? 1
       : isClicking
@@ -373,84 +356,85 @@ export default function CustomCursor() {
 
   return (
     <>
-      <motion.div
+      <div
+        ref={arrowPositionRef}
         aria-hidden="true"
-        className={`custom-cursor-arrow is-${cursorMode}`}
         style={{
-          x: cursorX,
-          y: cursorY,
-        }}
-        animate={{
-          opacity:
-            showCustomCursor ? 1 : 0,
-          scale: interactionScale,
-        }}
-        transition={{
-          opacity: {
-            duration: 0.08,
-          },
-          scale: {
-            duration:
-              prefersReducedMotion
-                ? 0
-                : 0.08,
-            ease: "easeOut",
-          },
+          position: "fixed",
+          left: 0,
+          top: 0,
+          zIndex: 2147483646,
+          pointerEvents: "none",
+          transform:
+            "translate3d(-120px, -120px, 0)",
+          willChange: "transform",
+          contain: "layout style paint",
         }}
       >
-        <svg
-          viewBox="0 0 22 28"
-          role="presentation"
-          focusable="false"
+        <div
+          className={`custom-cursor-arrow is-${cursorMode}`}
+          style={{
+            position: "relative",
+            left: "auto",
+            top: "auto",
+            zIndex: "auto",
+            opacity: showCustomCursor ? 1 : 0,
+            transform: `scale(${arrowScale})`,
+            transition: prefersReducedMotion
+              ? "none"
+              : "opacity 80ms ease, transform 80ms ease-out",
+          }}
         >
-          <path
-            d="
-              M2.25 2.1
-              V21.15
-              L7.25 16.55
-              L11.15 25.45
-              L15.4 23.55
-              L11.45 14.75
-              H19.55
-              Z
-            "
-          />
-        </svg>
+          <svg
+            viewBox="0 0 22 28"
+            role="presentation"
+            focusable="false"
+          >
+            <path
+              d="M2.25 2.1V21.15L7.25 16.55L11.15 25.45L15.4 23.55L11.45 14.75H19.55Z"
+            />
+          </svg>
 
-        <span className="custom-cursor-arrow-core" />
-      </motion.div>
+          <span className="custom-cursor-arrow-core" />
+        </div>
+      </div>
 
-      <motion.div
+      <div
+        ref={ringPositionRef}
         aria-hidden="true"
-        className={`custom-cursor-ring is-${cursorMode}`}
         style={{
-          x: cursorX,
-          y: cursorY,
+          position: "fixed",
+          left: 0,
+          top: 0,
+          zIndex: 2147483645,
+          pointerEvents: "none",
+          transform:
+            "translate3d(-120px, -120px, 0)",
+          willChange: "transform",
+          contain: "layout style paint",
         }}
-        animate={{
-          opacity:
-            showCustomCursor
+      >
+        <div
+          className={`custom-cursor-ring is-${cursorMode}`}
+          style={{
+            position: "relative",
+            left: "auto",
+            top: "auto",
+            zIndex: "auto",
+            opacity: showCustomCursor
               ? cursorMode === "pointer"
                 ? 1
                 : 0.62
               : 0,
-          scale: ringScale,
-        }}
-        transition={{
-          opacity: {
-            duration: 0.08,
-          },
-          scale: {
-            duration:
-              prefersReducedMotion
-                ? 0
-                : 0.1,
-            ease: "easeOut",
-          },
-        }}
-      >
-        <span className="custom-cursor-ring-dot" />
-      </motion.div>
+            transform: `scale(${ringScale})`,
+            transition: prefersReducedMotion
+              ? "none"
+              : "opacity 80ms ease, transform 100ms ease-out",
+          }}
+        >
+          <span className="custom-cursor-ring-dot" />
+        </div>
+      </div>
     </>
   );
 }
