@@ -1,8 +1,10 @@
-// src\app\layout.tsx
+// src/app/layout.tsx
+
 import type {
   Metadata,
   Viewport,
 } from "next";
+import type { ReactNode } from "react";
 
 import {
   IBM_Plex_Mono,
@@ -18,21 +20,6 @@ import Footer from "@/components/ui/Footer";
 import Header from "@/components/ui/Header";
 
 import "./globals.css";
-
-/*
- * ============================================================
- * FONTES DA NOVA IDENTIDADE
- * ============================================================
- *
- * Space Grotesk:
- * títulos editoriais e chamadas de alto impacto.
- *
- * Manrope:
- * textos, navegação, botões e interface.
- *
- * IBM Plex Mono:
- * etiquetas técnicas, números, códigos e metadados.
- */
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -50,31 +37,20 @@ const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-ibm-plex-mono",
-  weight: [
-    "400",
-    "500",
-    "600",
-    "700",
-  ],
+  weight: ["400", "500", "600", "700"],
 });
-
-/*
- * ============================================================
- * IDENTIDADE E SEO
- * ============================================================
- */
 
 const siteUrl =
   "https://carlosdaniel.dev.br";
 
 const title =
-  "Carlos Daniel | Software, IA e Automação Industrial";
+  "Carlos Daniel | Portfólio de Software, IA e Eletrônica";
 
 const description =
-  "Desenvolvo sistemas, dashboards, automações e soluções com inteligência artificial e visão computacional para transformar problemas reais de indústria, qualidade e operação.";
+  "Portfólio profissional de Carlos Daniel com projetos em sistemas, software industrial, dashboards, inteligência artificial, visão computacional, eletrônica e automação.";
 
 const socialImage =
-  `${siteUrl}/opengraph-image?v=cd3`;
+  `${siteUrl}/opengraph-image?v=cd4`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -85,9 +61,8 @@ export const metadata: Metadata = {
   },
 
   description,
-
   applicationName:
-    "Portfólio Carlos Daniel",
+    "Portfólio Profissional Carlos Daniel",
 
   authors: [
     {
@@ -105,8 +80,10 @@ export const metadata: Metadata = {
 
   keywords: [
     "Carlos Daniel",
+    "Portfólio profissional",
+    "Técnico em Eletrônica",
+    "Desenvolvedor de Sistemas",
     "Desenvolvedor Full Stack",
-    "Desenvolvimento de Sistemas",
     "Software Industrial",
     "Inteligência Artificial",
     "Visão Computacional",
@@ -116,6 +93,7 @@ export const metadata: Metadata = {
     "TypeScript",
     "Python",
     "OpenCV",
+    "Manaus",
   ],
 
   openGraph: {
@@ -125,14 +103,13 @@ export const metadata: Metadata = {
     siteName: "Carlos Daniel",
     title,
     description,
-
     images: [
       {
         url: socialImage,
         width: 1200,
         height: 630,
         alt:
-          "Carlos Daniel — Software, IA e Automação Industrial",
+          "Portfólio profissional de Carlos Daniel — Software, IA e Eletrônica",
       },
     ],
   },
@@ -154,7 +131,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-
     googleBot: {
       index: true,
       follow: true,
@@ -165,39 +141,12 @@ export const metadata: Metadata = {
   },
 };
 
-/*
- * Cor usada também pela barra superior
- * dos navegadores mobile.
- */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: "#12343a",
   colorScheme: "dark",
 };
-
-/*
- * ============================================================
- * INICIALIZAÇÃO TEMPORÁRIA DO TEMA
- * ============================================================
- *
- * O ThemeToggle atual ainda salva:
- *
- * portfolio-theme = "dark" | "light"
- *
- * Na nova identidade:
- *
- * dark  → tema principal verde
- * light → tema principal azul
- *
- * Este script é executado antes da hidratação para evitar
- * que a página pisque verde antes de carregar o tema salvo.
- *
- * Depois de atualizarmos ThemeToggle.tsx, essa ponte será
- * substituída por:
- *
- * portfolio-accent-theme = "green" | "blue"
- */
 
 const themeInitializationScript = `
   (() => {
@@ -215,16 +164,10 @@ const themeInitializationScript = `
   })();
 `;
 
-/*
- * ============================================================
- * ROOT LAYOUT
- * ============================================================
- */
-
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   const fontVariables = [
     spaceGrotesk.variable,
@@ -250,13 +193,9 @@ export default function RootLayout({
         />
 
         <CustomCursor />
-
         <Header />
-
         {children}
-
         <Footer />
-
         <Analytics />
       </body>
     </html>
