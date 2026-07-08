@@ -3,13 +3,19 @@
 
 import NeuralCircuitCore from "@/components/ui/neural/NeuralCircuitCore";
 
-import { motion } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+} from "framer-motion";
 
 import {
   ArrowDown,
   ArrowRight,
   ArrowUpRight,
 } from "lucide-react";
+
+import { useRef } from "react";
 
 const demosUrl =
   "https://demos.carlosdaniel.dev.br";
@@ -41,8 +47,24 @@ const revealTransition = {
 };
 
 export default function Hero() {
+  const shouldReduceMotion =
+    useReducedMotion();
+
+  const heroRef =
+    useRef<HTMLElement>(null);
+
+  const isHeroInView = useInView(heroRef, {
+    margin: "320px 0px 320px 0px",
+    amount: 0.05,
+    initial: true,
+  });
+
+  const runContinuousAnimations =
+    !shouldReduceMotion && isHeroInView;
+
   return (
     <section
+      ref={heroRef}
       id="inicio"
       className="relative scroll-mt-28 overflow-hidden pb-20 pt-10 sm:pb-24 sm:pt-14 lg:flex lg:min-h-[calc(100svh-96px)] lg:items-center lg:pb-28 lg:pt-16"
     >
@@ -274,12 +296,20 @@ export default function Hero() {
             <motion.div
               aria-hidden="true"
               className="pointer-events-none absolute inset-[-3%] rounded-full border border-dashed border-[color:var(--accent)]/25"
-              animate={{ rotate: 360 }}
-              transition={{
-                duration: 34,
-                repeat: Infinity,
-                ease: "linear",
-              }}
+              animate={
+                runContinuousAnimations
+                  ? { rotate: 360 }
+                  : { rotate: 0 }
+              }
+              transition={
+                runContinuousAnimations
+                  ? {
+                      duration: 34,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }
+                  : { duration: 0 }
+              }
             />
 
             <div
@@ -295,7 +325,11 @@ export default function Hero() {
             </div>
 
             <div className="relative z-10 [perspective:1400px]">
-              <NeuralCircuitCore />
+              {isHeroInView ? (
+                <NeuralCircuitCore />
+              ) : (
+                <div className="min-h-[500px] w-full sm:min-h-[590px] lg:min-h-[640px]" />
+              )}
             </div>
 
             <div className="relative z-20 mx-auto mt-4 flex max-w-[88%] items-center justify-between gap-4 rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] px-4 py-3 backdrop-blur-xl">
@@ -335,12 +369,20 @@ export default function Hero() {
           className="mt-16 hidden items-center gap-4 font-mono text-[9px] font-semibold uppercase tracking-[0.22em] text-[color:var(--muted)] lg:flex"
         >
           <motion.span
-            animate={{ y: [0, 6, 0] }}
-            transition={{
-              duration: 1.8,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
+            animate={
+              runContinuousAnimations
+                ? { y: [0, 6, 0] }
+                : { y: 0 }
+            }
+            transition={
+              runContinuousAnimations
+                ? {
+                    duration: 1.8,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }
+                : { duration: 0 }
+            }
             className="grid h-10 w-10 place-items-center rounded-full border border-[color:var(--line)] bg-[color:var(--panel)] text-[color:var(--accent)]"
           >
             <ArrowDown size={15} strokeWidth={2.2} />
