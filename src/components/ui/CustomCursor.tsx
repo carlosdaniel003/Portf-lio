@@ -237,11 +237,6 @@ export default function CustomCursor() {
       }
     }
 
-    /*
-     * pointerrawupdate acompanha a taxa real do mouse quando
-     * o navegador oferece suporte. Nos demais navegadores,
-     * pointermove permanece como fallback.
-     */
     const movementEvent =
       "onpointerrawupdate" in window
         ? "pointerrawupdate"
@@ -368,7 +363,7 @@ export default function CustomCursor() {
           transform:
             "translate3d(-120px, -120px, 0)",
           willChange: "transform",
-          contain: "layout style paint",
+          contain: "layout style",
         }}
       >
         <div
@@ -411,7 +406,7 @@ export default function CustomCursor() {
           transform:
             "translate3d(-120px, -120px, 0)",
           willChange: "transform",
-          contain: "layout style paint",
+          contain: "layout style",
         }}
       >
         <div
