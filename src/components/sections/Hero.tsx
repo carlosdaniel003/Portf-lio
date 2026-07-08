@@ -15,7 +15,11 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
-import { useRef } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 const demosUrl =
   "https://demos.carlosdaniel.dev.br";
@@ -53,14 +57,25 @@ export default function Hero() {
   const heroRef =
     useRef<HTMLElement>(null);
 
+  const [hasEnteredView, setHasEnteredView] =
+    useState(false);
+
   const isHeroInView = useInView(heroRef, {
     margin: "320px 0px 320px 0px",
     amount: 0.05,
-    initial: true,
   });
+
+  useEffect(() => {
+    if (isHeroInView) {
+      setHasEnteredView(true);
+    }
+  }, [isHeroInView]);
 
   const runContinuousAnimations =
     !shouldReduceMotion && isHeroInView;
+
+  const shouldRenderNeuralCore =
+    !hasEnteredView || isHeroInView;
 
   return (
     <section
@@ -325,7 +340,7 @@ export default function Hero() {
             </div>
 
             <div className="relative z-10 [perspective:1400px]">
-              {isHeroInView ? (
+              {shouldRenderNeuralCore ? (
                 <NeuralCircuitCore />
               ) : (
                 <div className="min-h-[500px] w-full sm:min-h-[590px] lg:min-h-[640px]" />
