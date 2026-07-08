@@ -1,23 +1,23 @@
-// src\app\page.tsx
+// src/app/page.tsx
 
 import AboutMe from "@/components/sections/AboutMe";
 import CaseStudies from "@/components/sections/CaseStudies";
 import Contact from "@/components/sections/Contact";
 import Hero from "@/components/sections/Hero";
-import Services from "@/components/sections/Services";
+import Technologies from "@/components/sections/Technologies";
+import WebDemosCTA from "@/components/sections/WebDemosCTA";
 
 import InteractiveBackground from "@/components/ui/InteractiveBackground";
 import Loader from "@/components/ui/Loader";
 import SectionDivider from "@/components/ui/SectionDivider";
-import WebDemosCTA from "@/components/sections/WebDemosCTA";
 
 const editorialTopics = [
+  "Eletrônica",
   "Software industrial",
   "Inteligência artificial",
   "Visão computacional",
-  "Automação",
   "Dashboards",
-  "Sistemas",
+  "Automação",
 ];
 
 export default function Home() {
@@ -27,179 +27,93 @@ export default function Home() {
   ];
 
   return (
-    <main
-      className="
-        relative isolate
-        min-h-screen
-        overflow-x-clip
-        bg-transparent
-        text-[color:var(--text)]
-      "
-    >
+    <main className="relative isolate min-h-screen overflow-x-clip bg-transparent text-[color:var(--text)]">
       <Loader />
-
       <InteractiveBackground />
 
-      {/* =====================================================
-          CONTEÚDO PRINCIPAL
-          ===================================================== */}
       <div className="relative z-10">
-        {/* 00 — Abertura */}
+        {/* 00 — Apresentação */}
         <Hero />
 
-        {/* Faixa editorial pós-Hero */}
-        <div
-          aria-hidden="true"
-          className="editorial-strip"
-        >
+        <div aria-hidden="true" className="editorial-strip">
           <div className="editorial-strip-track">
-            {repeatedTopics.map(
-              (topic, index) => (
-                <span
-                  key={`${topic}-${index}`}
-                  className="editorial-strip-item"
-                >
-                  {topic}
-                </span>
-              )
-            )}
+            {repeatedTopics.map((topic, index) => (
+              <span
+                key={`${topic}-${index}`}
+                className="editorial-strip-item"
+              >
+                {topic}
+              </span>
+            ))}
           </div>
         </div>
 
         {/* 01 — Projetos */}
-        <div
-          className="
-            relative
-            section-glow
-          "
-        >
+        <div className="relative section-glow">
           <div
             aria-hidden="true"
-            className="
-              soft-dots
-              pointer-events-none
-              absolute
-              right-[-8rem]
-              top-20
-              h-[28rem]
-              w-[28rem]
-              opacity-45
-            "
+            className="soft-dots pointer-events-none absolute right-[-8rem] top-20 h-[28rem] w-[28rem] opacity-45"
           />
 
           <SectionDivider
             index="01"
-            title="Projetos em operação"
+            title="Projetos em destaque"
           />
 
           <CaseStudies />
         </div>
 
-        {/* 02 — Soluções */}
-        <div
-          className="
-            relative
-            border-y
-            border-[color:var(--line-soft)]
-            bg-[color:var(--bg-deep)]/20
-          "
-        >
+        {/* 02 — Perfil profissional */}
+        <div className="relative border-y border-[color:var(--line-soft)] bg-[color:var(--bg-deep)]/20">
           <div
             aria-hidden="true"
-            className="
-              soft-grid
-              pointer-events-none
-              absolute inset-0
-              opacity-25
-            "
+            className="soft-grid pointer-events-none absolute inset-0 opacity-20"
           />
 
           <div className="relative z-10">
             <SectionDivider
               index="02"
-              title="Soluções para empresas"
+              title="Perfil e trajetória"
             />
 
-            <Services />
+            <AboutMe />
           </div>
         </div>
 
-        {/* Ponte para websites e landing pages */}
-        <WebDemosCTA />
-
-        {/* 03 — Identidade técnica */}
+        {/* 03 — Tecnologias */}
         <div className="relative">
           <div
             aria-hidden="true"
-            className="
-              pointer-events-none
-              absolute
-              left-[-12rem]
-              top-[20%]
-
-              h-[34rem]
-              w-[34rem]
-
-              rounded-full
-
-              bg-[color:var(--accent-2)]/[0.055]
-              blur-[130px]
-            "
+            className="pointer-events-none absolute right-[-14rem] top-[18%] h-[36rem] w-[36rem] rounded-full bg-[color:var(--accent)]/[0.055] blur-[140px]"
           />
 
           <SectionDivider
             index="03"
-            title="Base técnica e trajetória"
+            title="Tecnologias e aplicações"
           />
 
-          <AboutMe />
+          <Technologies />
         </div>
 
-        {/* 04 — Contato */}
-        <div
-          className="
-            relative
-            overflow-hidden
-            border-t
-            border-[color:var(--line-soft)]
-          "
-        >
+        {/* Ponte para o site comercial */}
+        <WebDemosCTA />
+
+        {/* 04 — Contato profissional */}
+        <div className="relative overflow-hidden border-t border-[color:var(--line-soft)]">
           <div
             aria-hidden="true"
-            className="
-              soft-grid
-              pointer-events-none
-              absolute inset-0
-              opacity-20
-
-              [mask-image:linear-gradient(to_top,black,transparent_82%)]
-              [-webkit-mask-image:linear-gradient(to_top,black,transparent_82%)]
-            "
+            className="soft-grid pointer-events-none absolute inset-0 opacity-20 [mask-image:linear-gradient(to_top,black,transparent_82%)] [-webkit-mask-image:linear-gradient(to_top,black,transparent_82%)]"
           />
 
           <div
             aria-hidden="true"
-            className="
-              pointer-events-none
-              absolute
-              bottom-[-18rem]
-              left-1/2
-
-              h-[42rem]
-              w-[42rem]
-
-              -translate-x-1/2
-              rounded-full
-
-              bg-[color:var(--accent)]/[0.09]
-              blur-[140px]
-            "
+            className="pointer-events-none absolute bottom-[-18rem] left-1/2 h-[42rem] w-[42rem] -translate-x-1/2 rounded-full bg-[color:var(--accent)]/[0.09] blur-[140px]"
           />
 
           <div className="relative z-10">
             <SectionDivider
               index="04"
-              title="Vamos construir algo real"
+              title="Contato profissional"
             />
 
             <Contact />
